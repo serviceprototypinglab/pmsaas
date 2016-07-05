@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>New Employee</title>
+		<link rel="stylesheet" type="text/css" href="css/foundation.css" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+	</head>
+	<body>
+		<div id="wrapper">
+			<header>
+				<div class="row">
+					<div class="small-8 medium-6 columns"><h1>New Employee</h1></div>
+					<div class="small-12 medium-6 columns">
+						<div class="float-right">
+							<a href="overwiev.shtml" class="button">All Projects</a>
+							<a href="newProject.shtml" class="button">New Project</a>
+							<a href="newProject.shtml" class="button">New Employee</a>
+							<a href="newProject.shtml" class="button">Help</a>
+							<a href="newProject.shtml" class="button">Logout</a>
+						</div>
+					</div>
+				</div>
+			</header>
+			<section>
+				<form method="post" action="newEmployee">
+					<div class="row">
+						<label class="small-12 large-6 columns">First Name <input type="text"></label>
+						<label class="small-12 large-6 columns">Last Name <input type="text"></label>
+						<label class="small-12 large-6 columns">Kürzel <input type="text"></label>
+						<label class="small-12 large-6 columns">Mail <input type="email"></label>
+						<label class="small-12 large-6 columns endKonsta">Wage per Hour <input type="number"></label>
+					</div>
+					<div class="row">
+						<input type="submit" class="small-3 columns large button float-right create" value="Create Employee">
+					</div>
+				</form>
+			</section>			
+		</div>
+	</body>
+</html>

@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+
+body {
+	background-color: #0065a6;
+}
+
+#wrapper, header {
+	margin: 10px 0;
+}
+
+.row {
+	background-color: #fff;
+	padding: 10px;
+}
+
+p {
+	margin: 0;
+}
+
+h2 {
+	margin-left: 15px;	
+}
+
+.add {
+	margin-left: 15px;
+}
+
+.create {
+	margin-right: 15px;
+}
