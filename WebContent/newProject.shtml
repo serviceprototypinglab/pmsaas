@@ -11,6 +11,7 @@
 			
 	          var newdiv = document.createElement('div');
 
+<<<<<<< HEAD
 	          newdiv.innerHTML = '<div class="small-4 columns"><input type="text" name="wpName"></div><div class="small-4 columns"><input type="text" name="wpStart"></div>	<div class="small-4 columns"><input type="text" name="wpEnd"></div>';
 
 	          document.getElementById(divName).appendChild(newdiv);
@@ -106,6 +107,104 @@
 							<div class="small-2 columns"><input type="text" name="taskPM"></div>		
 							<div class="small-2 columns"><input type="text" name="taskBudget"></div>		
 							<div class="small-2 columns"><input type="text" name="taskWP"></div>
+=======
+	          newdiv.innerHTML = '<div class="small-4 columns"><input type="text" name="wpName[]"></div><div class="small-4 columns"><input type="text" name="wpStart[]"></div>	<div class="small-4 columns"><input type="text" name="wpEnd[]"></div>';
+
+	          document.getElementById(divName).appendChild(newdiv);
+		
+		}
+		
+		function addTask(divName) {
+			
+	          var newdiv = document.createElement('div');
+
+	          newdiv.innerHTML = '<div class="small-2 columns"><input type="text" name="taskName[]"></div><div class="small-2 columns"><input type="text" name="taskStart[]"></div><div class="small-2 columns"><input type="text" name="taskEnd[]"></div><div class="small-2 columns"><input type="text" name="taskPM[]"></div><div class="small-2 columns"><input type="text" name="taskBudget[]"></div><div class="small-2 columns"><input type="text" name="taskWP[]"></div>';
+
+	          document.getElementById(divName).appendChild(newdiv);
+		
+		}
+		</script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<header>
+				<div class="row">
+					<div class="small-8 medium-6 columns"><h1>New Project</h1></div>
+					<div class="small-12 medium-6 columns">
+						<div class="float-right">
+							<a href="overwiev.shtml" class="button">All Projects</a>
+							<a href="newProject.shtml" class="button">New Project</a>
+							<a href="newEmployee.shtml" class="button">New Employee</a>
+							<a href="help.shtml" class="button">Help</a>
+							<a href="logout.shtml" class="button">Logout</a>
+						</div>
+					</div>
+				</div>
+			</header>
+			<section>
+				<form>
+					<div class="row">
+						<h2 class="small-12">Project</h2>
+					</div>
+					<div class="row">
+						<p class="small-4 large-2 columns">Name</p>
+						<div class="small-6 large-5 end columns"><input type="text"></div>
+					</div>
+					<div class="row">
+						<p class="small-4 large-2 columns">Shortname</p>
+						<div class="small-6 large-5 end columns"><input type="text"></div>
+					</div>				
+					<div class="row">
+						<p class="small-4 large-2 columns">Total Budget</p>
+						<div class="small-4 large-5 columns"><input type="text"></div>
+						<div class="small-2 large-2 end columns">
+							<select name="currency">
+								<option>CHF</option>
+								<option>EUR</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<p class="small-4 large-2 columns">Duration</p>
+						<div class="small-6 large-5 end columns"><input type="date"></div>
+						<div class="small-6 large-5 end columns"><input type="date"></div>
+					</div>
+					<div class="row">
+						<p class="small-4 large-2 columns">Partners</p>
+						<div class="small-6 large-5 end columns"><input type="text"></div>
+					</div>
+					<div class="row">
+						<h2 class="small-12">Workpackages</h2>
+					</div>
+					<div class="row">
+						<p class="small-4 columns">Name</p>		
+						<p class="small-4 columns">Start</p>		
+						<p class="small-4 columns">End</p>						
+						<div id="workpackage">
+							<div class="small-4 columns"><input type="text" name="wpName[]"></div>		
+							<div class="small-4 columns"><input type="text" name="wpStart[]"></div>		
+							<div class="small-4 columns"><input type="text" name="wpEnd[]"></div>
+						</div>
+						<i id="addWP" class="fa fa-plus small-1 columns button add float-left" aria-hidden="true" onclick="addWP('workpackage')"></i>
+					</div>
+					<div class="row">
+						<h2 class="small-12">Tasks</h2>
+					</div>
+					<div class="row">
+						<p class="small-2 columns">Name</p>		
+						<p class="small-2 columns">Start</p>		
+						<p class="small-2 columns">End</p>	
+						<p class="small-2 columns">PMs</p>		
+						<p class="small-2 columns">Budget</p>		
+						<p class="small-2 columns">Workpackage</p>						
+						<div id="task">
+							<div class="small-2 columns"><input type="text" name="taskName[]"></div>		
+							<div class="small-2 columns"><input type="text" name="taskStart[]"></div>		
+							<div class="small-2 columns"><input type="text" name="taskEnd[]"></div>
+							<div class="small-2 columns"><input type="text" name="taskPM[]"></div>		
+							<div class="small-2 columns"><input type="text" name="taskBudget[]"></div>		
+							<div class="small-2 columns"><input type="text" name="taskWP[]"></div>
+>>>>>>> branch 'master' of https://srv-lab-t-401.zhaw.ch/walj/project_management.git
 						</div>
 						<i id="addTask" class="fa fa-plus small-1 columns button add float-left" aria-hidden="true" onclick="addTask('task')"></i>
 					</div>

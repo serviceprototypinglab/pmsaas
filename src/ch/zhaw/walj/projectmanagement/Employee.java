@@ -1,5 +1,6 @@
 package ch.zhaw.walj.projectmanagement;
 
+<<<<<<< HEAD
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -17,3 +18,12 @@ public class Employee extends HttpServlet{
 			// TODO Auto-generated method stub
 	}
 }
+=======
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+
+@WebServlet("/newEmployee")
+public class Employee extends HttpServlet{
+	
+}
+>>>>>>> branch 'master' of https://srv-lab-t-401.zhaw.ch/walj/project_management.git
