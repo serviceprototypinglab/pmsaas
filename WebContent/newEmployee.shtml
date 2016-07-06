@@ -23,11 +23,7 @@
 				</div>
 			</header>
 			<section>
-<<<<<<< HEAD
 				<form method="post" action="newEmployee">
-=======
-				<form>
->>>>>>> branch 'master' of https://srv-lab-t-401.zhaw.ch/walj/project_management.git
 					<div class="row">
 						<label class="small-12 large-6 columns">First Name <input type="text"></label>
 						<label class="small-12 large-6 columns">Last Name <input type="text"></label>

@@ -66,38 +66,23 @@ public class DBConnection {
 	
 	public int createProject(String pName, String pShortname, String pBudget, String pCurrency, String pStart, String pEnd, String pPartners) throws SQLException{
 				
+		conn = DriverManager.getConnection(this.url+this.dbName,this.userName,this.password);
+		st = conn.createStatement();
+		
+		
 		query = "INSERT INTO Projects (" +
 				"ProjectShortname, ProjectName, ProjectLeader, TotalBudget, Currency, ProjectStart, ProjectEnd, Partner" +
 				") VALUES ('" +
-				pShortname + 
-				"', '" +
-				pName +
-				"', " +
-				"1" +
-				", " +
-				pBudget +
-				", '" +
-				pCurrency +
-				"', '" +
-				pStart +
-				"', '" +
-				pEnd +
-				"', '" +
-				pPartners +
-				"');";
-		
-		/*pstmt = (PreparedStatement) conn.prepareStatement("INSERT INTO Projects (ProjectShortname, ProjectName, ProjectLeader, TotalBudget, Currency, ProjectStart, ProjectEnd, Partner) VALUES (?,?,?,?,?,?,?,?)");
-
-		pstmt.setString(1, pShortname);
-		pstmt.setString(2, pName);
-		pstmt.setInt(3, 1);
-		pstmt.setFloat(4, Float.parseFloat(pBudget));
-		pstmt.setString(5, pCurrency);
-		pstmt.setString(6, pStart);
-		pstmt.setString(7, pEnd);
-		pstmt.setString(8, pPartners);*/
+				pShortname + "', '" +
+				pName +	"', " +
+				"1" + ", " + 
+				pBudget + ", '" +
+				pCurrency +	"', '" +
+				pStart + "', '" +
+				pEnd + "', '" +
+				pPartners +	"');";
 				
-		st.executeUpdate(query);
+		int nothingToDoHere = st.executeUpdate(query);
 		
 		query = "SELECT `ProjectIDFS` FROM `projectmanagement`.`Projects` ORDER BY `ProjectIDFS` DESC LIMIT 1";
 		
