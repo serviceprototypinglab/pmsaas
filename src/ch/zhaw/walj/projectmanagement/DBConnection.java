@@ -19,12 +19,14 @@ public class DBConnection {
 	PreparedStatement pstmt;
 	ResultSet res;
 	String query;
+	int idToUse;
 	
 	public DBConnection(String url, String dbName, String userName, String password){
 		this.url = url;
 		this.dbName = dbName;
 		this.userName = userName;
 		this.password = password;
+		
 		
 		try {
 			Class.forName(driver).newInstance();
@@ -54,7 +56,9 @@ public class DBConnection {
 		}
 		return res;		
 	}
-	
+		
+		
+		
 	public ResultSet getTasks (int id){
 		 try {
 			res = st.executeQuery("SELECT * FROM Tasks where WorkpackageIDFS=" + id + "");
@@ -64,8 +68,8 @@ public class DBConnection {
 		return res;		
 	}
 	
-	public int createProject(String pName, String pShortname, String pBudget, String pCurrency, String pStart, String pEnd, String pPartners) throws SQLException{
-				
+	public int newProject(String pName, String pShortname, String pBudget, String pCurrency, String pStart, String pEnd, String pPartners) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		Class.forName(driver).newInstance();
 		conn = DriverManager.getConnection(this.url+this.dbName,this.userName,this.password);
 		st = conn.createStatement();
 		
@@ -82,13 +86,61 @@ public class DBConnection {
 				pEnd + "', '" +
 				pPartners +	"');";
 				
-		int nothingToDoHere = st.executeUpdate(query);
+		st.executeUpdate(query);
 		
 		query = "SELECT `ProjectIDFS` FROM `projectmanagement`.`Projects` ORDER BY `ProjectIDFS` DESC LIMIT 1";
 		
 		res = st.executeQuery(query);
-		return res.getInt("ProjectIDFS");
+		while (res.next()){
+			idToUse = res.getInt("ProjectIDFS");
+		}
+		return idToUse;
 	}
+	
+	public void newWorkpackage(int projectIDFS, String wpName, String wpStart, String wpEnd) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		Class.forName(driver).newInstance();
+		conn = DriverManager.getConnection(this.url+this.dbName,this.userName,this.password);
+		st = conn.createStatement();
+		
+		query = "INSERT INTO Workpackages (" +
+				"ProjectIDFS, WPName, WPStart, WPEnd" +
+				") VALUES (" +
+				projectIDFS + ", '" +
+				wpName +	"', '" +
+				wpStart + "', '" +
+				wpEnd +	"');";
+				
+		st.executeUpdate(query);
+		
+	}
+	
+	
+	public void newTask(int projectID, String wpName, String taskName, String taskStart, String taskEnd, String taskPM, String taskBudget) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		Class.forName(driver).newInstance();
+		conn = DriverManager.getConnection(this.url+this.dbName,this.userName,this.password);
+		st = conn.createStatement();
+
+		query = "SELECT `WorkpackageID` FROM `projectmanagement`.`Workpackages` WHERE WPName = '" + wpName + "' AND ProjectIDFS = " + projectID + ";";
+		
+		res = st.executeQuery(query);
+		res.next();
+		idToUse = res.getInt("WorkpackageID");
+				
+		
+		query = "INSERT INTO Tasks (" +
+				"WorkpackageIDFS, TaskName, TaskStart, TaskEnd, PMs, Budget" +
+				") VALUES (" +
+				idToUse + ", '" +
+				taskName + "', '" +
+				taskStart +	"', '" +
+				taskEnd + "', " +
+				taskPM + ", " +
+				taskBudget + ");";
+				
+		st.executeUpdate(query);
+		
+	}
+	
 	
 	public void closeConnection () {
 		try {

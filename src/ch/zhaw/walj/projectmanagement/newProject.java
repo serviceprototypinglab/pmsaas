@@ -79,9 +79,25 @@ public class newProject extends HttpServlet{
 			out.println("<p>Projektende: " + pEnd + "</p>");
 			out.println("<p>Projektpartner: " + pPartners + "</p>");
 			
+
+			try {
+				pID = con.newProject(pName, pShortname, pBudget, pCurrency, pStart, pEnd, pPartners);
+			} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			
+			
 			out.println("<p><br>Workpackages:</p>");
 			out.println("<table><tr><th>Name</th><th>Start</th><th>End</th></tr>");
 			for (int i = 0; i < wpName.length; ++i){
+				
+				try {
+					con.newWorkpackage(pID, wpName[i], wpStart[i], wpEnd[i]);
+				} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+								
 				out.println("</tr>");
 				out.println("<td>" + wpName[i] + "</td>");	
 				out.println("<td>" + wpStart[i] + "</td>");	
@@ -90,9 +106,22 @@ public class newProject extends HttpServlet{
 			}
 			out.println("</table>");
 			
+			
+			
+			
+			
 			out.println("<p><br>Tasks:</p>");
 			out.println("<table><tr><th>Name</th><th>Start</th><th>End</th><th>PMs</th><th>Budget</th><th>Workpackage</th></tr>");
 			for (int i = 0; i < taskName.length; i++){
+				
+				
+				try {
+					con.newTask(pID, taskWP[i], taskName[i], taskStart[i], taskEnd[i], taskPM[i], taskBudget[i]);
+				} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				
+				
 				out.println("</tr>");
 				out.println("<td>" + taskName[i] + "</td>");	
 				out.println("<td>" + taskStart[i] + "</td>");	
@@ -105,15 +134,12 @@ public class newProject extends HttpServlet{
 			out.println("</table>");
 			
 			
-			try {
-				pID = con.createProject(pName, pShortname, pBudget, pCurrency, pStart, pEnd, pPartners);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 			
 			out.println("<p>Projekt ID: " + pID + "</p>");
 			
 			out.println("</body>");
 			out.println("</html>");
+			
+			con.closeConnection();
 	}
 }
