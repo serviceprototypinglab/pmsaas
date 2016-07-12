@@ -132,8 +132,5 @@ public class NewProject extends HttpServlet {
 		
 		out.println("</body>");
 		out.println("</html>");
-		
-		// close the DB connection
-		con.closeConnection();
 	}
 }

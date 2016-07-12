@@ -57,6 +57,5 @@ public class NewEmployee extends HttpServlet {
 		out.println("</body>");
 		out.println("</html>");
 		
-		con.closeConnection();
 	}
 }

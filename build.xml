@@ -12,7 +12,6 @@
     <path id="Projektverwaltung.classpath">
         <pathelement location="bin"/>
         <pathelement location="lib/mysql-connector-java-5.1.39-bin.jar"/>
-        <pathelement location="lib/mysql-connector-java-5.1.39/mysql-connector-java-5.1.39-bin.jar"/>
         <pathelement location="lib/servlet-api.jar"/>
     </path>
     <target name="init">

@@ -11,9 +11,7 @@ public class TestDBConnection {
 		String userName = "Janine";
 		String password = "test123";
 		
-		DBConnection con;
-		
-		con = new DBConnection(url, dbName, userName, password);
+		DBConnection con = new DBConnection(url, dbName, userName, password);
 		
 		con.newEmployee(1, "Test", "Test", "Test", "Test", "78");
 	}

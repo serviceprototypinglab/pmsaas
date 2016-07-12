@@ -18,21 +18,21 @@ import java.util.Random;
  */
 public class DBConnection {
 	
-	String				driver		= "com.mysql.jdbc.Driver";
-	String				url			= "";
-	String				dbName		= "";
-	String				userName	= "";
-	String				password	= "";
-	Connection			conn;
-	Statement			st;
-	PreparedStatement	pstmt;
-	ResultSet			res;
-	String				query;
-	int					idToUse;
+	private String				driver		= "com.mysql.jdbc.Driver";
+	private String				url			= "";
+	private String				dbName		= "";
+	private String				userName	= "";
+	private String				password	= "";
+	private Connection			conn;
+	private Statement			st;
+	private PreparedStatement	pstmt;
+	private ResultSet			res;
+	private String				query;
+	private int					idToUse;
 	
-	private Random		rng;
-	private String		characters	= "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
-	private int			length		= 12;
+	private Random				rndm;
+	private String				characters	= "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
+	private int					length;
 	
 	/**
 	 * 
@@ -139,7 +139,7 @@ public class DBConnection {
 	 */
 	public int newProject(String pName, String pShortname, String pBudget, String pCurrency, String pStart, String pEnd,
 			String pPartners)
-			throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+			throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		Class.forName(driver).newInstance();
 		conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
 		st = conn.createStatement();
@@ -267,12 +267,12 @@ public class DBConnection {
 		conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
 		st = conn.createStatement();
 		
-		char[] text = new char[length];
-		String password = "";
+		char[] text = new char[12];
 		for (int i = 0; i < length; i++) {
-			text[i] = characters.charAt(rng.nextInt(characters.length()));
-			password = password + text[i];
+			text[i] = characters.charAt(rndm.nextInt(characters.length()));
 		}
+		
+		String password = new String(text);
 		
 		query = "INSERT INTO Employees (" + "Firstname, Lastname, Kuerzel, Password, Mail, Supervisor" + ") VALUES ('"
 				+ firstname + "', '" + lastname + "', '" + kuerzel + "', '" + password + "', '" + mail + "', "
@@ -280,15 +280,4 @@ public class DBConnection {
 		
 		st.executeUpdate(query);
 	}
-	
-	public void closeConnection() {
-		try {
-			res.close();
-			st.close();
-			conn.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 }
