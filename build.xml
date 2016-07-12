@@ -5,24 +5,27 @@
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. --><project basedir="." default="build" name="Projektverwaltung">
     <property environment="env"/>
-    <property name="ECLIPSE_HOME" value="../../../../../../../usr/lib/eclipse"/>
+    <property name="ECLIPSE_HOME" value="../../Downloads/eclipse/"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
     <path id="Projektverwaltung.classpath">
         <pathelement location="bin"/>
-        <pathelement location="../../../../../../janine/Schreibtisch/tomcat/lib/servlet-api.jar"/>
         <pathelement location="lib/mysql-connector-java-5.1.39-bin.jar"/>
+        <pathelement location="lib/mysql-connector-java-5.1.39/mysql-connector-java-5.1.39-bin.jar"/>
+        <pathelement location="lib/servlet-api.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="src">
+                <exclude name="**/*.launch"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="test">
+                <exclude name="**/*.launch"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
@@ -54,5 +57,10 @@
     <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
+    </target>
+    <target name="TestDBConnection">
+        <java classname="ch.zhaw.walj.projectmanagement.TestDBConnection" failonerror="true" fork="yes">
+            <classpath refid="Projektverwaltung.classpath"/>
+        </java>
     </target>
 </project>
