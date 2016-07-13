@@ -35,7 +35,7 @@
 					<div class="small-8 medium-6 columns"><h1>New Project</h1></div>
 					<div class="small-12 medium-6 columns">
 						<div class="float-right">
-							<a href="overwiev.shtml" class="button">All Projects</a>
+							<a href="/Projektverwaltung/Overview" class="button">All Projects</a>
 							<a href="newProject.shtml" class="button">New Project</a>
 							<a href="newEmployee.shtml" class="button">New Employee</a>
 							<a href="help.shtml" class="button">Help</a>

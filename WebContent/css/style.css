@@ -28,3 +28,47 @@ h2 {
 .create {
 	margin-right: 15px;
 }
+
+.is-active > .accordion-title::before {
+    content: "";
+}
+
+.accordion-title::before {
+	content:"";
+}
+.accordion-title {
+	min-height: 65px;
+	vertical-align: bottom;
+	padding: 0 0 0 15px;
+	border: none;
+}
+
+.bigtext {
+	font-size: 3em;
+}
+
+.middletext {
+	font-size: 2em;
+	color: #bbb;
+}
+
+.smalltext {
+	font-size: 1.5em;
+}
+
+.down {
+	line-height: 62px;
+	vertical-align: bottom;
+	min-height: 62px;
+	margin: 0;
+	padding: 0;
+}
+
+.badge {
+	height: 62px;
+	width: 62px;
+	float: right;
+	font-size: 2em;
+	line-height: 50px;
+	vertical-align: middle;
+}
