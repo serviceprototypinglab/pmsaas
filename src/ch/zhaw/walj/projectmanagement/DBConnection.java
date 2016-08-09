@@ -2,7 +2,6 @@ package ch.zhaw.walj.projectmanagement;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,7 +24,6 @@ public class DBConnection {
 	private String				password	= "";
 	private Connection			conn;
 	private Statement			st;
-	private PreparedStatement	pstmt;
 	private ResultSet			res;
 	private String				query;
 	private int					idToUse;
@@ -77,6 +75,130 @@ public class DBConnection {
 		return res;
 	}
 	
+	
+	/**
+	 * creates a new Project object and returns it to the user
+	 * 
+	 * @param id
+	 *            id of the project
+	 * 
+	 * @return project with data from the database
+	 * @throws SQLException 
+	 */
+	public Project getProject(int pID) throws SQLException {
+
+		Statement stProject = conn.createStatement();
+		Statement stWP = conn.createStatement();
+		Statement stTask = conn.createStatement();
+		Statement stEmployee = conn.createStatement();
+		Statement stWage = conn.createStatement();
+		
+
+		ResultSet resProject;
+		ResultSet resWP;
+		ResultSet resTask;
+		ResultSet resEmployee;
+		ResultSet resWage;
+				
+		Project project;
+		String pName;
+		String pShortname;
+		String pStart;
+		String pEnd;
+		String pCurrency;
+		float pBudget;
+		String pPartner;
+		
+		int wID;
+		int wProjectID;
+		String wName;
+		String wStart;
+		String wEnd;
+		
+		int tID;
+		int tWorkpackageID;
+		String tName;
+		String tStart;
+		String tEnd;
+		int tPMs;
+		float tBudget;
+		
+		int eID;
+		String eFirstname;
+		String eLastname;
+		String eKuerzel;
+		String eMail;
+		float eWage;
+		int eSupervisor;
+		
+		resProject = stProject.executeQuery("SELECT * FROM  Projects where ProjectIDFS=" + pID + "");
+		
+		resProject.next();
+		pName = resProject.getString("ProjectName");
+		pShortname = resProject.getString("ProjectShortname");
+		pStart = resProject.getString("ProjectStart");
+		pEnd = resProject.getString("ProjectEnd");
+		pCurrency = resProject.getString("Currency");
+		pBudget = resProject.getFloat("TotalBudget");
+		pPartner = resProject.getString("Partner");
+		
+		project = new Project(pID, pName, pShortname, pStart, pEnd, pCurrency, pBudget, pPartner);
+		
+		resWP = stWP.executeQuery("SELECT * FROM  Workpackages where ProjectIDFS=" + pID + "");
+		while (resWP.next()){
+			wID = resWP.getInt("WorkpackageID");
+			wProjectID = resWP.getInt("ProjectIDFS");
+			wName = resWP.getString("WPName");
+			wStart = resWP.getString("WPStart");
+			wEnd = resWP.getString("WPEnd");
+			
+			Workpackage wp = new Workpackage(wID, wProjectID, wName, wStart, wEnd);
+			
+			resTask = stTask.executeQuery("SELECT * FROM  Tasks where WorkpackageIDFS=" + wID + "");
+			while (resTask.next()){
+				tID = resTask.getInt("TaskID");
+				tWorkpackageID = resTask.getInt("WorkpackageIDFS");
+				tName = resTask.getString("TaskName");
+				tStart = resTask.getString("TaskStart");
+				tEnd = resTask.getString("TaskEnd");
+				tPMs = resTask.getInt("PMs");
+				tBudget = resTask.getFloat("Budget");
+				
+				Task task = new Task(tID, tWorkpackageID, tName, tStart, tEnd, tPMs, tBudget);
+				
+				resEmployee = stEmployee.executeQuery("SELECT Employees.* " + 
+						"FROM Employees INNER JOIN Assignments ON Employees.EmployeeID = Assignments.EmployeeIDFS " + 
+						"WHERE Assignments.TaskIDFS =" + tID + "");
+				
+				while(resEmployee.next()){
+
+					eID = resEmployee.getInt("EmployeeID");
+					eFirstname = resEmployee.getString("Firstname");
+					eLastname = resEmployee.getString("Lastname");
+					eKuerzel = resEmployee.getString("Kuerzel");
+					eMail = resEmployee.getString("Mail");
+					eSupervisor = resEmployee.getInt("Supervisor");
+					
+					resWage = stWage.executeQuery("SELECT WagePerHour FROM  Wage where EmployeeIDFS=" + eID + " order by ValidFrom desc");
+					resWage.next();
+					eWage = resWage.getFloat("WagePerHour");
+					
+					Employee employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, eWage, eSupervisor);
+					
+					task.addEmployee(employee);
+				}
+				
+				wp.addTask(task);
+			}
+			
+			project.addWorkpackage(wp);
+		}
+		
+		return project;
+	}
+	
+	
+	
 	/**
 	 * returns all workpackages from the current project
 	 * 
@@ -98,13 +220,33 @@ public class DBConnection {
 	 * returns all tasks from the current workpackage
 	 * 
 	 * @param id
-	 *            id of the current work
+	 *            id of the current workpackage
 	 * 
 	 * @return all tasks from the current workpackage
 	 */
 	public ResultSet getTasks(int id) {
 		try {
 			res = st.executeQuery("SELECT * FROM Tasks where WorkpackageIDFS=" + id + "");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+	
+	
+	/**
+	 * returns all employees, working at the current project
+	 * 
+	 * @param id
+	 *            id of the current task
+	 * 
+	 * @return  all employees, working at the current project
+	 */
+	public ResultSet getEmployees(int id) {
+		try {
+			res = st.executeQuery("SELECT `Employees`.`Firstname` , `Employees`.`Lastname` " + 
+					"FROM `Employees` INNER JOIN `Assignments` ON `Employees`.`EmployeeID` = `Assignments`.`EmployeeIDFS` " + 
+					"WHERE `Assignments`.`TaskIDFS` =" + id + "");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

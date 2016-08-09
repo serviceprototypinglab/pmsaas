@@ -1,5 +1,14 @@
 @CHARSET "UTF-8";
 
+* {
+	border: none;
+}
+
+hr {
+	display: none;
+}
+
+
 body {
 	background-color: #0065a6;
 }
@@ -11,6 +20,13 @@ body {
 .row {
 	background-color: #fff;
 	padding: 10px;
+}
+
+.round {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin: 5px !important;
 }
 
 p {
@@ -40,7 +56,12 @@ h2 {
 	min-height: 65px;
 	vertical-align: bottom;
 	padding: 0 0 0 15px;
-	border: none;
+	border: none !important;
+}
+
+.accordion-content {
+	height: 200px;
+	border: none !important;
 }
 
 .bigtext {
@@ -71,4 +92,33 @@ h2 {
 	font-size: 2em;
 	line-height: 50px;
 	vertical-align: middle;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.right {
+	float: right;
+}
+
+.left {
+	float: left;
+}
+
+.floatform {
+	display: inline;
+}
+
+p span {
+	padding: 0 !important;
+	margin-bottom: 5px;
+}
+
+.panel {
+	background-color: #eee;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
 }

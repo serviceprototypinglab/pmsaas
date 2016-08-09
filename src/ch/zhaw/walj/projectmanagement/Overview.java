@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Overview
  */
+@SuppressWarnings("serial")
 @WebServlet("/Overview")
 public class Overview extends HttpServlet {
 	
@@ -21,21 +23,31 @@ public class Overview extends HttpServlet {
 	private String		dbName		= "projectmanagement";
 	private String		userName	= "Janine";
 	private String		password	= "test123";
+
+	private ResultSet	resProjects;
+	private ResultSet	resWorkpackages;
+	private ResultSet	resTasks;
+	private ResultSet	resEmployees;
 	
-	private ResultSet	res;
-	
-	private int			i			= 0;
+
+	private int	i = 0;
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
-		
+
 		DBConnection con = new DBConnection(url, dbName, userName, password);
+		DBConnection con2 = new DBConnection(url, dbName, userName, password);
+		DBConnection con3 = new DBConnection(url, dbName, userName, password);
+		DBConnection con4 = new DBConnection(url, dbName, userName, password);
 		
-		res = con.getProjects(1);
+		
+		resProjects = con.getProjects(1);
+		
 		
 		PrintWriter out = response.getWriter();
 		
+		// write HTML (head, header, nav)
 		out.println("<!DOCTYPE html>\n" 
 						+ "\t<html>\n" 
 							+ "\t\t<head>\n" 
@@ -44,6 +56,7 @@ public class Overview extends HttpServlet {
 								+ "\t\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/foundation.css\" />\n"
 								+ "\t\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />\n" 
 								+ "\t\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/font-awesome/css/font-awesome.min.css\" />\n" 
+								+ "\t\t\t<script>function Redirect(ID) {var url = \"Overview/Project?id=\" + ID; window.location=url;}</script>\n"
 							+ "\t\t</head>\n" 
 							+ "\t\t<body>\n"
 								+ "\t\t\t<div id=\"wrapper\">\n" 
@@ -66,20 +79,81 @@ public class Overview extends HttpServlet {
 									+ "\t\t\t\t<ul class=\"accordion\" data-accordion>");
 		
 		try {
-			while (res.next()) {
+			// write Projectinformation
+			while (resProjects.next()) {
+				
+				ArrayList<String> employees = new ArrayList<String>();
+				String allEmployees = null;
+
+				String projectID = resProjects.getString("ProjectIDFS");
+				String projectShortname = resProjects.getString("ProjectShortname");
+				String projectName = resProjects.getString("ProjectName");
+				String projectStart = resProjects.getString("ProjectStart");
+				String projectEnd = resProjects.getString("ProjectEnd");
+				String projectCurrency = resProjects.getString("Currency");
+				float totalBudget = resProjects.getFloat("TotalBudget");
+				String partner = resProjects.getString("Partner");
+				
+				resWorkpackages = con2.getWorkpackages(resProjects.getInt("ProjectIDFS"));
+				int nbrOfWP = 0;
+				int nbrOfTasks = 0;
+				for (nbrOfWP = 0; resWorkpackages.next(); nbrOfWP++){
+					resTasks = con3.getTasks(resWorkpackages.getInt("WorkpackageID"));
+					for (nbrOfTasks = 0; resTasks.next(); nbrOfTasks++){			
+						
+						
+						resEmployees = con4.getEmployees(resTasks.getInt("TaskID"));
+						resEmployees.next();
+						String firstname = resEmployees.getString("Firstname");
+						String lastname = resEmployees.getString("Lastname");
+						String employee =  firstname + " " + lastname; 
+						if (!employees.contains(employee)){
+							employees.add(employee);
+						}
+						allEmployees = employees.get(0);
+						for (i = 1; i < employees.size(); i++){
+							allEmployees += ", " + employees.get(i);
+						}
+					};
+				};
+				
+				
 				out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">");
-				out.println("<span class=\"bigtext small-3 columns down\">" + res.getString("ProjectShortname") + "</span>");
-				out.println("<span class=\"middletext small-6 columns down\">" + res.getString("ProjectName") + "</span>");
-				out.println("<button class=\"button small-2 columns down smalltext\">Select</button>");
+				out.println("<span class=\"bigtext small-3 columns down\">" + projectShortname + "</span>");
+				out.println("<span class=\"middletext small-6 columns down\">" + projectName + "</span>");
+				out.println("<button class=\"button small-2 columns down smalltext\" onclick=\"Redirect(" + projectID + ");\">Select</button>");
 				out.println("<span class=\"success badge\">0</span>");
 				out.println("</a>");
 				out.println("<div class=\"accordion-content\" data-tab-content>");
+				// Write Duration
 				out.println(
-						"<p><span class=\"small-2 columns\">Projectduration</span><span class=\"small-6 columns\">" + res.getString("ProjectStart")
-								+ " - " + res.getString("ProjectEnd") + "</span><span class=\"small-4 columns\">Project ends in X Days</span></p>");
-				out.println("<p><span class=\"small-2 columns\">Budget</span><span class=\"small-6 columns\">" + res.getString("Currency") + " "
-						+ res.getString("TotalBudget") + "</span><span class=\"small-4 columns\">" + res.getString("Currency")
+						"<p><span class=\"small-3 columns\">Projectduration</span><span class=\"small-4 columns\">" + projectStart
+								+ " - " + projectEnd + "</span><span class=\"small-4 end columns align-right\">Project ends in X Days</span></p>");
+				
+				// Write Budget
+				out.println("<p><span class=\"small-3 columns\">Budget</span><span class=\"small-4 columns\">" + projectCurrency + " "
+						+ totalBudget + "</span><span class=\"small-4 end columns align-right\">" + projectCurrency
 						+ " XXXXX left</span></p>");
+
+				// Write Workpackages
+				out.println("<p><span class=\"small-3 columns\">Workpackages</span><span class=\"small-4 columns\">" + nbrOfWP 
+						+ "</span><span class=\"small-4 end columns align-right\">"
+						+ "Workpackage 1 ends in 5 days</span></p>");
+
+				// Write Tasks
+				out.println("<p><span class=\"small-3 columns\">Tasks</span><span class=\"small-4 columns\">" + nbrOfTasks 
+						+ "</span><span class=\"small-4 end columns align-right\">" 
+						+ "Task 2 ends in 5 days</span></p>");
+				
+				// Write Employees
+				out.println("<p><span class=\"small-3 columns\">Employees</span><span class=\"small-4 columns\">" + employees.size() 
+						+ "</span><span class=\"small-4 end columns align-right\">" + allEmployees
+						+ "</span></p>");
+				
+				// Write Partners
+				out.println("<p><span class=\"small-3 columns\">Partner</span><span class=\"small-4 end columns\">" + partner + 
+						"</span></p>");
+				
 				out.println("</div>");
 				out.println("</li>");
 				
