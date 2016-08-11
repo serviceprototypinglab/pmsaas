@@ -32,6 +32,8 @@ public class DBConnection {
 	private String				characters	= "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
 	private int					length;
 	
+	private DateFormatter dateFormatter = new DateFormatter();
+	
 	/**
 	 * 
 	 * @param url
@@ -92,6 +94,7 @@ public class DBConnection {
 		Statement stTask = conn.createStatement();
 		Statement stEmployee = conn.createStatement();
 		Statement stWage = conn.createStatement();
+		Statement stExpenses = conn.createStatement();
 		
 
 		ResultSet resProject;
@@ -99,6 +102,7 @@ public class DBConnection {
 		ResultSet resTask;
 		ResultSet resEmployee;
 		ResultSet resWage;
+		ResultSet resExpenses;
 				
 		Project project;
 		String pName;
@@ -131,26 +135,52 @@ public class DBConnection {
 		float eWage;
 		int eSupervisor;
 		
+		Expense expense;
+		int exID;
+		int exProjextID;
+		int exEmployeeID;
+		float exCosts;
+		String exType;
+		String exDescription;
+		String exDate;
+		
+		
 		resProject = stProject.executeQuery("SELECT * FROM  Projects where ProjectIDFS=" + pID + "");
 		
 		resProject.next();
 		pName = resProject.getString("ProjectName");
 		pShortname = resProject.getString("ProjectShortname");
-		pStart = resProject.getString("ProjectStart");
-		pEnd = resProject.getString("ProjectEnd");
+		pStart = dateFormatter.getFormattedString(resProject.getString("ProjectStart"));
+		pEnd = dateFormatter.getFormattedString(resProject.getString("ProjectEnd"));
 		pCurrency = resProject.getString("Currency");
 		pBudget = resProject.getFloat("TotalBudget");
 		pPartner = resProject.getString("Partner");
 		
 		project = new Project(pID, pName, pShortname, pStart, pEnd, pCurrency, pBudget, pPartner);
 		
+		resExpenses = stExpenses.executeQuery("Select * from Expenses where ProjectIDFS=" + pID + "");
+		
+		while (resExpenses.next()){
+
+			exID = resExpenses.getInt("ExpenseID");
+			exProjextID = resExpenses.getInt("ProjectIDFS");
+			exEmployeeID = resExpenses.getInt("EmployeeIDFS");
+			exCosts = resExpenses.getFloat("Costs");
+			exType = resExpenses.getString("Type");
+			exDescription = resExpenses.getString("Description");
+			exDate = resExpenses.getString("Date");
+			
+			expense = new Expense(exID, exProjextID, exEmployeeID, exCosts, exType, exDescription, exDate);
+			project.addExpense(expense);
+		}
+		
 		resWP = stWP.executeQuery("SELECT * FROM  Workpackages where ProjectIDFS=" + pID + "");
 		while (resWP.next()){
 			wID = resWP.getInt("WorkpackageID");
 			wProjectID = resWP.getInt("ProjectIDFS");
 			wName = resWP.getString("WPName");
-			wStart = resWP.getString("WPStart");
-			wEnd = resWP.getString("WPEnd");
+			wStart = dateFormatter.getFormattedString(resWP.getString("WPStart"));
+			wEnd = dateFormatter.getFormattedString(resWP.getString("WPEnd"));
 			
 			Workpackage wp = new Workpackage(wID, wProjectID, wName, wStart, wEnd);
 			
@@ -159,8 +189,8 @@ public class DBConnection {
 				tID = resTask.getInt("TaskID");
 				tWorkpackageID = resTask.getInt("WorkpackageIDFS");
 				tName = resTask.getString("TaskName");
-				tStart = resTask.getString("TaskStart");
-				tEnd = resTask.getString("TaskEnd");
+				tStart = dateFormatter.getFormattedString(resTask.getString("TaskStart"));
+				tEnd = dateFormatter.getFormattedString(resTask.getString("TaskEnd"));
 				tPMs = resTask.getInt("PMs");
 				tBudget = resTask.getFloat("Budget");
 				
@@ -189,9 +219,11 @@ public class DBConnection {
 				}
 				
 				wp.addTask(task);
+				wp.addEmployees();
 			}
 			
 			project.addWorkpackage(wp);
+			project.addEmployees();
 		}
 		
 		return project;

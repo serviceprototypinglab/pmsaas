@@ -11,6 +11,7 @@ public class Employee {
 	private int supervisor;
 	
 	public Employee(int id, String firstname, String lastname, String kuerzel, String mail, float wage, int supervisor){
+		
 		this.id = id;
 		this.firstname = firstname;
 		this.lastname = lastname;

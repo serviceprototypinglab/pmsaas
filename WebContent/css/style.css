@@ -85,7 +85,7 @@ h2 {
 	padding: 0;
 }
 
-.badge {
+.errorbadge {
 	height: 62px;
 	width: 62px;
 	float: right;
@@ -93,6 +93,7 @@ h2 {
 	line-height: 50px;
 	vertical-align: middle;
 }
+
 
 .align-right {
 	text-align: right;
@@ -117,8 +118,37 @@ p span {
 
 .panel {
 	background-color: #eee;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border: solid white 5px;
 	padding: 5px;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+img {
+	text-align: center;
+}
+
+.legend-1 {
+	background-color: #0064a6;
+}
+
+.legend-2 {
+	background-color: #003e66;
+}
+
+.smallbadge {
+	height: 20px;
+	width: 20px;
+	line-height: 15px;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.verticalAlignMiddle {
+	vertical-align: middle;	
 }

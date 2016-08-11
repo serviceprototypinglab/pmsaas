@@ -25,7 +25,17 @@ public class Task {
 	}
 	
 	public void addEmployee(Employee employee){
-		if (!employees.contains(employee)){
+		String nameEmployee;
+		String nameNewEmployee;
+		int flag = 0;
+		for (Employee e : employees){
+			nameEmployee = e.getKuerzel();
+			nameNewEmployee = employee.getKuerzel();
+			if (nameEmployee.equals(nameNewEmployee)){
+				flag++;
+			}
+		}
+		if (flag == 0){
 			employees.add(employee);
 		}
 	}
@@ -37,6 +47,7 @@ public class Task {
 	public int getWorkpackageID(){
 		return workpackageID;
 	}
+	
 	
 	public String getName(){
 		return name;

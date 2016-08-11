@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.zhaw.walj.chart.PieChart;
+
 /**
  * Servlet implementation class Overview
  */
@@ -30,6 +32,8 @@ public class Overview extends HttpServlet {
 	private ResultSet	resEmployees;
 	
 
+	private DateFormatter dateFormatter = new DateFormatter();
+	
 	private int	i = 0;
 	
 	@Override
@@ -85,7 +89,7 @@ public class Overview extends HttpServlet {
 				ArrayList<String> employees = new ArrayList<String>();
 				String allEmployees = null;
 
-				String projectID = resProjects.getString("ProjectIDFS");
+				int projectID = resProjects.getInt("ProjectIDFS");
 				String projectShortname = resProjects.getString("ProjectShortname");
 				String projectName = resProjects.getString("ProjectName");
 				String projectStart = resProjects.getString("ProjectStart");
@@ -103,32 +107,39 @@ public class Overview extends HttpServlet {
 						
 						
 						resEmployees = con4.getEmployees(resTasks.getInt("TaskID"));
-						resEmployees.next();
-						String firstname = resEmployees.getString("Firstname");
-						String lastname = resEmployees.getString("Lastname");
-						String employee =  firstname + " " + lastname; 
-						if (!employees.contains(employee)){
-							employees.add(employee);
-						}
-						allEmployees = employees.get(0);
-						for (i = 1; i < employees.size(); i++){
-							allEmployees += ", " + employees.get(i);
+						while (resEmployees.next()){
+							String firstname = resEmployees.getString("Firstname");
+							String lastname = resEmployees.getString("Lastname");
+							String employee =  firstname + " " + lastname; 
+							if (!employees.contains(employee)){
+								employees.add(employee);
+							}
+							allEmployees = employees.get(0);
+							for (i = 1; i < employees.size(); i++){
+								allEmployees += ", " + employees.get(i);
+							}
 						}
 					};
 				};
-				
+
+				PieChart pieChart = new PieChart(con.getProject(projectID));
+				try {
+					pieChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/");
+				} catch (NumberFormatException | SQLException e) {
+					e.printStackTrace();
+				}
 				
 				out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">");
 				out.println("<span class=\"bigtext small-3 columns down\">" + projectShortname + "</span>");
 				out.println("<span class=\"middletext small-6 columns down\">" + projectName + "</span>");
 				out.println("<button class=\"button small-2 columns down smalltext\" onclick=\"Redirect(" + projectID + ");\">Select</button>");
-				out.println("<span class=\"success badge\">0</span>");
+				out.println("<span class=\"success badge errorbadge\">0</span>");
 				out.println("</a>");
 				out.println("<div class=\"accordion-content\" data-tab-content>");
 				// Write Duration
 				out.println(
-						"<p><span class=\"small-3 columns\">Projectduration</span><span class=\"small-4 columns\">" + projectStart
-								+ " - " + projectEnd + "</span><span class=\"small-4 end columns align-right\">Project ends in X Days</span></p>");
+						"<p><span class=\"small-3 columns\">Projectduration</span><span class=\"small-4 columns\">" + dateFormatter.getFormattedString(projectStart)
+								+ " - " + dateFormatter.getFormattedString(projectEnd) + "</span><span class=\"small-4 end columns align-right\">Project ends in X Days</span></p>");
 				
 				// Write Budget
 				out.println("<p><span class=\"small-3 columns\">Budget</span><span class=\"small-4 columns\">" + projectCurrency + " "
@@ -156,6 +167,7 @@ public class Overview extends HttpServlet {
 				
 				out.println("</div>");
 				out.println("</li>");
+				
 				
 			}
 		} catch (SQLException e) {

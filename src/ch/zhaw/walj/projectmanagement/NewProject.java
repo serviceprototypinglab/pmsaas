@@ -71,7 +71,7 @@ public class NewProject extends HttpServlet {
 		
 		// show the new project to the user
 		out.println("<!DOCTYPE html>");
-		out.println("<html>");
+		out.println("<html><head><meta http-equiv=\"refresh\" content=\"0; url=Overview\"></head>");
 		out.println("<body>");
 		out.println("<p>Neues Projekt:</p>");
 		out.println("<p>Projektname: " + pName + "</p>");

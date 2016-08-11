@@ -11,11 +11,14 @@ public class Project {
 	private String end;
 	private String currency;
 	private float budget;
+	private ArrayList<Task> tasks = new ArrayList<Task>();
 	private ArrayList<Workpackage> wps = new ArrayList<Workpackage>();
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
+	private ArrayList<Expense> expenses = new ArrayList<Expense>();
 	private String partner;
 	
 	public Project(int id, String name, String shortname, String start, String end, String currency, float budget, String partner){
+
 		this.id = id;
 		this.name = name; 
 		this.shortname = shortname;
@@ -56,28 +59,96 @@ public class Project {
 		return duration;
 	}
 	
-	public String getBudget(){
+	public float getBudget(){
+		return budget;
+	}
+	
+	public String getBudgetFormatted(){
 		String formattedBudget = String.format("%.2f", budget);
 		return currency + " " + formattedBudget;
 	}
+	
 	
 	public String getPartners(){
 		return partner;
 	}	
 	
-	public ArrayList<Employee> getEmployees(){
+	public void addEmployees(){
 		for (Workpackage wp : wps){
 			for (int i = 0; i < wp.nbrOfEmployees(); i++){
 				Employee employee = wp.getEmployee(i);
-				if (!employees.contains(employee)){
+				String nameEmployee;
+				String nameNewEmployee;
+				int flag = 0;
+				for (Employee e : employees){
+					nameEmployee = e.getKuerzel();
+					nameNewEmployee = employee.getKuerzel();
+					if (nameEmployee.equals(nameNewEmployee)){
+						flag++;
+					}
+				}
+				if (flag == 0){
 					employees.add(employee);
 				}
 			}
 		}
+	}
+	
+	public ArrayList<Employee> getEmployees(){
 		return employees;
+	}
+	
+	public Employee getSpecificEmployee(int id){
+		for(Employee employee : employees){
+			if (employee.getID() == id){
+				return employee;
+			}
+		}
+		return null;
 	}
 	
 	public int nbrOfEmployees(){
 		return employees.size();
+	}
+	
+	public int nbrOfWorkpackages(){
+		return wps.size();
+	}
+	
+
+	public int nbrOfTasks(){
+		int nbrOfTasks = 0;
+		for (Workpackage wp : wps){
+			nbrOfTasks += wp.nbrOfTasks();
+		}
+		return nbrOfTasks;
+	}
+	
+	public ArrayList<Task> getTasks(){
+		for (Workpackage wp : wps){
+			tasks.addAll(wp.getTasks());
+		}
+		return tasks;		
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+	
+	
+	public void addExpense(Expense expense){
+		expenses.add(expense);
+	}
+	
+	public ArrayList<Expense> getExpenses(){
+		return expenses;
+	}
+	
+	public float getTotalExpenses(){
+		float total = 0;
+		for (Expense expense : expenses){
+			total += expense.getCosts();
+		}
+		return total;
 	}
 }

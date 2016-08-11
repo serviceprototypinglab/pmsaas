@@ -27,18 +27,34 @@ public class Workpackage {
 	public int nbrOfTasks(){
 		return tasks.size();
 	}	
+	
+	public ArrayList<Task> getTasks(){
+		return tasks;		
+	}
 
-	public ArrayList<Employee> getEmployees(){
+	public ArrayList<Employee> addEmployees(){
 		for(Task task : tasks){
-			for (int i = 0; i < task.nbrOfEmployees(); i++){
+		int nbrOfEmployees = task.nbrOfEmployees();
+			for (int i = 0; i < nbrOfEmployees; i++){
 				Employee employee = task.getEmployee(i);
-				if (!employees.contains(employee)){
+				String nameEmployee;
+				String nameNewEmployee;
+				int flag = 0;
+				for (Employee e : employees){
+					nameEmployee = e.getKuerzel();
+					nameNewEmployee = employee.getKuerzel();
+					if (nameEmployee.equals(nameNewEmployee)){
+						flag++;
+					}
+				}
+				if (flag == 0){
 					employees.add(employee);
 				}
 			}
 		}
 		return employees;
 	}
+	
 	
 	public int nbrOfEmployees(){
 		return employees.size();
