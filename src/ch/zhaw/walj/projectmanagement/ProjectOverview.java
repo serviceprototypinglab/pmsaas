@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.zhaw.walj.chart.LineChart;
 import ch.zhaw.walj.chart.PieChart;
 
 /**
@@ -27,9 +28,12 @@ public class ProjectOverview extends HttpServlet {
 
 	private Project project;
 	private ArrayList<Expense> expenses = new ArrayList<Expense>();
+	private ArrayList<Employee> employees = new ArrayList<Employee>();
+	private Effort effort;
 	private PieChart pieChart;
+	private LineChart lineChart;
 	
-	private DateFormatter dateFormatter = new DateFormatter();
+	private DateHelper dateFormatter = new DateHelper();
 	
 	private int	i = 0;
 	
@@ -44,6 +48,8 @@ public class ProjectOverview extends HttpServlet {
 		try {
 			project = con.getProject(projectID);
 			expenses = project.getExpenses();
+			employees = project.getEmployees();
+			effort = new Effort(project.getTasks());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -51,8 +57,10 @@ public class ProjectOverview extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		pieChart = new PieChart(project);
+		lineChart = new LineChart(project);
 		try {
 			pieChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/");
+			lineChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/");
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -114,21 +122,48 @@ public class ProjectOverview extends HttpServlet {
 							+ "<div class=\"small-2 columns\"><span class=\"bold\">Type</span></div>"
 							+ "<div class=\"small-3 columns\"><span class=\"bold\">Date</span></div>"
 							+ "<div class=\"small-3 columns\"><span class=\"bold\">Costs</span></div>");
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
 		}
-		
-		for (Expense ex : expenses){
+		for(Expense ex : expenses){
 			Employee employee = project.getSpecificEmployee(ex.getEmployeeID());
 			out.println("<div class=\"small-4 columns\">" + employee.getName() + "</div>"
 							+ "<div class=\"small-2 columns\" title=\"" + ex.getDescription() + "\">" + ex.getType() + "</div>"
-							+ "<div class=\"small-3 columns\">" + dateFormatter.getFormattedString(ex.getDate()) + "</div>"
+							+ "<div class=\"small-3 columns\">" + dateFormatter.getFormattedDate(ex.getDate()) + "</div>"
 							+ "<div class=\"small-3 columns\">" + project.getCurrency() + " " + ex.getCosts() + "</div>");
 		}
-		out.println("<span class=\"bold\"><div class=\"small-3 small-offset-6 columns\"></br>Total</div><div class=\"small-3 columns\"></br>" + project.getCurrency() + " " + project.getTotalExpenses() + "</div></span>");
-		out.println("</div></div><div class=\"panel small-12 medium-6 columns\"><div class=\"row round\"><div class=\"small-4 medium-2 columns\"><h2>Effort</h2></div></div>");
+		out.println("<span class=\"bold\"><div class=\"small-3 small-offset-6 columns\"></br>Total</div>"
+						+ "<div class=\"small-3 columns\"></br>" + project.getCurrency() + " " 
+						+ project.getTotalExpenses() + "</div></span>");
+		out.println("</div></div><div class=\"panel small-12 medium-6 columns\"><div class=\"row round\">"
+						+ "<div class=\"small-6 columns\"><h2>Effort</h2></div><div class=\"small-6 columns align-right padding-top-10\">"
+						+ "<a class=\"button\">Add Employee</a> <a class=\"button\">Book Hours</a></div>");
+		out.println("<div class=\"small-12 no-padding columns\"><img src=\"../Charts/EffortProject" + project.getID() + ".jpg\"></div>");
+		
+		out.println("<div class=\"small-6 columns\"><span class=\"bold\">Employee</span></div>"
+						+ "<div class=\"small-4 end columns\"><span class=\"bold\">Total Effort</span></div>");
+		
+
+		float totalEffort = 0;
+		for(Employee employee : employees){
+			try {
+				float effortEmployee = effort.getEffortPerEmployee(employee.getID());
+				totalEffort += effortEmployee;
+				out.println("<div class=\"small-6 columns\">" + employee.getName() + "</div>");
+				out.println("<div class=\"small-4 columns\">" + effortEmployee + "</div>");
+				out.println("<div class=\"small-2 columns\"><a class=\"button\">Details</a></div>");
+				
+			} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		out.println("<div class=\"small-6 columns\"><span class=\"bold\">Total</span></div>");
+		out.println("<div class=\"small-4 columns\"><span class=\"bold\">" + totalEffort + "</span></div>");
+		out.println("<div class=\"small-2 columns\"><a class=\"button\">Details</a></div>");
+		
 		out.println(
-				"</div></section></div><script src=\"../js/vendor/jquery.js\"></script><script src=\"../js/vendor/foundation.min.js\"></script><script>$(document).foundation();</script></body></html>");
+				"</div></div></section></div><script src=\"../js/vendor/jquery.js\"></script><script src=\"../js/vendor/foundation.min.js\"></script><script>$(document).foundation();</script></body></html>");
 	}
 	
 }

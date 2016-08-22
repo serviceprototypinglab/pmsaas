@@ -32,7 +32,7 @@ public class DBConnection {
 	private String				characters	= "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
 	private int					length;
 	
-	private DateFormatter dateFormatter = new DateFormatter();
+	private DateHelper dateFormatter = new DateHelper();
 	
 	/**
 	 * 
@@ -110,7 +110,7 @@ public class DBConnection {
 		String pStart;
 		String pEnd;
 		String pCurrency;
-		float pBudget;
+		double pBudget;
 		String pPartner;
 		
 		int wID;
@@ -125,21 +125,21 @@ public class DBConnection {
 		String tStart;
 		String tEnd;
 		int tPMs;
-		float tBudget;
+		double tBudget;
 		
 		int eID;
 		String eFirstname;
 		String eLastname;
 		String eKuerzel;
 		String eMail;
-		float eWage;
+		double eWage;
 		int eSupervisor;
 		
 		Expense expense;
 		int exID;
 		int exProjextID;
 		int exEmployeeID;
-		float exCosts;
+		double exCosts;
 		String exType;
 		String exDescription;
 		String exDate;
@@ -150,10 +150,10 @@ public class DBConnection {
 		resProject.next();
 		pName = resProject.getString("ProjectName");
 		pShortname = resProject.getString("ProjectShortname");
-		pStart = dateFormatter.getFormattedString(resProject.getString("ProjectStart"));
-		pEnd = dateFormatter.getFormattedString(resProject.getString("ProjectEnd"));
+		pStart = dateFormatter.getFormattedDate(resProject.getString("ProjectStart"));
+		pEnd = dateFormatter.getFormattedDate(resProject.getString("ProjectEnd"));
 		pCurrency = resProject.getString("Currency");
-		pBudget = resProject.getFloat("TotalBudget");
+		pBudget = resProject.getDouble("TotalBudget");
 		pPartner = resProject.getString("Partner");
 		
 		project = new Project(pID, pName, pShortname, pStart, pEnd, pCurrency, pBudget, pPartner);
@@ -165,7 +165,7 @@ public class DBConnection {
 			exID = resExpenses.getInt("ExpenseID");
 			exProjextID = resExpenses.getInt("ProjectIDFS");
 			exEmployeeID = resExpenses.getInt("EmployeeIDFS");
-			exCosts = resExpenses.getFloat("Costs");
+			exCosts = resExpenses.getDouble("Costs");
 			exType = resExpenses.getString("Type");
 			exDescription = resExpenses.getString("Description");
 			exDate = resExpenses.getString("Date");
@@ -179,8 +179,8 @@ public class DBConnection {
 			wID = resWP.getInt("WorkpackageID");
 			wProjectID = resWP.getInt("ProjectIDFS");
 			wName = resWP.getString("WPName");
-			wStart = dateFormatter.getFormattedString(resWP.getString("WPStart"));
-			wEnd = dateFormatter.getFormattedString(resWP.getString("WPEnd"));
+			wStart = dateFormatter.getFormattedDate(resWP.getString("WPStart"));
+			wEnd = dateFormatter.getFormattedDate(resWP.getString("WPEnd"));
 			
 			Workpackage wp = new Workpackage(wID, wProjectID, wName, wStart, wEnd);
 			
@@ -189,12 +189,12 @@ public class DBConnection {
 				tID = resTask.getInt("TaskID");
 				tWorkpackageID = resTask.getInt("WorkpackageIDFS");
 				tName = resTask.getString("TaskName");
-				tStart = dateFormatter.getFormattedString(resTask.getString("TaskStart"));
-				tEnd = dateFormatter.getFormattedString(resTask.getString("TaskEnd"));
+				tStart = dateFormatter.getFormattedDate(resTask.getString("TaskStart"));
+				tEnd = dateFormatter.getFormattedDate(resTask.getString("TaskEnd"));
 				tPMs = resTask.getInt("PMs");
-				tBudget = resTask.getFloat("Budget");
+				tBudget = resTask.getDouble("Budget");
 				
-				Task task = new Task(tID, tWorkpackageID, tName, tStart, tEnd, tPMs, tBudget);
+				Task task = new Task(tID, tWorkpackageID, tName, tStart, pStart, tEnd, tPMs, tBudget);
 				
 				resEmployee = stEmployee.executeQuery("SELECT Employees.* " + 
 						"FROM Employees INNER JOIN Assignments ON Employees.EmployeeID = Assignments.EmployeeIDFS " + 
@@ -211,7 +211,7 @@ public class DBConnection {
 					
 					resWage = stWage.executeQuery("SELECT WagePerHour FROM  Wage where EmployeeIDFS=" + eID + " order by ValidFrom desc");
 					resWage.next();
-					eWage = resWage.getFloat("WagePerHour");
+					eWage = resWage.getDouble("WagePerHour");
 					
 					Employee employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, eWage, eSupervisor);
 					

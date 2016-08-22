@@ -2,6 +2,7 @@
 
 * {
 	border: none;
+	vertical-align: bottom !important;
 }
 
 hr {
@@ -151,4 +152,16 @@ img {
 
 .verticalAlignMiddle {
 	vertical-align: middle;	
+}
+
+.grey {
+	color: #bbb;
+}
+
+.no-padding {
+	padding: 0;
+}
+
+.padding-top-10 {
+	padding-top: 10px;
 }

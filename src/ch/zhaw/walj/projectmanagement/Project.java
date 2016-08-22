@@ -10,14 +10,15 @@ public class Project {
 	private String start;
 	private String end;
 	private String currency;
-	private float budget;
+	private double budget;
 	private ArrayList<Task> tasks = new ArrayList<Task>();
 	private ArrayList<Workpackage> wps = new ArrayList<Workpackage>();
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
 	private ArrayList<Expense> expenses = new ArrayList<Expense>();
 	private String partner;
+	private DateHelper date = new DateHelper();
 	
-	public Project(int id, String name, String shortname, String start, String end, String currency, float budget, String partner){
+	public Project(int id, String name, String shortname, String start, String end, String currency, double budget, String partner){
 
 		this.id = id;
 		this.name = name; 
@@ -32,6 +33,7 @@ public class Project {
 	
 	public void addWorkpackage(Workpackage wp){
 		wps.add(wp);
+		tasks.addAll(wp.getTasks());
 	}
 
 	public String getShortname(){
@@ -59,7 +61,7 @@ public class Project {
 		return duration;
 	}
 	
-	public float getBudget(){
+	public double getBudget(){
 		return budget;
 	}
 	
@@ -125,9 +127,6 @@ public class Project {
 	}
 	
 	public ArrayList<Task> getTasks(){
-		for (Workpackage wp : wps){
-			tasks.addAll(wp.getTasks());
-		}
 		return tasks;		
 	}
 
@@ -144,11 +143,22 @@ public class Project {
 		return expenses;
 	}
 	
-	public float getTotalExpenses(){
-		float total = 0;
+	public double getTotalExpenses(){
+		double total = 0;
 		for (Expense expense : expenses){
 			total += expense.getCosts();
 		}
 		return total;
+	}
+	
+	
+	public int getNumberOfMonths(){
+		
+		return date.getMonthsBetween(start, end);
+	}
+	
+	
+	public int getMonthsBetween(String date){
+		return this.date.getMonthsBetween(start, date);
 	}
 }

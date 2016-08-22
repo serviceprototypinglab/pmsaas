@@ -32,7 +32,7 @@ public class Overview extends HttpServlet {
 	private ResultSet	resEmployees;
 	
 
-	private DateFormatter dateFormatter = new DateFormatter();
+	private DateHelper dateFormatter = new DateHelper();
 	
 	private int	i = 0;
 	
@@ -95,7 +95,7 @@ public class Overview extends HttpServlet {
 				String projectStart = resProjects.getString("ProjectStart");
 				String projectEnd = resProjects.getString("ProjectEnd");
 				String projectCurrency = resProjects.getString("Currency");
-				float totalBudget = resProjects.getFloat("TotalBudget");
+				double totalBudget = resProjects.getDouble("TotalBudget");
 				String partner = resProjects.getString("Partner");
 				
 				resWorkpackages = con2.getWorkpackages(resProjects.getInt("ProjectIDFS"));
@@ -138,8 +138,8 @@ public class Overview extends HttpServlet {
 				out.println("<div class=\"accordion-content\" data-tab-content>");
 				// Write Duration
 				out.println(
-						"<p><span class=\"small-3 columns\">Projectduration</span><span class=\"small-4 columns\">" + dateFormatter.getFormattedString(projectStart)
-								+ " - " + dateFormatter.getFormattedString(projectEnd) + "</span><span class=\"small-4 end columns align-right\">Project ends in X Days</span></p>");
+						"<p><span class=\"small-3 columns\">Projectduration</span><span class=\"small-4 columns\">" + dateFormatter.getFormattedDate(projectStart)
+								+ " - " + dateFormatter.getFormattedDate(projectEnd) + "</span><span class=\"small-4 end columns align-right\">Project ends in X Days</span></p>");
 				
 				// Write Budget
 				out.println("<p><span class=\"small-3 columns\">Budget</span><span class=\"small-4 columns\">" + projectCurrency + " "

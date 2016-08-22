@@ -68,7 +68,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<p class="small-4 large-2 columns">Duration</p>
+						<p class="small-4 large-2 columns">Duration<span class ="grey"></br>(YYYY-MM-DD)</span></p>
 						<div class="small-6 large-5 end columns"><input type="date" name="pStart"></div>
 						<div class="small-6 large-5 end columns"><input type="date" name="pEnd"></div>
 					</div>
@@ -81,8 +81,8 @@
 					</div>
 					<div class="row">
 						<p class="small-4 columns">Name</p>		
-						<p class="small-4 columns">Start</p>		
-						<p class="small-4 columns">End</p>						
+						<p class="small-4 columns">Start<span class ="grey"> (YYYY-MM-DD)</span></p>		
+						<p class="small-4 columns">End<span class ="grey"> (YYYY-MM-DD)</span></p>						
 						<div id="workpackage">
 							<div class="small-4 columns"><input type="text" name="wpName"></div>		
 							<div class="small-4 columns"><input type="text" name="wpStart"></div>		
@@ -95,8 +95,8 @@
 					</div>
 					<div class="row">
 						<p class="small-2 columns">Name</p>		
-						<p class="small-2 columns">Start</p>		
-						<p class="small-2 columns">End</p>	
+						<p class="small-2 columns">Start<span class ="grey"> (YYYY-MM-DD)</span></p>		
+						<p class="small-2 columns">End<span class ="grey"> (YYYY-MM-DD)</span></p>	
 						<p class="small-2 columns">PMs</p>		
 						<p class="small-2 columns">Budget</p>		
 						<p class="small-2 columns">Workpackage</p>						

@@ -8,17 +8,22 @@ public class Task {
 	private int workpackageID;
 	private String name;
 	private String start;
+	private String projectStart;
 	private String end;
 	private int pms;
-	private float budget;
+	private double budget;
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
+	private int startMonth;
+	private int endMonth;
+	private DateHelper dateHelper = new DateHelper();
 
 	
-	public Task(int id, int workpackageID, String name, String start, String end, int pms, float budget){
+	public Task(int id, int workpackageID, String name, String start, String projectStart, String end, int pms, double budget){
 		this.id = id;
 		this.workpackageID = workpackageID;
 		this.name = name;
 		this.start = start;
+		this.projectStart = projectStart;
 		this.end = end;
 		this.pms = pms;
 		this.budget = budget;
@@ -70,7 +75,7 @@ public class Task {
 		return pms;
 	}
 	
-	public float getBudget(){
+	public double getBudget(){
 		return budget;
 	}
 	
@@ -80,6 +85,26 @@ public class Task {
 	
 	public Employee getEmployee(int i){
 		return employees.get(i);
-	}
+	}	
 	
+	public int getStartMonth(){
+		startMonth = dateHelper.getMonthsBetween(projectStart, start);
+		return startMonth;
+	}	
+	
+	public int getEndMonth(){
+		endMonth = dateHelper.getMonthsBetween(projectStart, end);
+		return endMonth;
+	}	
+	
+	public int getNumberOfMonths(){
+		int numberOfMonths = 0;
+		numberOfMonths = dateHelper.getMonthsBetween(start, end);
+		return numberOfMonths;
+	}
+		
+	public double getPMsPerMonth(){
+		double pmsPerMonth = pms / this.getNumberOfMonths();
+		return pmsPerMonth;
+	}
 }

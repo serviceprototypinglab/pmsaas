@@ -7,10 +7,10 @@ public class Employee {
 	private String lastname;
 	private String kuerzel;
 	private String mail;
-	private float wage;
+	private double wage;
 	private int supervisor;
 	
-	public Employee(int id, String firstname, String lastname, String kuerzel, String mail, float wage, int supervisor){
+	public Employee(int id, String firstname, String lastname, String kuerzel, String mail, double wage, int supervisor){
 		
 		this.id = id;
 		this.firstname = firstname;
@@ -39,7 +39,7 @@ public class Employee {
 		return mail;
 	}
 	
-	public float getWage(){
+	public double getWage(){
 		return wage;
 	}
 	

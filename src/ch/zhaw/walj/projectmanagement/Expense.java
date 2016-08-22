@@ -5,12 +5,12 @@ public class Expense {
 	private int id;
 	private int projectID;
 	private int employeeID;
-	private float costs;
+	private double costs;
 	private String type;
 	private String description;
 	private String date;
 	
-	public Expense (int id, int projectID, int employeeID, float costs, String type, String description, String date){
+	public Expense (int id, int projectID, int employeeID, double costs, String type, String description, String date){
 		this.id = id;
 		this.projectID = projectID;
 		this.employeeID = employeeID;
@@ -32,7 +32,7 @@ public class Expense {
 		return employeeID;
 	}
 	
-	public float getCosts() {
+	public double getCosts() {
 		return costs;
 	}
 	

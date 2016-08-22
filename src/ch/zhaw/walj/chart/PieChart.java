@@ -43,7 +43,15 @@ public class PieChart {
 		this.project = project;
     	tasks = project.getTasks();
     	employees = project.getEmployees();
-		try {
+		
+		
+	}
+    
+    public double getUsedBudget() throws SQLException{
+    	double usedBudget = 0;
+    	int employeeID;    	
+    	
+    	try {
 			Class.forName(driver).newInstance();
 			conn = DriverManager.getConnection(url + dbName, userName, password);
 			st = conn.createStatement();
@@ -52,12 +60,7 @@ public class PieChart {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-	}
-    
-    public float getUsedBudget() throws SQLException{
-    	float usedBudget = 0;
-    	int employeeID;    	
+    	
     	for (Task task : tasks){
     		res = st.executeQuery("select * from Assignments where TaskIDFS = " + task.getID() );
     		while (res.next()){
@@ -66,7 +69,7 @@ public class PieChart {
     				employeeID = res.getInt("EmployeeIDFS");
     				for (Employee employee : employees){
     					if (employee.getID() == employeeID){
-    						usedBudget += (employee.getWage() * res2.getFloat("Hours"));
+    						usedBudget += (employee.getWage() * res2.getDouble("Hours"));
     					}
     				}
     			}
@@ -75,14 +78,14 @@ public class PieChart {
     	
 		res = st.executeQuery("select Costs from Expenses where ProjectIDFS = " + project.getID() );
     	while (res.next()){
-    		usedBudget += res.getFloat("Costs");
+    		usedBudget += res.getDouble("Costs");
     	}
-    	   	
+    	conn.close();
     	return usedBudget;
     }
     
-    public float getRemainingBudget() throws SQLException{
-    	float remainingBudget = project.getBudget() - getUsedBudget();
+    public double getRemainingBudget() throws SQLException{
+    	double remainingBudget = project.getBudget() - getUsedBudget();
     	return remainingBudget;
     }
     
