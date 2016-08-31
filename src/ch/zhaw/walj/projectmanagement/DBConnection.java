@@ -1,11 +1,14 @@
 package ch.zhaw.walj.projectmanagement;
 
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Random;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * 
@@ -28,9 +31,8 @@ public class DBConnection {
 	private String				query;
 	private int					idToUse;
 	
-	private Random				rndm;
 	private String				characters	= "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
-	private int					length;
+	private int					pwLength = 8;
 	
 	private DateHelper dateFormatter = new DateHelper();
 	
@@ -81,7 +83,7 @@ public class DBConnection {
 	/**
 	 * creates a new Project object and returns it to the user
 	 * 
-	 * @param id
+	 * @param pID
 	 *            id of the project
 	 * 
 	 * @return project with data from the database
@@ -441,16 +443,101 @@ public class DBConnection {
 		conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
 		st = conn.createStatement();
 		
-		char[] text = new char[12];
-		for (int i = 0; i < length; i++) {
-			text[i] = characters.charAt(rndm.nextInt(characters.length()));
-		}
+		SecureRandom random = new SecureRandom();
+	    StringBuilder pass = new StringBuilder(pwLength);
+	    for (int i = 0; i < pwLength; i++) {
+	        pass.append(characters.charAt(random.nextInt(characters.length())));
+	    }
+	    
+	    String password = pass.toString();
 		
-		String password = new String(text);
 		
-		query = "INSERT INTO Employees (" + "Firstname, Lastname, Kuerzel, Password, Mail, Supervisor" + ") VALUES ('"
+	    query = "INSERT INTO Employees (" + "Firstname, Lastname, Kuerzel, Password, Mail, Supervisor" + ") VALUES ('"
 				+ firstname + "', '" + lastname + "', '" + kuerzel + "', '" + password + "', '" + mail + "', "
 				+ employeeID + ");";
+		
+		st.executeUpdate(query);
+		
+		
+		res = st.executeQuery("Select EmployeeID from Employees order by EmployeeID desc");
+		
+		res.next();
+		
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String date = format.format(cal.getTime());
+		
+		
+		query = "INSERT INTO Wage (EmployeeIDFS, WagePerHour, ValidFrom) VALUES ("
+				+ res.getInt("EmployeeID") + ", " + wage + ", '" + date + "');";
+		
+		st.executeUpdate(query);
+	}
+	
+	
+	public ArrayList<Employee> getAllEmployees(int supervisor) throws SQLException{
+		ArrayList<Employee> employees = new ArrayList<Employee>();
+		Employee employee;
+		try {
+			res = st.executeQuery("SELECT * from Employees WHERE Supervisor =" + supervisor + " or EmployeeID = " + supervisor);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		while (res.next()){
+			employee = new Employee(res.getInt("EmployeeID"), res.getString("Firstname"), res.getString("Lastname"), res.getString("Kuerzel"), res.getString("Mail"), 0, supervisor);
+			employees.add(employee);
+		}
+		
+		return employees;
+	}
+	
+	
+	public void newExpense(int projectID, int employeeID, double costs, String type, String description, String date) throws SQLException{
+		
+		query = "INSERT INTO Expenses (" + "ProjectIDFS, EmployeeIDFS, Costs, Type, Description, Date" + ") VALUES ("
+				+ projectID + ", " + employeeID + ", " + costs + ", '" + type + "', '" + description + "', '"
+				+ date + "');";
+		
+		st.executeUpdate(query);
+	}
+	
+	public ArrayList<Integer> getAssignments (int employee) throws SQLException{
+		ArrayList<Integer> tasks = new ArrayList<Integer>();
+		
+		res = st.executeQuery("SELECT * from Assignments WHERE EmployeeIDFS =" + employee);
+		
+		while(res.next()){
+			tasks.add(res.getInt("TaskIDFS"));
+		}
+		
+		return tasks;
+	}
+	
+	
+	public int getAssignment (int employee, int task) throws SQLException{
+		res = st.executeQuery("SELECT AssignmentID from Assignments WHERE EmployeeIDFS =" + employee + " and TaskIDFS = " + task);
+		res.next();
+		
+		return res.getInt("AssignmentID");
+	}
+	
+	
+	
+	
+	public void newAssignment(int taskID, int employeeID) throws SQLException{
+		
+		query = "INSERT INTO Assignments (TaskIDFS, EmployeeIDFS) VALUES ("
+				+ taskID + ", " + employeeID + ");";
+		
+		st.executeUpdate(query);
+	}
+	
+	
+	public void newBooking(int assignment, int month, double hours) throws SQLException{
+		
+		query = "INSERT INTO Bookings (AssignmentIDFS, Month, Hours) VALUES ("
+				+ assignment + ", " + month + ", " + hours + ");";
 		
 		st.executeUpdate(query);
 	}

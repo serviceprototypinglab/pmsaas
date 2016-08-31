@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.walj.chart.PieChart;
-
 /**
  * Servlet implementation class Overview
  */
@@ -68,12 +66,12 @@ public class Overview extends HttpServlet {
 										+ "\t\t\t\t\t<div class=\"row\">\n" 
 											+ "\t\t\t\t\t\t<div class=\"small-8 medium-6 columns\"><h1>Projects</h1></div>\n"
 											+ "\t\t\t\t\t\t<div class=\"small-12 medium-6 columns\">\n" 
-												+ "\t\t\t\t\t\t\t<div class=\"float-right\">\n"
+												+ "\t\t\t\t\t\t\t<div class=\"float-right menu\">\n"
 													+ "\t\t\t\t\t\t\t\t<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a>\n"
-													+ "\t\t\t\t\t\t\t\t<a href=\"newProject.shtml\" class=\"button\">New Project</a>\n" 
-													+ "\t\t\t\t\t\t\t\t<a href=\"newEmployee.shtml\" class=\"button\">New Employee</a>\n"
-													+ "\t\t\t\t\t\t\t\t<a href=\"help.shtml\" class=\"button\">Help</a>\n" 
-													+ "\t\t\t\t\t\t\t\t<a href=\"logout.shtml\" class=\"button\">Logout</a>\n" 
+													+ "\t\t\t\t\t\t\t\t<a href=\"newProject\" class=\"button\">New Project</a>\n" 
+													+ "\t\t\t\t\t\t\t\t<a href=\"newEmployee\" class=\"button\">New Employee</a>\n"
+													+ "\t\t\t\t\t\t\t\t<a href=\"help\" class=\"button\">Help</a>\n" 
+													+ "\t\t\t\t\t\t\t\t<a href=\"logout\" class=\"button\">Logout</a>\n" 
 												+ "\t\t\t\t\t\t\t</div>\n" 
 											+ "\t\t\t\t\t\t</div>\n"
 										+ "\t\t\t\t\t</div>\n" 
@@ -122,12 +120,7 @@ public class Overview extends HttpServlet {
 					};
 				};
 
-				PieChart pieChart = new PieChart(con.getProject(projectID));
-				try {
-					pieChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/");
-				} catch (NumberFormatException | SQLException e) {
-					e.printStackTrace();
-				}
+				
 				
 				out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">");
 				out.println("<span class=\"bigtext small-3 columns down\">" + projectShortname + "</span>");

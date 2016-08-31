@@ -1,4 +1,4 @@
-package ch.zhaw.walj.chart;
+package ch.zhaw.walj.projectmanagement.chart;
 
 import java.awt.Color;
 import java.io.File;

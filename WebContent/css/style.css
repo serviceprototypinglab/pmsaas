@@ -2,7 +2,6 @@
 
 * {
 	border: none;
-	vertical-align: bottom !important;
 }
 
 hr {
@@ -34,7 +33,11 @@ p {
 	margin: 0;
 }
 
-h2 {
+h1 {
+	float: left;
+}
+
+h2, h3 {
 	margin-left: 15px;	
 }
 
@@ -44,6 +47,10 @@ h2 {
 
 .create {
 	margin-right: 15px;
+}
+
+.back-button {
+	margin-left: 15px;
 }
 
 .is-active > .accordion-title::before {
@@ -160,8 +167,21 @@ img {
 
 .no-padding {
 	padding: 0;
+	margin-bottom: 10px;
 }
 
 .padding-top-10 {
 	padding-top: 10px;
+}
+
+.back {
+	position: relative;
+	top: 30px;
+	left: 10px;
+	font-size: 20px;
+}
+
+.menu {
+	position: relative;
+	top: 15px;
 }
