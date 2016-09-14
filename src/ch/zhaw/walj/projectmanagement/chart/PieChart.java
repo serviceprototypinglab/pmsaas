@@ -18,7 +18,7 @@ import org.jfree.data.general.DefaultPieDataset;
 
 import ch.zhaw.walj.projectmanagement.Employee;
 import ch.zhaw.walj.projectmanagement.Project;
-import ch.zhaw.walj.projectmanagement.Task;
+import ch.zhaw.walj.projectmanagement.ProjectTask;
 
 public class PieChart {
 	
@@ -34,7 +34,7 @@ public class PieChart {
 	private ResultSet res2;
 	
 	private Project project;
-	private ArrayList<Task> tasks = new ArrayList<Task>();
+	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
 	
 	
@@ -61,7 +61,7 @@ public class PieChart {
 			e.printStackTrace();
 		}
     	
-    	for (Task task : tasks){
+    	for (ProjectTask task : tasks){
     		res = st.executeQuery("select * from Assignments where TaskIDFS = " + task.getID() );
     		while (res.next()){
     			res2 = st2.executeQuery("select * from Bookings where AssignmentIDFS = " + res.getInt("AssignmentID"));
@@ -84,9 +84,28 @@ public class PieChart {
     	return usedBudget;
     }
     
+    public String getUsedBudgetAsString() throws SQLException {
+    	String budget;
+    	
+    	double uBudget = getUsedBudget();
+    	budget = String.format("%.2f", uBudget);
+    	
+    	return budget;
+    }
+    
+    
     public double getRemainingBudget() throws SQLException{
     	double remainingBudget = project.getBudget() - getUsedBudget();
     	return remainingBudget;
+    }
+    
+    public String getRemainingBudgetAsString() throws SQLException {
+    	String budget;
+    	
+    	double rBudget = getRemainingBudget();
+    	budget = String.format("%.2f", rBudget);
+    	
+    	return budget;
     }
     
     public void createChart(String path) throws NumberFormatException, SQLException, IOException{

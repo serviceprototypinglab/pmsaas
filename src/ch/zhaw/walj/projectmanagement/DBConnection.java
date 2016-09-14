@@ -11,57 +11,60 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * 
  * creates a connection to the database
- * 
  * 
  * @author Janine Walther, ZHAW
  *
  */
 public class DBConnection {
-	
-	private String				driver		= "com.mysql.jdbc.Driver";
-	private String				url			= "";
-	private String				dbName		= "";
-	private String				userName	= "";
-	private String				password	= "";
-	private Connection			conn;
-	private Statement			st;
-	private ResultSet			res;
-	private String				query;
-	private int					idToUse;
-	
-	private String				characters	= "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
-	private int					pwLength = 8;
-	
+
+	private String driver = "com.mysql.jdbc.Driver";
+	private String url = "";
+	private String dbName = "";
+	private String userName = "";
+	private String password = "";
+	private Connection conn;
+	private Statement st;
+	private ResultSet res;
+	private String query;
+	private int idToUse;
+
+	private String characters = "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
+	private int pwLength = 8;
+
 	private DateHelper dateFormatter = new DateHelper();
-	
+
 	/**
+	 * Constructor to the DBConnection class
+	 * creates a connection to a database
 	 * 
 	 * @param url
-	 *            url to the db
+	 *            URL to the database
 	 * @param dbName
-	 *            name of the db
+	 *            name of the database
 	 * @param userName
+	 * 			  username for login
 	 * @param password
+	 * 			  password for login
 	 */
 	public DBConnection(String url, String dbName, String userName, String password) {
 		this.url = url;
 		this.dbName = dbName;
 		this.userName = userName;
 		this.password = password;
-		
+
+		// get connection to database
 		try {
 			Class.forName(driver).newInstance();
 			conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
 			st = conn.createStatement();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	/**
 	 * returns all projects from the current user as project leader
 	 * 
@@ -78,8 +81,7 @@ public class DBConnection {
 		}
 		return res;
 	}
-	
-	
+
 	/**
 	 * creates a new Project object and returns it to the user
 	 * 
@@ -87,17 +89,17 @@ public class DBConnection {
 	 *            id of the project
 	 * 
 	 * @return project with data from the database
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public Project getProject(int pID) throws SQLException {
 
+		// variable declaration
 		Statement stProject = conn.createStatement();
 		Statement stWP = conn.createStatement();
 		Statement stTask = conn.createStatement();
 		Statement stEmployee = conn.createStatement();
 		Statement stWage = conn.createStatement();
 		Statement stExpenses = conn.createStatement();
-		
 
 		ResultSet resProject;
 		ResultSet resWP;
@@ -105,7 +107,8 @@ public class DBConnection {
 		ResultSet resEmployee;
 		ResultSet resWage;
 		ResultSet resExpenses;
-				
+
+		// variables for data from project table
 		Project project;
 		String pName;
 		String pShortname;
@@ -114,13 +117,15 @@ public class DBConnection {
 		String pCurrency;
 		double pBudget;
 		String pPartner;
-		
+
+		// variables for data from workpackage table
 		int wID;
 		int wProjectID;
 		String wName;
 		String wStart;
 		String wEnd;
-		
+
+		// variables for data from task table
 		int tID;
 		int tWorkpackageID;
 		String tName;
@@ -128,7 +133,8 @@ public class DBConnection {
 		String tEnd;
 		int tPMs;
 		double tBudget;
-		
+
+		// variables for data from empoloyee table
 		int eID;
 		String eFirstname;
 		String eLastname;
@@ -136,7 +142,8 @@ public class DBConnection {
 		String eMail;
 		double eWage;
 		int eSupervisor;
-		
+
+		// variables for data from expense table
 		Expense expense;
 		int exID;
 		int exProjextID;
@@ -145,10 +152,10 @@ public class DBConnection {
 		String exType;
 		String exDescription;
 		String exDate;
-		
-		
+
+		// get the project information from the database
 		resProject = stProject.executeQuery("SELECT * FROM  Projects where ProjectIDFS=" + pID + "");
-		
+
 		resProject.next();
 		pName = resProject.getString("ProjectName");
 		pShortname = resProject.getString("ProjectShortname");
@@ -157,12 +164,13 @@ public class DBConnection {
 		pCurrency = resProject.getString("Currency");
 		pBudget = resProject.getDouble("TotalBudget");
 		pPartner = resProject.getString("Partner");
-		
+
 		project = new Project(pID, pName, pShortname, pStart, pEnd, pCurrency, pBudget, pPartner);
-		
+
+		// get all expenses
 		resExpenses = stExpenses.executeQuery("Select * from Expenses where ProjectIDFS=" + pID + "");
-		
-		while (resExpenses.next()){
+
+		while (resExpenses.next()) {
 
 			exID = resExpenses.getInt("ExpenseID");
 			exProjextID = resExpenses.getInt("ProjectIDFS");
@@ -171,23 +179,25 @@ public class DBConnection {
 			exType = resExpenses.getString("Type");
 			exDescription = resExpenses.getString("Description");
 			exDate = resExpenses.getString("Date");
-			
+
 			expense = new Expense(exID, exProjextID, exEmployeeID, exCosts, exType, exDescription, exDate);
 			project.addExpense(expense);
 		}
-		
+
+		// get all workpackages
 		resWP = stWP.executeQuery("SELECT * FROM  Workpackages where ProjectIDFS=" + pID + "");
-		while (resWP.next()){
+		while (resWP.next()) {
 			wID = resWP.getInt("WorkpackageID");
 			wProjectID = resWP.getInt("ProjectIDFS");
 			wName = resWP.getString("WPName");
 			wStart = dateFormatter.getFormattedDate(resWP.getString("WPStart"));
 			wEnd = dateFormatter.getFormattedDate(resWP.getString("WPEnd"));
-			
+
 			Workpackage wp = new Workpackage(wID, wProjectID, wName, wStart, wEnd);
-			
+
+			// get all tasks
 			resTask = stTask.executeQuery("SELECT * FROM  Tasks where WorkpackageIDFS=" + wID + "");
-			while (resTask.next()){
+			while (resTask.next()) {
 				tID = resTask.getInt("TaskID");
 				tWorkpackageID = resTask.getInt("WorkpackageIDFS");
 				tName = resTask.getString("TaskName");
@@ -195,14 +205,15 @@ public class DBConnection {
 				tEnd = dateFormatter.getFormattedDate(resTask.getString("TaskEnd"));
 				tPMs = resTask.getInt("PMs");
 				tBudget = resTask.getDouble("Budget");
-				
-				Task task = new Task(tID, tWorkpackageID, tName, tStart, pStart, tEnd, tPMs, tBudget);
-				
-				resEmployee = stEmployee.executeQuery("SELECT Employees.* " + 
-						"FROM Employees INNER JOIN Assignments ON Employees.EmployeeID = Assignments.EmployeeIDFS " + 
-						"WHERE Assignments.TaskIDFS =" + tID + "");
-				
-				while(resEmployee.next()){
+
+				ProjectTask task = new ProjectTask(tID, tWorkpackageID, tName, tStart, pStart, tEnd, tPMs, tBudget);
+
+				// get all employees that are assigned to at least one of the tasks
+				resEmployee = stEmployee.executeQuery("SELECT Employees.* "
+						+ "FROM Employees INNER JOIN Assignments ON Employees.EmployeeID = Assignments.EmployeeIDFS "
+						+ "WHERE Assignments.TaskIDFS =" + tID + "");
+
+				while (resEmployee.next()) {
 
 					eID = resEmployee.getInt("EmployeeID");
 					eFirstname = resEmployee.getString("Firstname");
@@ -210,29 +221,32 @@ public class DBConnection {
 					eKuerzel = resEmployee.getString("Kuerzel");
 					eMail = resEmployee.getString("Mail");
 					eSupervisor = resEmployee.getInt("Supervisor");
-					
-					resWage = stWage.executeQuery("SELECT WagePerHour FROM  Wage where EmployeeIDFS=" + eID + " order by ValidFrom desc");
+
+					// get the wage of the employee
+					resWage = stWage.executeQuery(
+							"SELECT WagePerHour FROM  Wage where EmployeeIDFS=" + eID + " order by ValidFrom desc");
 					resWage.next();
 					eWage = resWage.getDouble("WagePerHour");
-					
+
 					Employee employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, eWage, eSupervisor);
 					
+					// add employee to the task
 					task.addEmployee(employee);
 				}
-				
+
+				// add the task and his employees to the workpackage
 				wp.addTask(task);
 				wp.addEmployees();
 			}
-			
+
+			// add the workpackages with his tasks and the employees to the project
 			project.addWorkpackage(wp);
 			project.addEmployees();
 		}
-		
+
 		return project;
 	}
-	
-	
-	
+
 	/**
 	 * returns all workpackages from the current project
 	 * 
@@ -249,7 +263,7 @@ public class DBConnection {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * returns all tasks from the current workpackage
 	 * 
@@ -266,27 +280,26 @@ public class DBConnection {
 		}
 		return res;
 	}
-	
-	
+
 	/**
 	 * returns all employees, working at the current project
 	 * 
 	 * @param id
 	 *            id of the current task
 	 * 
-	 * @return  all employees, working at the current project
+	 * @return all employees, working at the current project
 	 */
 	public ResultSet getEmployees(int id) {
 		try {
-			res = st.executeQuery("SELECT `Employees`.`Firstname` , `Employees`.`Lastname` " + 
-					"FROM `Employees` INNER JOIN `Assignments` ON `Employees`.`EmployeeID` = `Assignments`.`EmployeeIDFS` " + 
-					"WHERE `Assignments`.`TaskIDFS` =" + id + "");
+			res = st.executeQuery("SELECT `Employees`.`Firstname` , `Employees`.`Lastname` "
+					+ "FROM `Employees` INNER JOIN `Assignments` ON `Employees`.`EmployeeID` = `Assignments`.`EmployeeIDFS` "
+					+ "WHERE `Assignments`.`TaskIDFS` =" + id + "");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return res;
 	}
-	
+
 	/**
 	 * creates a new project in the database
 	 * 
@@ -319,25 +332,25 @@ public class DBConnection {
 		Class.forName(driver).newInstance();
 		conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
 		st = conn.createStatement();
-		
+
 		// create the new project
 		query = "INSERT INTO Projects ("
 				+ "ProjectShortname, ProjectName, ProjectLeader, TotalBudget, Currency, ProjectStart, ProjectEnd, Partner"
 				+ ") VALUES ('" + pShortname + "', '" + pName + "', " + "1" + ", " + pBudget + ", '" + pCurrency
 				+ "', '" + pStart + "', '" + pEnd + "', '" + pPartners + "');";
-		
+
 		st.executeUpdate(query);
-		
+
 		// get the ID of the new project and return it afterwards
 		query = "SELECT `ProjectIDFS` FROM `projectmanagement`.`Projects` ORDER BY `ProjectIDFS` DESC LIMIT 1";
-		
+
 		res = st.executeQuery(query);
 		while (res.next()) {
 			idToUse = res.getInt("ProjectIDFS");
 		}
 		return idToUse;
 	}
-	
+
 	/**
 	 * creates a new workpackage in the database
 	 * 
@@ -360,15 +373,15 @@ public class DBConnection {
 		Class.forName(driver).newInstance();
 		conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
 		st = conn.createStatement();
-		
+
 		// create the new workpackage
 		query = "INSERT INTO Workpackages (" + "ProjectIDFS, WPName, WPStart, WPEnd" + ") VALUES (" + projectIDFS
 				+ ", '" + wpName + "', '" + wpStart + "', '" + wpEnd + "');";
-		
+
 		st.executeUpdate(query);
-		
+
 	}
-	
+
 	/**
 	 * creates a new task in the database
 	 * 
@@ -398,24 +411,24 @@ public class DBConnection {
 		Class.forName(driver).newInstance();
 		conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
 		st = conn.createStatement();
-		
+
 		// get the id from the workpackage (needed to create the new task)
 		query = "SELECT `WorkpackageID` FROM `projectmanagement`.`Workpackages` WHERE WPName = '" + wpName
 				+ "' AND ProjectIDFS = " + projectID + ";";
-		
+
 		res = st.executeQuery(query);
 		res.next();
 		idToUse = res.getInt("WorkpackageID");
-		
+
 		// create new task
 		query = "INSERT INTO Tasks (" + "WorkpackageIDFS, TaskName, TaskStart, TaskEnd, PMs, Budget" + ") VALUES ("
 				+ idToUse + ", '" + taskName + "', '" + taskStart + "', '" + taskEnd + "', " + taskPM + ", "
 				+ taskBudget + ");";
-		
+
 		st.executeUpdate(query);
-		
+
 	}
-	
+
 	/**
 	 * create a new employee in the database
 	 * 
@@ -442,103 +455,186 @@ public class DBConnection {
 		Class.forName(driver).newInstance();
 		conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
 		st = conn.createStatement();
-		
+
+		// generate random password
 		SecureRandom random = new SecureRandom();
-	    StringBuilder pass = new StringBuilder(pwLength);
-	    for (int i = 0; i < pwLength; i++) {
-	        pass.append(characters.charAt(random.nextInt(characters.length())));
-	    }
-	    
-	    String password = pass.toString();
-		
-		
-	    query = "INSERT INTO Employees (" + "Firstname, Lastname, Kuerzel, Password, Mail, Supervisor" + ") VALUES ('"
+		StringBuilder pass = new StringBuilder(pwLength);
+		for (int i = 0; i < pwLength; i++) {
+			pass.append(characters.charAt(random.nextInt(characters.length())));
+		}
+
+		String password = pass.toString();
+
+		// create new employee
+		query = "INSERT INTO Employees (" + "Firstname, Lastname, Kuerzel, Password, Mail, Supervisor" + ") VALUES ('"
 				+ firstname + "', '" + lastname + "', '" + kuerzel + "', '" + password + "', '" + mail + "', "
 				+ employeeID + ");";
-		
+
 		st.executeUpdate(query);
-		
-		
+
+		// get the ID of the employee
 		res = st.executeQuery("Select EmployeeID from Employees order by EmployeeID desc");
-		
+
 		res.next();
-		
+
+		// create new date from the current time
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		String date = format.format(cal.getTime());
-		
-		
-		query = "INSERT INTO Wage (EmployeeIDFS, WagePerHour, ValidFrom) VALUES ("
-				+ res.getInt("EmployeeID") + ", " + wage + ", '" + date + "');";
-		
+
+		// create new wage
+		query = "INSERT INTO Wage (EmployeeIDFS, WagePerHour, ValidFrom) VALUES (" + res.getInt("EmployeeID") + ", "
+				+ wage + ", '" + date + "');";
+
 		st.executeUpdate(query);
 	}
-	
-	
-	public ArrayList<Employee> getAllEmployees(int supervisor) throws SQLException{
+
+	/**
+	 * Get all the employees with the given supervisor and the supervisor
+	 * itself.
+	 * 
+	 * @param supervisor
+	 *            ID of the supervisor
+	 * 
+	 * @return ArrayList with all employees
+	 * 
+	 * @throws SQLException
+	 */
+	public ArrayList<Employee> getAllEmployees(int supervisor) throws SQLException {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
 		Employee employee;
+
 		try {
-			res = st.executeQuery("SELECT * from Employees WHERE Supervisor =" + supervisor + " or EmployeeID = " + supervisor);
+
+			// get the employees
+			res = st.executeQuery(
+					"SELECT * from Employees WHERE Supervisor =" + supervisor + " or EmployeeID = " + supervisor);
+
+			while (res.next()) {
+
+				// create new employees and add them to the ArrayList
+				employee = new Employee(res.getInt("EmployeeID"), res.getString("Firstname"), res.getString("Lastname"),
+						res.getString("Kuerzel"), res.getString("Mail"), 0, supervisor);
+				employees.add(employee);
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		while (res.next()){
-			employee = new Employee(res.getInt("EmployeeID"), res.getString("Firstname"), res.getString("Lastname"), res.getString("Kuerzel"), res.getString("Mail"), 0, supervisor);
-			employees.add(employee);
-		}
-		
+
 		return employees;
 	}
-	
-	
-	public void newExpense(int projectID, int employeeID, double costs, String type, String description, String date) throws SQLException{
-		
+
+	/**
+	 * create a new expense in the database
+	 * 
+	 * @param projectID
+	 *            ID of the project
+	 * 
+	 * @param employeeID
+	 *            ID of the employee
+	 * 
+	 * @param costs
+	 *            costs of the expense
+	 * 
+	 * @param type
+	 *            type of the expense (Travel, etc.)
+	 * 
+	 * @param description
+	 *            description
+	 * 
+	 * @param date
+	 *            date of the expense
+	 * 
+	 * @throws SQLException
+	 */
+	public void newExpense(int projectID, int employeeID, double costs, String type, String description, String date)
+			throws SQLException {
+
+		// create new expense
 		query = "INSERT INTO Expenses (" + "ProjectIDFS, EmployeeIDFS, Costs, Type, Description, Date" + ") VALUES ("
-				+ projectID + ", " + employeeID + ", " + costs + ", '" + type + "', '" + description + "', '"
-				+ date + "');";
-		
+				+ projectID + ", " + employeeID + ", " + costs + ", '" + type + "', '" + description + "', '" + date
+				+ "');";
+
 		st.executeUpdate(query);
 	}
-	
-	public ArrayList<Integer> getAssignments (int employee) throws SQLException{
+
+	/**
+	 * get all tasks the given employee is assigned to
+	 * 
+	 * @param employee
+	 *            ID of the employee
+	 * @return ArrayList with all task IDs
+	 * @throws SQLException
+	 */
+	public ArrayList<Integer> getAssignments(int employee) throws SQLException {
 		ArrayList<Integer> tasks = new ArrayList<Integer>();
-		
-		res = st.executeQuery("SELECT * from Assignments WHERE EmployeeIDFS =" + employee);
-		
-		while(res.next()){
+
+		// get the task IDs
+		res = st.executeQuery("SELECT TaskIDFS from Assignments WHERE EmployeeIDFS =" + employee);
+
+		while (res.next()) {
+			// add the IDs to the ArrayList
 			tasks.add(res.getInt("TaskIDFS"));
 		}
-		
+
 		return tasks;
 	}
-	
-	
-	public int getAssignment (int employee, int task) throws SQLException{
-		res = st.executeQuery("SELECT AssignmentID from Assignments WHERE EmployeeIDFS =" + employee + " and TaskIDFS = " + task);
+
+	/**
+	 * get the ID of the assignment between the given employee and task
+	 * 
+	 * @param employee
+	 *            ID of the employee
+	 * @param task
+	 *            ID of the task
+	 * @return Assignment ID
+	 * @throws SQLException
+	 */
+	public int getAssignment(int employee, int task) throws SQLException {
+
+		// get the ID of the assignment
+		res = st.executeQuery(
+				"SELECT AssignmentID from Assignments WHERE EmployeeIDFS =" + employee + " and TaskIDFS = " + task);
 		res.next();
-		
+
 		return res.getInt("AssignmentID");
 	}
-	
-	
-	
-	
-	public void newAssignment(int taskID, int employeeID) throws SQLException{
-		
-		query = "INSERT INTO Assignments (TaskIDFS, EmployeeIDFS) VALUES ("
-				+ taskID + ", " + employeeID + ");";
-		
+
+	/**
+	 * create a new assignment for the given task and employee
+	 * 
+	 * @param taskID
+	 *            ID of the task
+	 * @param employeeID
+	 *            ID of the employee
+	 * @throws SQLException
+	 */
+	public void newAssignment(int taskID, int employeeID) throws SQLException {
+
+		// create new assignment
+		query = "INSERT INTO Assignments (TaskIDFS, EmployeeIDFS) VALUES (" + taskID + ", " + employeeID + ");";
+
 		st.executeUpdate(query);
 	}
-	
-	
-	public void newBooking(int assignment, int month, double hours) throws SQLException{
-		
-		query = "INSERT INTO Bookings (AssignmentIDFS, Month, Hours) VALUES ("
-				+ assignment + ", " + month + ", " + hours + ");";
-		
+
+	/**
+	 * create a new booking in the database
+	 * 
+	 * @param assignment
+	 *            ID of the assignment
+	 * @param month
+	 *            number of the month
+	 * @param hours
+	 *            amount of hours
+	 * @throws SQLException
+	 */
+	public void newBooking(int assignment, int month, double hours) throws SQLException {
+
+		// create new booking
+		query = "INSERT INTO Bookings (AssignmentIDFS, Month, Hours) VALUES (" + assignment + ", " + month + ", "
+				+ hours + ");";
+
 		st.executeUpdate(query);
 	}
 }

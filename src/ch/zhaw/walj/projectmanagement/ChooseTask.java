@@ -11,26 +11,37 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Projectmanagement tool, Page to assign employees (choose task)
+ * 
+ * @author Janine Walther, ZHAW
+ * 
+ */
 @SuppressWarnings("serial")
 @WebServlet("/Overview/assignEmployee/chooseTask")
 public class ChooseTask extends HttpServlet{
 
+	// database access information
 	String url = "jdbc:mysql://localhost:3306/";
 	String dbName = "projectmanagement";
 	String userName	= "Janine";
 	String password	= "test123";
 	
+	// connection to database
 	private DBConnection con = new DBConnection(url, dbName, userName, password);
 	
 	
 	
 	@Override
+	// method to handle post-requests
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
 						
+		// variable declaration, get parameters from request
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		int employeeID = Integer.parseInt(request.getParameter("employee"));
 		
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
@@ -38,80 +49,88 @@ public class ChooseTask extends HttpServlet{
 			e.printStackTrace();
 		}
 				
-		
-		ArrayList<Task> tasks = project.getTasks();
+		ArrayList<ProjectTask> tasks = project.getTasks();
 		ArrayList<Integer> assignedTasks = null;
+		// get assignments
 		try {
 			assignedTasks = con.getAssignments(employeeID);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		String message = "";
-		
+				
 		
 		PrintWriter out = response.getWriter();
 		
-		out.println("<!DOCTYPE html>\n" 
-				+ "<html>\n" 
-					+ "<head>\n" 
-						+ "<meta charset=\"UTF-8\">\n"
-						+ "<title>Assign Employees</title>\n" 
-						+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/foundation.css\" />\n"
-						+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/style.css\" />\n" 
-						+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/font-awesome/css/font-awesome.min.css\" />\n" 
-					+ "</head>\n" 
-					+ "<body>\n"
-						+ "<div id=\"wrapper\">\n" 
-							+ "<header>\n" 
-								+ "<div class=\"row\">\n" 
-									+ "<div class=\"small-8 medium-6 columns\">"
-									+ "<h1>Assign Employees</h1><a href=\"../Project?id=" + projectID + "\" class=\"back\">"
-											+ "<i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a></div>\n"
-									+ "<div class=\"small-12 medium-6 columns\">\n" 
-										+ "<div class=\"float-right menu\">\n"
-											+ "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a>\n"
-											+ "<a href=\"newProject\" class=\"button\">New Project</a>\n" 
-											+ "<a href=\"newEmployee\" class=\"button\">New Employee</a>\n"
-											+ "<a href=\"help\" class=\"button\">Help</a>\n" 
-											+ "<a href=\"logout\" class=\"button\">Logout</a>\n" 
-										+ "</div>\n" 
-									+ "</div>\n"
-								+ "</div>\n" 
-							+ "</header>\n"
-							+ message
-							+ "<section>\n");
+		// print HTML
+		out.println("<!DOCTYPE html>" 
+				  + "<html>" 
+				  // HTML head
+				  + "<head>" 
+				  + "<meta charset=\"UTF-8\">"
+				  + "<title>Assign Employees</title>" 
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/style.css\" />" 
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/font-awesome/css/font-awesome.min.css\" />" 
+				  + "</head>" 
+				  // HTML body
+				  + "<body>"
+				  + "<div id=\"wrapper\">" 
+				  + "<header>" 
+				  + "<div class=\"row\">" 
+				  + "<div class=\"small-8 medium-6 columns\">"
+				  // title
+				  + "<h1>Assign Employees</h1><a href=\"../Project?id=" + projectID + "\" class=\"back\">"
+				  + "<i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a></div>"
+				  // menu
+				  + "<div class=\"small-12 medium-6 columns\">" 
+				  + "<div class=\"float-right menu\">"
+				  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a>"
+				  + "<a href=\"newProject\" class=\"button\">New Project</a>" 
+				  + "<a href=\"newEmployee\" class=\"button\">New Employee</a>"
+				  + "<a href=\"help\" class=\"button\">Help</a>" 
+				  + "<a href=\"logout\" class=\"button\">Logout</a>" 
+				  + "</div>" 
+				  + "</div>"
+				  + "</div>" 
+				  + "</header>"
+				  + "<section>");
+		// print HTML section with form
 		out.println("<div class=\"row\">"
-				+ "<form method=\"post\" action=\"../assignEmployee\" data-abide novalidate>"
+				  + "<form method=\"post\" action=\"../assignEmployee\" data-abide novalidate>"
 			
-				+ "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
-				+ "<p><i class=\"fa fa-exclamation-triangle\"></i> Please choose at least one task.</p></div>"
+				  // error message (if something's wrong with the form)
+				  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
+				  + "<p><i class=\"fa fa-exclamation-triangle\"></i> Please choose at least one task.</p></div>"
 
-				+ "<input type=\"hidden\" name=\"projectID\" value=\"" + projectID + "\">"
-				+ "<input type=\"hidden\" name=\"employeeID\" value=\"" + employeeID + "\">"
-				+ "<label class=\"small-12 medium-6 end columns\">Task "
-				+ "<span class=\"grey\">multiple options possible</span> <select name=\"tasks\" size=\"5\" multiple required>");
+				  // project and employee ID
+				  + "<input type=\"hidden\" name=\"projectID\" value=\"" + projectID + "\">"
+				  + "<input type=\"hidden\" name=\"employeeID\" value=\"" + employeeID + "\">"
+				  
+				  // select tasks
+				  + "<label class=\"small-12 medium-6 end columns\">Task "
+				  + "<span class=\"grey\">multiple options possible</span> <select name=\"tasks\" size=\"5\" multiple required>");
 				
-				for (Task task : tasks){
-					int i = 0;
-					for (int assignedTask : assignedTasks){
-						if (task.getID() == assignedTask){
-							i++;
-						}
-					}
-					if (i == 0){
-						out.println("<option value =\"" + task.getID() + ";" + task.getName() + "\">" + task.getName() + "</option>");
-					}
+		// only tasks, the employee is not assigned to yet
+		for (ProjectTask task : tasks){
+			int i = 0;
+			for (int assignedTask : assignedTasks){
+				if (task.getID() == assignedTask){
+					i++;
 				}
-						
-				out.println("</select></label></div>");
+			}
+			if (i == 0){
+				out.println("<option value =\"" + task.getID() + ";" + task.getName() + "\">" + task.getName() + "</option>");
+			}
+		}
+				
+		out.println("</select></label></div>");
 	
+		// print return and submit buttons
 		out.println("<div class=\"row\">"
-				+ "<a href=\"../assignEmployee?projectID=" + projectID +"&employee=" + employeeID + "\" class=\"small-3 columns large button back-button\"><i class=\"fa fa-chevron-left\"></i>  Choose Employee</a>"
-				+ "<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Assign\">"
-				+ "</div>");
+					
+				  + "<a href=\"../assignEmployee?projectID=" + projectID +"&employee=" + employeeID + "\" class=\"small-3 columns large button back-button\"><i class=\"fa fa-chevron-left\"></i>  Choose Employee</a>"
+				  + "<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Assign\">"
+				  + "</div>");
 		
 		out.println("</section></div><script src=\"../../js/vendor/jquery.js\"></script><script src=\"../../js/vendor/foundation.min.js\"></script><script>$(document).foundation();</script></body></html>");
 			

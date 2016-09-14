@@ -1,0 +1,9 @@
+<div class="small-12 medium-6 columns">
+	<div class="float-right menu">
+		<a href="http://localhost:8080/Projektverwaltung/Overview" class="button">All Projects</a> 
+		<a href="http://localhost:8080/Projektverwaltung/newProject" class="button">New Project</a> 
+		<a href="http://localhost:8080/Projektverwaltung/newEmployee" class="button">New Employee</a> 
+		<a href="http://localhost:8080/Projektverwaltung/help" class="button">Help</a> 
+		<a href="http://localhost:8080/Projektverwaltung/logout" class="button">Logout</a> 
+	</div>
+</div>

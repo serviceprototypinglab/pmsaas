@@ -1,6 +1,7 @@
 package ch.zhaw.walj.projectmanagement;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Project {
 	
@@ -11,7 +12,7 @@ public class Project {
 	private String end;
 	private String currency;
 	private double budget;
-	private ArrayList<Task> tasks = new ArrayList<Task>();
+	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
 	private ArrayList<Workpackage> wps = new ArrayList<Workpackage>();
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
 	private ArrayList<Expense> expenses = new ArrayList<Expense>();
@@ -126,7 +127,7 @@ public class Project {
 		return nbrOfTasks;
 	}
 	
-	public ArrayList<Task> getTasks(){
+	public ArrayList<ProjectTask> getTasks(){
 		return tasks;		
 	}
 
@@ -151,6 +152,15 @@ public class Project {
 		return total;
 	}
 	
+	public String getTotalExpensesAsString(){
+		String budget;
+    	
+		double costs = getTotalExpenses();
+    	budget = String.format("%.2f", costs);
+    	
+    	return budget;
+	}
+	
 	
 	public int getNumberOfMonths(){
 		
@@ -160,5 +170,16 @@ public class Project {
 	
 	public int getMonthsBetween(String date){
 		return this.date.getMonthsBetween(start, date);
+	}
+	
+	
+	public int nbrOfDaysUntilEnd(Date currentDate){
+		int days = 0;
+		days = date.getDaysBetween(currentDate, end);
+		return days;
+	}
+
+	public ArrayList<Workpackage> getWorkpackages() {
+		return wps;
 	}
 }

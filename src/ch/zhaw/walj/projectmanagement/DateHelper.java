@@ -1,5 +1,9 @@
 package ch.zhaw.walj.projectmanagement;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * DateHelper has some useful methods for date strings 
@@ -46,8 +50,11 @@ public class DateHelper {
 	 */
 	public String getFormattedDate(String unformatted){
 		String[] helper = unformatted.split("-");
-		String formatted = helper[2] + "." + helper[1] + "." + helper[0];
-		return formatted;
+		if (helper.length == 3) {
+			String formatted = helper[2] + "." + helper[1] + "." + helper[0];
+			return formatted;
+		}
+		return unformatted;
 	}
 	
 	
@@ -119,5 +126,28 @@ public class DateHelper {
 		return getMonthsBetween(start, date);
 	}
 	
-	
+	public int getDaysBetween(Date startDate, String end){
+		int days = 0;
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+		try {		
+			Calendar cStart = Calendar.getInstance();
+			Calendar cEnd = Calendar.getInstance();
+						
+			String start = format.format(startDate);	
+			Date endDate = format.parse(end);
+			startDate = format.parse(start);
+			cStart.setTime(startDate);
+			cEnd.setTime(endDate);
+			if (cStart.after(cEnd)){
+				return 0;
+			}
+			while (!(cStart.getTime().equals(cEnd.getTime()))) {
+				cStart.add(Calendar.DAY_OF_MONTH, 1);
+				days++;
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return days;
+	}
 }

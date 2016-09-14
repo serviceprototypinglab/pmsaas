@@ -8,7 +8,6 @@ hr {
 	display: none;
 }
 
-
 body {
 	background-color: #0065a6;
 }
@@ -39,6 +38,10 @@ h1 {
 
 h2, h3 {
 	margin-left: 15px;	
+}
+
+.panel h2, .panel h3 {
+	margin-left: 0;
 }
 
 .add {
@@ -166,7 +169,7 @@ img {
 }
 
 .no-padding {
-	padding: 0;
+	padding: 5px;
 	margin-bottom: 10px;
 }
 

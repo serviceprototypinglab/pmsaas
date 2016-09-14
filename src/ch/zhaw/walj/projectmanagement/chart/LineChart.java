@@ -18,12 +18,12 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import ch.zhaw.walj.projectmanagement.Effort;
 import ch.zhaw.walj.projectmanagement.Project;
-import ch.zhaw.walj.projectmanagement.Task;
+import ch.zhaw.walj.projectmanagement.ProjectTask;
 
 public class LineChart {
 
 	private Project project;
-	private ArrayList<Task> tasks = new ArrayList<Task>();
+	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
 	
 		
 	public LineChart(Project project) {
@@ -32,7 +32,7 @@ public class LineChart {
 			
 	}
     
-    public XYDataset createDataset() throws SQLException{
+    private XYDataset createDataset() throws SQLException{
     	Effort effort = new Effort(tasks);
     	double plannedEffort = 0;
     	double bookedEffort = 0;
@@ -77,8 +77,8 @@ public class LineChart {
 	    
 	    int width = 600; /* Width of the image */
 	    int height = 400; /* Height of the image */ 
-	    File pieChart = new File(path + "EffortProject" + project.getID() + ".jpg" ); 
-	    ChartUtilities.saveChartAsJPEG( pieChart , xylineChart , width , height );
+	    File lineChart = new File(path + "EffortProject" + project.getID() + ".jpg" ); 
+	    ChartUtilities.saveChartAsJPEG( lineChart , xylineChart , width , height );
     }
     
     

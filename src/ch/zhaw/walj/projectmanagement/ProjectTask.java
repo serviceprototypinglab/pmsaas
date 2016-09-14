@@ -1,8 +1,11 @@
 package ch.zhaw.walj.projectmanagement;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
-public class Task {
+public class ProjectTask {
 
 	private int id;
 	private int workpackageID;
@@ -18,7 +21,7 @@ public class Task {
 	private DateHelper dateHelper = new DateHelper();
 
 	
-	public Task(int id, int workpackageID, String name, String start, String projectStart, String end, int pms, double budget){
+	public ProjectTask(int id, int workpackageID, String name, String start, String projectStart, String end, int pms, double budget){
 		this.id = id;
 		this.workpackageID = workpackageID;
 		this.name = name;
@@ -61,9 +64,21 @@ public class Task {
 	public String getStart(){
 		return start;
 	}
+
+	public Date getStartAsDate() throws ParseException{
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+		Date date = format.parse(start);
+		return date;
+	}
 	
 	public String getEnd(){
 		return end;
+	}
+	
+	public Date getEndAsDate() throws ParseException{
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+		Date date = format.parse(end);
+		return date;
 	}
 	
 	public String getDuration(){

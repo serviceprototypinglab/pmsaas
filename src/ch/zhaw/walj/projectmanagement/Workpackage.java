@@ -1,6 +1,9 @@
 package ch.zhaw.walj.projectmanagement;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Workpackage {
 	
@@ -9,7 +12,7 @@ public class Workpackage {
 	private String name;
 	private String start;
 	private String end;
-	private ArrayList<Task> tasks = new ArrayList<Task>();
+	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
 	
 	public Workpackage(int id, int projectID, String name, String start, String end){
@@ -20,7 +23,7 @@ public class Workpackage {
 		this.end = end;		
 	}
 	
-	public void addTask(Task task){
+	public void addTask(ProjectTask task){
 		tasks.add(task);		
 	}
 	
@@ -28,12 +31,12 @@ public class Workpackage {
 		return tasks.size();
 	}	
 	
-	public ArrayList<Task> getTasks(){
+	public ArrayList<ProjectTask> getTasks(){
 		return tasks;		
 	}
 
 	public ArrayList<Employee> addEmployees(){
-		for(Task task : tasks){
+		for(ProjectTask task : tasks){
 		int nbrOfEmployees = task.nbrOfEmployees();
 			for (int i = 0; i < nbrOfEmployees; i++){
 				Employee employee = task.getEmployee(i);
@@ -77,8 +80,20 @@ public class Workpackage {
 		return start;
 	}
 	
+	public Date getStartAsDate() throws ParseException{
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+		Date date = format.parse(start);
+		return date;
+	}
+	
 	public String getEnd(){
 		return end;
+	}
+	
+	public Date getEndAsDate() throws ParseException{
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+		Date date = format.parse(end);
+		return date;
 	}
 	
 	public String getDuration(){

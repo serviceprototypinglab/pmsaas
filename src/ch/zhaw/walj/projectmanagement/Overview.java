@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,154 +13,160 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.zhaw.walj.projectmanagement.chart.PieChart;
+
 /**
  * Servlet implementation class Overview
  */
+
+// TODO übersicht richtige werte (anstatt XX days until...)
 @SuppressWarnings("serial")
 @WebServlet("/Overview")
 public class Overview extends HttpServlet {
 	
-	private String		url			= "jdbc:mysql://localhost:3306/";
-	private String		dbName		= "projectmanagement";
-	private String		userName	= "Janine";
-	private String		password	= "test123";
+	private String url = "jdbc:mysql://localhost:3306/";
+	private String dbName = "projectmanagement";
+	private String userName	= "Janine";
+	private String password	= "test123";
 
-	private ResultSet	resProjects;
-	private ResultSet	resWorkpackages;
-	private ResultSet	resTasks;
-	private ResultSet	resEmployees;
-	
+	private ResultSet resProjects;
 
-	private DateHelper dateFormatter = new DateHelper();
-	
-	private int	i = 0;
+	private DateHelper dateHelper = new DateHelper();
+	private PieChart piechart;
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
 
 		DBConnection con = new DBConnection(url, dbName, userName, password);
-		DBConnection con2 = new DBConnection(url, dbName, userName, password);
-		DBConnection con3 = new DBConnection(url, dbName, userName, password);
-		DBConnection con4 = new DBConnection(url, dbName, userName, password);
 		
-		
+		// TODO employee id
+		// get all projects where the current user is supervisor
 		resProjects = con.getProjects(1);
-		
 		
 		PrintWriter out = response.getWriter();
 		
-		// write HTML (head, header, nav)
-		out.println("<!DOCTYPE html>\n" 
-						+ "\t<html>\n" 
-							+ "\t\t<head>\n" 
-								+ "\t\t\t<meta charset=\"UTF-8\">\n"
-								+ "\t\t\t<title>Projects</title>\n" 
-								+ "\t\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/foundation.css\" />\n"
-								+ "\t\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />\n" 
-								+ "\t\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/font-awesome/css/font-awesome.min.css\" />\n" 
-								+ "\t\t\t<script>function Redirect(ID) {var url = \"Overview/Project?id=\" + ID; window.location=url;}</script>\n"
-							+ "\t\t</head>\n" 
-							+ "\t\t<body>\n"
-								+ "\t\t\t<div id=\"wrapper\">\n" 
-									+ "\t\t\t\t<header>\n" 
-										+ "\t\t\t\t\t<div class=\"row\">\n" 
-											+ "\t\t\t\t\t\t<div class=\"small-8 medium-6 columns\"><h1>Projects</h1></div>\n"
-											+ "\t\t\t\t\t\t<div class=\"small-12 medium-6 columns\">\n" 
-												+ "\t\t\t\t\t\t\t<div class=\"float-right menu\">\n"
-													+ "\t\t\t\t\t\t\t\t<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a>\n"
-													+ "\t\t\t\t\t\t\t\t<a href=\"newProject\" class=\"button\">New Project</a>\n" 
-													+ "\t\t\t\t\t\t\t\t<a href=\"newEmployee\" class=\"button\">New Employee</a>\n"
-													+ "\t\t\t\t\t\t\t\t<a href=\"help\" class=\"button\">Help</a>\n" 
-													+ "\t\t\t\t\t\t\t\t<a href=\"logout\" class=\"button\">Logout</a>\n" 
-												+ "\t\t\t\t\t\t\t</div>\n" 
-											+ "\t\t\t\t\t\t</div>\n"
-										+ "\t\t\t\t\t</div>\n" 
-									+ "\t\t\t\t</header>\n" 
-								+ "\t\t\t<section>\n" 
-								+ "\t\t\t<div class=\"row\">\n" 
-									+ "\t\t\t\t<ul class=\"accordion\" data-accordion>");
+		out.println("<!DOCTYPE html>" 
+				  + "<html>"
+				  // HTML head
+				  + "<head>" 
+				  + "<meta charset=\"UTF-8\">"
+				  + "<title>Projects</title>" 
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />" 
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/font-awesome/css/font-awesome.min.css\" />" 
+				  // function to redirect after click on select button
+				  + "<script>function Redirect(ID) {var url = \"Overview/Project?id=\" + ID; window.location=url;}</script>"
+				  + "</head>" 
+				  + "<body>"
+				  + "<div id=\"wrapper\">" 
+				  + "<header>" 
+				  + "<div class=\"row\">" 
+				  + "<div class=\"small-8 medium-6 columns\">"
+				  // title
+				  + "<h1>Projects</h1>"
+				  + "</div>"
+				  // menu
+				  + "<div class=\"small-12 medium-6 columns\">" 
+				  + "<div class=\"float-right menu\">"
+				  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a> "
+				  + "<a href=\"newProject\" class=\"button\">New Project</a> " 
+				  + "<a href=\"newEmployee\" class=\"button\">New Employee</a> "
+				  + "<a href=\"help\" class=\"button\">Help</a> " 
+				  + "<a href=\"logout\" class=\"button\">Logout</a> " 
+				  + "</div>" 
+				  + "</div>"
+				  + "</div>" 
+				  + "</header>" 
+				  // HTML section with list of all projects
+				  + "<section>" 
+				  + "<div class=\"row\">" 
+				  + "<ul class=\"accordion\" data-accordion>");
 		
 		try {
-			// write Projectinformation
+			// write project information
 			while (resProjects.next()) {
 				
-				ArrayList<String> employees = new ArrayList<String>();
-				String allEmployees = null;
-
-				int projectID = resProjects.getInt("ProjectIDFS");
-				String projectShortname = resProjects.getString("ProjectShortname");
-				String projectName = resProjects.getString("ProjectName");
-				String projectStart = resProjects.getString("ProjectStart");
-				String projectEnd = resProjects.getString("ProjectEnd");
-				String projectCurrency = resProjects.getString("Currency");
-				double totalBudget = resProjects.getDouble("TotalBudget");
-				String partner = resProjects.getString("Partner");
+				// new project with data from the database
+				Project project = con.getProject(resProjects.getInt("ProjectIDFS"));
+				// get all employees
+				ArrayList <Employee> employee = project.getEmployees();
 				
-				resWorkpackages = con2.getWorkpackages(resProjects.getInt("ProjectIDFS"));
-				int nbrOfWP = 0;
-				int nbrOfTasks = 0;
-				for (nbrOfWP = 0; resWorkpackages.next(); nbrOfWP++){
-					resTasks = con3.getTasks(resWorkpackages.getInt("WorkpackageID"));
-					for (nbrOfTasks = 0; resTasks.next(); nbrOfTasks++){			
-						
-						
-						resEmployees = con4.getEmployees(resTasks.getInt("TaskID"));
-						while (resEmployees.next()){
-							String firstname = resEmployees.getString("Firstname");
-							String lastname = resEmployees.getString("Lastname");
-							String employee =  firstname + " " + lastname; 
-							if (!employees.contains(employee)){
-								employees.add(employee);
-							}
-							allEmployees = employees.get(0);
-							for (i = 1; i < employees.size(); i++){
-								allEmployees += ", " + employees.get(i);
-							}
-						}
-					};
-				};
-
+				String employees = "";
+				
+				// string of all employee names
+				if (!employee.isEmpty()){
+					employees = employee.get(0).getName();
+					for (int i = 1; i < employee.size(); i++){
+						employees += ", " + employee.get(i).getName();
+					}
+				} else {
+					employees = "no employees assigned";
+				}
+				
+				// get number of days left to end of project
+				Date date = new Date();
+				String daysUntilEnd = "";
+				int days = dateHelper.getDaysBetween(date, project.getEnd());
+				if (days == 0){
+					daysUntilEnd = "Project finished";
+				} else {
+					daysUntilEnd = "Project ends in " + days + " days";
+				}
+		
+				piechart = new PieChart(project);
 				
 				
-				out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">");
-				out.println("<span class=\"bigtext small-3 columns down\">" + projectShortname + "</span>");
-				out.println("<span class=\"middletext small-6 columns down\">" + projectName + "</span>");
-				out.println("<button class=\"button small-2 columns down smalltext\" onclick=\"Redirect(" + projectID + ");\">Select</button>");
-				out.println("<span class=\"success badge errorbadge\">0</span>");
-				out.println("</a>");
-				out.println("<div class=\"accordion-content\" data-tab-content>");
-				// Write Duration
-				out.println(
-						"<p><span class=\"small-3 columns\">Projectduration</span><span class=\"small-4 columns\">" + dateFormatter.getFormattedDate(projectStart)
-								+ " - " + dateFormatter.getFormattedDate(projectEnd) + "</span><span class=\"small-4 end columns align-right\">Project ends in X Days</span></p>");
-				
-				// Write Budget
-				out.println("<p><span class=\"small-3 columns\">Budget</span><span class=\"small-4 columns\">" + projectCurrency + " "
-						+ totalBudget + "</span><span class=\"small-4 end columns align-right\">" + projectCurrency
-						+ " XXXXX left</span></p>");
-
-				// Write Workpackages
-				out.println("<p><span class=\"small-3 columns\">Workpackages</span><span class=\"small-4 columns\">" + nbrOfWP 
-						+ "</span><span class=\"small-4 end columns align-right\">"
-						+ "Workpackage 1 ends in 5 days</span></p>");
-
-				// Write Tasks
-				out.println("<p><span class=\"small-3 columns\">Tasks</span><span class=\"small-4 columns\">" + nbrOfTasks 
-						+ "</span><span class=\"small-4 end columns align-right\">" 
-						+ "Task 2 ends in 5 days</span></p>");
-				
-				// Write Employees
-				out.println("<p><span class=\"small-3 columns\">Employees</span><span class=\"small-4 columns\">" + employees.size() 
-						+ "</span><span class=\"small-4 end columns align-right\">" + allEmployees
-						+ "</span></p>");
-				
-				// Write Partners
-				out.println("<p><span class=\"small-3 columns\">Partner</span><span class=\"small-4 end columns\">" + partner + 
-						"</span></p>");
-				
-				out.println("</div>");
-				out.println("</li>");
+				// print list item
+				out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
+						  + "<span class=\"bigtext small-3 columns down\">" + project.getShortname() + "</span>"
+						  + "<span class=\"middletext small-6 columns down\">" + project.getName() + "</span>"
+						  + "<button class=\"button small-2 columns down smalltext\" onclick=\"Redirect(" + project.getID() + ");\">Select</button>"
+						  + "<span class=\"success badge errorbadge\">0</span>"
+						  + "</a>"
+						  + "<div class=\"accordion-content\" data-tab-content>"
+						  // Write Duration
+						  +"<p>"
+						  + "<span class=\"small-3 columns\">Projectduration</span>"
+						  + "<span class=\"small-4 columns\">" 
+						  + dateHelper.getFormattedDate(project.getStart()) + " - " + dateHelper.getFormattedDate(project.getEnd()) + "</span>"
+				  		  + "<span class=\"small-4 end columns align-right\">" + daysUntilEnd + "</span>"
+		  		  		  + "</p>"
+		  		  		  // Write Budget
+		  		  		  + "<p>"
+		  		  		  + "<span class=\"small-3 columns\">Budget</span>"
+		  		  		  + "<span class=\"small-4 columns\">" + project.getBudgetFormatted() + "</span>"
+		  		  		  + "<span class=\"small-4 end columns align-right\">" + project.getCurrency()
+		  		  		  + " " + piechart.getRemainingBudgetAsString() + " left</span>"
+		  		  		  + "</p>"
+						  // Write Workpackages
+						  + "<p>"
+						  + "<span class=\"small-3 columns\">Workpackages</span>"
+						  + "<span class=\"small-4 columns\">" + project.nbrOfWorkpackages() + "</span>"
+						  + "<span class=\"small-4 end columns align-right\">"
+						  + "-"
+						  + "</span>"
+						  + "</p>"
+						  // Write Tasks
+						  + "<p>"
+						  + "<span class=\"small-3 columns\">Tasks</span>"
+						  + "<span class=\"small-4 columns\">" + project.nbrOfTasks() + "</span>"
+						  + "<span class=\"small-4 end columns align-right\">" 
+						  + "-"
+						  + "</span>"
+						  + "</p>"
+						  // Write Employees
+						  + "<p>"
+						  + "<span class=\"small-3 columns\">Employees</span>"
+						  + "<span class=\"small-4 columns\">" + project.nbrOfEmployees() 
+						  + "</span><span class=\"small-4 end columns align-right\">" + employees
+						  + "</span></p>"
+						  // Write Partners
+						  + "<p><span class=\"small-3 columns\">Partner</span>"
+						  + "<span class=\"small-4 end columns\">" + project.getPartners() + "</span>"
+						  + "</p>"
+						  + "</div>"
+						  + "</li>");
 				
 				
 			}
@@ -167,8 +174,15 @@ public class Overview extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		out.println(
-				"</ul></div></section></div><script src=\"js/vendor/jquery.js\"></script><script src=\"js/vendor/foundation.min.js\"></script><script>$(document).foundation();</script></body></html>");
+		out.println("</ul>"
+				  + "</div>"
+				  + "</section>"
+				  + "</div>"
+				  + "<script src=\"js/vendor/jquery.js\"></script>"
+				  + "<script src=\"js/vendor/foundation.min.js\"></script>"
+				  + "<script>$(document).foundation();</script>"
+				  + "</body>"
+				  + "</html>");
 	}
 	
 }
