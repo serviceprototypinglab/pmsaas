@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.zhaw.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.walj.projectmanagement.util.Employee;
+import ch.zhaw.walj.projectmanagement.util.Project;
+
 /**
  * Projectmanagement tool, Page to add expenses
  * 
@@ -19,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 @SuppressWarnings("serial")
-@WebServlet("/Overview/addExpense")
+@WebServlet("/Projects/Overview/addExpense")
 public class AddExpense extends HttpServlet {
 
 	// Database access information
@@ -61,9 +65,9 @@ public class AddExpense extends HttpServlet {
 				  + "<head>" 
 				  + "<meta charset=\"UTF-8\">" 
 				  + "<title>Add Expenses</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/style.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/font-awesome/css/font-awesome.min.css\" />"
 				  + "</head>" 
 				  // HTML body
 				  + "<body>" 
@@ -76,11 +80,11 @@ public class AddExpense extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">" 
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a>"
-				  + "<a href=\"newProject\" class=\"button\">New Project</a>"
-				  + "<a href=\"newEmployee\" class=\"button\">New Employee</a>"
-				  + "<a href=\"help\" class=\"button\">Help</a>" 
-				  + "<a href=\"logout\" class=\"button\">Logout</a>"
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> " 
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
 				  + "</div></div></div></header><section>");
 
 		// print HTML section with form
@@ -135,7 +139,13 @@ public class AddExpense extends HttpServlet {
 				  + "<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Add Expense\">"
 				  + "</div>");
 
-		out.println("</section></div><script src=\"../js/vendor/jquery.js\"></script><script src=\"../js/vendor/foundation.min.js\"></script><script>$(document).foundation();</script></body></html>");
+		out.println("</section>"
+				  + "</div>"
+				  + "<script src=\"../../js/vendor/jquery.js\"></script>"
+				  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
+				  + "<script>$(document).foundation();</script>"
+				  + "</body>"
+				  + "</html>");
 
 	}
 
@@ -203,9 +213,9 @@ public class AddExpense extends HttpServlet {
 				  + "<head>" 
 				  + "<meta charset=\"UTF-8\">" 
 				  + "<title>Add Expenses</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/style.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/font-awesome/css/font-awesome.min.css\" />"
 				  + "</head>" 
 				  // HTML body
 				  + "<body>" 
@@ -220,10 +230,11 @@ public class AddExpense extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">" 
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a>"
-				  + "<a href=\"newProject\" class=\"button\">New Project</a>"
-				  + "<a href=\"newEmployee\" class=\"button\">New Employee</a>"
-				  + "<a href=\"help\" class=\"button\">Help</a>" + "<a href=\"logout\" class=\"button\">Logout</a>"
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> " 
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
 				  + "</div></div></div></header><section>" 
 				  + message);
 
@@ -276,11 +287,16 @@ public class AddExpense extends HttpServlet {
 
 		// print HTML submit button
 		out.println("<div class=\"row\">"
-				+ "<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Add Expense\">"
-				+ "</div>");
+				  + "<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Add Expense\">"
+				  + "</div>");
 
-		out.println(
-				"</section></div><script src=\"../js/vendor/jquery.js\"></script><script src=\"../js/vendor/foundation.min.js\"></script><script>$(document).foundation();</script></body></html>");
+		out.println("</section>"
+				  + "</div>"
+				  + "<script src=\"../../js/vendor/jquery.js\"></script>"
+				  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
+				  + "<script>$(document).foundation();</script>"
+				  + "</body>"
+				  + "</html>");
 
 	}
 }

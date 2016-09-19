@@ -16,9 +16,9 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import ch.zhaw.walj.projectmanagement.Effort;
-import ch.zhaw.walj.projectmanagement.Project;
-import ch.zhaw.walj.projectmanagement.ProjectTask;
+import ch.zhaw.walj.projectmanagement.util.Effort;
+import ch.zhaw.walj.projectmanagement.util.Project;
+import ch.zhaw.walj.projectmanagement.util.ProjectTask;
 
 public class LineChart {
 

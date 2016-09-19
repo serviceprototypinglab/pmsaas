@@ -14,6 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.walj.projectmanagement.chart.PieChart;
+import ch.zhaw.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.walj.projectmanagement.util.DateHelper;
+import ch.zhaw.walj.projectmanagement.util.Employee;
+import ch.zhaw.walj.projectmanagement.util.Project;
 
 /**
  * Servlet implementation class Overview
@@ -21,7 +25,7 @@ import ch.zhaw.walj.projectmanagement.chart.PieChart;
 
 // TODO übersicht richtige werte (anstatt XX days until...)
 @SuppressWarnings("serial")
-@WebServlet("/Overview")
+@WebServlet("/Projects/Overview")
 public class Overview extends HttpServlet {
 	
 	private String url = "jdbc:mysql://localhost:3306/";
@@ -52,9 +56,9 @@ public class Overview extends HttpServlet {
 				  + "<head>" 
 				  + "<meta charset=\"UTF-8\">"
 				  + "<title>Projects</title>" 
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />" 
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/font-awesome/css/font-awesome.min.css\" />" 
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />" 
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\" />" 
 				  // function to redirect after click on select button
 				  + "<script>function Redirect(ID) {var url = \"Overview/Project?id=\" + ID; window.location=url;}</script>"
 				  + "</head>" 
@@ -69,11 +73,11 @@ public class Overview extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">" 
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"newProject\" class=\"button\">New Project</a> " 
-				  + "<a href=\"newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"help\" class=\"button\">Help</a> " 
-				  + "<a href=\"logout\" class=\"button\">Logout</a> " 
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> " 
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> " 
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> " 
 				  + "</div>" 
 				  + "</div>"
 				  + "</div>" 
@@ -178,8 +182,8 @@ public class Overview extends HttpServlet {
 				  + "</div>"
 				  + "</section>"
 				  + "</div>"
-				  + "<script src=\"js/vendor/jquery.js\"></script>"
-				  + "<script src=\"js/vendor/foundation.min.js\"></script>"
+				  + "<script src=\"../js/vendor/jquery.js\"></script>"
+				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
 				  + "<script>$(document).foundation();</script>"
 				  + "</body>"
 				  + "</html>");

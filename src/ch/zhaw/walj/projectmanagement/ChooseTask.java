@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.zhaw.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.walj.projectmanagement.util.Project;
+import ch.zhaw.walj.projectmanagement.util.ProjectTask;
+
 /**
  * Projectmanagement tool, Page to assign employees (choose task)
  * 
@@ -18,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * 
  */
 @SuppressWarnings("serial")
-@WebServlet("/Overview/assignEmployee/chooseTask")
+@WebServlet("/Projects/Overview/assignEmployee/chooseTask")
 public class ChooseTask extends HttpServlet{
 
 	// database access information
@@ -29,8 +33,7 @@ public class ChooseTask extends HttpServlet{
 	
 	// connection to database
 	private DBConnection con = new DBConnection(url, dbName, userName, password);
-	
-	
+		
 	
 	@Override
 	// method to handle post-requests
@@ -84,11 +87,11 @@ public class ChooseTask extends HttpServlet{
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">" 
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a>"
-				  + "<a href=\"newProject\" class=\"button\">New Project</a>" 
-				  + "<a href=\"newEmployee\" class=\"button\">New Employee</a>"
-				  + "<a href=\"help\" class=\"button\">Help</a>" 
-				  + "<a href=\"logout\" class=\"button\">Logout</a>" 
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> " 
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> " 
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> " 
 				  + "</div>" 
 				  + "</div>"
 				  + "</div>" 
@@ -132,7 +135,13 @@ public class ChooseTask extends HttpServlet{
 				  + "<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Assign\">"
 				  + "</div>");
 		
-		out.println("</section></div><script src=\"../../js/vendor/jquery.js\"></script><script src=\"../../js/vendor/foundation.min.js\"></script><script>$(document).foundation();</script></body></html>");
+		out.println("</section>"
+				  + "</div>"
+				  + "<script src=\"../../js/vendor/jquery.js\"></script>"
+				  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
+				  + "<script>$(document).foundation();</script>"
+				  + "</body>"
+				  + "</html>");
 			
 		
 	}

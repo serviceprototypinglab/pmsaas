@@ -16,9 +16,9 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
-import ch.zhaw.walj.projectmanagement.Employee;
-import ch.zhaw.walj.projectmanagement.Project;
-import ch.zhaw.walj.projectmanagement.ProjectTask;
+import ch.zhaw.walj.projectmanagement.util.Employee;
+import ch.zhaw.walj.projectmanagement.util.Project;
+import ch.zhaw.walj.projectmanagement.util.ProjectTask;
 
 public class PieChart {
 	

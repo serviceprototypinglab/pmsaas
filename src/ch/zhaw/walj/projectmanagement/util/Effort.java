@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement;
+package ch.zhaw.walj.projectmanagement.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

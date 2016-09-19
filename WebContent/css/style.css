@@ -110,6 +110,11 @@ h2, h3 {
 	text-align: right;
 }
 
+.align-center {
+	text-align: center;
+	float: none;
+}
+
 .right {
 	float: right;
 }
@@ -187,4 +192,8 @@ img {
 .menu {
 	position: relative;
 	top: 15px;
+}
+
+.button-group {
+	margin-left: 5px;
 }

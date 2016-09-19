@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.zhaw.walj.projectmanagement.util.DBConnection;
+
 // TODO datum normale eingabe
 // TODO /** kommentare
 @SuppressWarnings("serial")
-@WebServlet("/newProject")
+@WebServlet("/Projects/newProject")
 public class NewProject extends HttpServlet {
 	
 	// Variables for the database connection
@@ -60,9 +62,9 @@ public class NewProject extends HttpServlet {
 				  + "<head>"
 				  + "<meta charset=\"UTF-8\">"
 				  + "<title>New Project</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/font-awesome/css/font-awesome.min.css\">"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\">"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
 				  // JavaScript functions to add fields for new Workpackages or new Tasks
 				  + "<script type=\"text/javascript\">"
 				  // add fields for Workpackages
@@ -112,11 +114,11 @@ public class NewProject extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">"
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"newProject\" class=\"button\">New Project</a> "
-				  + "<a href=\"newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"help\" class=\"button\">Help</a> "
-				  + "<a href=\"logout\" class=\"button\">Logout</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
 				  + "</div>"
 				  + "</div>"
 				  + "</div>"
@@ -244,8 +246,8 @@ public class NewProject extends HttpServlet {
 				  +	"</div>"
 				  + "</section>"
 				  // required JavaScript
-				  + "<script src=\"js/vendor/jquery.js\"></script>"
-				  + "<script src=\"js/vendor/foundation.min.js\"></script>"
+				  + "<script src=\"../js/vendor/jquery.js\"></script>"
+				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
 				  + "<script>$(document).foundation();</script>"
 				  + "</body></html>");
 	}
@@ -329,7 +331,7 @@ public class NewProject extends HttpServlet {
 					  + "<p>Currency: " + pCurrency + ""
 					  + "<p>Duration: " + pStart + " - " + pEnd + "</p>"
 					  + "<p>Partners: " + pPartners + "</p>"
-					  + "<a href=\"Overview/Project?id=" + pID + "\">Klick here to go to the project overview</a>"
+					  + "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + pID + "\">Klick here to go to the project overview</a>"
 					  + "</div>";
 			
 		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException | ParseException e) {
@@ -346,9 +348,9 @@ public class NewProject extends HttpServlet {
 				  + "<head>"
 				  + "<meta charset=\"UTF-8\">"
 				  + "<title>New Project</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/font-awesome/css/font-awesome.min.css\">"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\">"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
 				  // JavaScript functions to add fields for new Workpackages or new Tasks
 				  + "<script type=\"text/javascript\">"
 				  // add fields for Workpackages
@@ -398,11 +400,11 @@ public class NewProject extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">"
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"newProject\" class=\"button\">New Project</a> "
-				  + "<a href=\"newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"help\" class=\"button\">Help</a> "
-				  + "<a href=\"logout\" class=\"button\">Logout</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
 				  + "</div>"
 				  + "</div>"
 				  + "</header>"
@@ -532,8 +534,8 @@ public class NewProject extends HttpServlet {
 				  +	"</div>"
 				  + "</section>"
 				  // required JavaScript
-				  + "<script src=\"js/vendor/jquery.js\"></script>"
-				  + "<script src=\"js/vendor/foundation.min.js\"></script>"
+				  + "<script src=\"../js/vendor/jquery.js\"></script>"
+				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
 				  + "<script>$(document).foundation();</script>"
 				  + "</body>"
 				  + "</html>");

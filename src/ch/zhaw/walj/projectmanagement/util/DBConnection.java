@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement;
+package ch.zhaw.walj.projectmanagement.util;
 
 import java.security.SecureRandom;
 import java.sql.Connection;
@@ -636,5 +636,16 @@ public class DBConnection {
 				+ hours + ");";
 
 		st.executeUpdate(query);
+	}
+	
+	public int findUser(String user, String password){
+		try {
+			query = "SELECT * from Employees WHERE Mail ='" + user + "' and Password = '" + password + "'";
+			res = st.executeQuery(query);
+			res.next();
+			return res.getInt("EmployeeID");
+		} catch (SQLException e) {
+			return 0;
+		}
 	}
 }

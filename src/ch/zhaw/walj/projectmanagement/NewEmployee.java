@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.zhaw.walj.projectmanagement.util.DBConnection;
+
 /**
  * Projectmanagement tool, Page to assign employees (choose task)
  * 
@@ -17,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * 
  */
 @SuppressWarnings("serial")
-@WebServlet("/newEmployee")
+@WebServlet("/Projects/newEmployee")
 public class NewEmployee extends HttpServlet {
 	
 	// variable declaration
@@ -54,8 +56,8 @@ public class NewEmployee extends HttpServlet {
 				  + "<head>"
 				  + "<meta charset=\"UTF-8\">"
 				  + "<title>New Employee</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
 				  + "</head>"
 				  // HTML body
 				  + "<body>"
@@ -69,12 +71,14 @@ public class NewEmployee extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">"
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"newProject\" class=\"button\">New Project</a> "
-				  + "<a href=\"newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"help\" class=\"button\">Help</a> "
-				  + "<a href=\"logout\" class=\"button\">Logout</a> "
-				  + "</div></div></div>"
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
+				  + "</div>"
+				  + "</div>"
+				  + "</div>"
 				  + "</header>"
 				  // HTML section with form
 				  + "<section>"
@@ -113,8 +117,8 @@ public class NewEmployee extends HttpServlet {
 				  + "</form>"
 				  + "</section>"
 				  // required JavaScript
-				  + "<script src=\"js/vendor/jquery.js\"></script>"
-				  + "<script src=\"js/vendor/foundation.min.js\"></script>"
+				  + "<script src=\"../js/vendor/jquery.js\"></script>"
+				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
 				  + "<script>$(document).foundation();</script>"
 				  + "</div>"
 				  + "</body>"
@@ -159,7 +163,7 @@ public class NewEmployee extends HttpServlet {
 					+ "<p>Kuerzel: " + kuerzel + "</p>"
 					+ "<p>Mail: " + mail + "</p>"
 					+ "<p>Wage: " + wage + "</p>"
-					+ "<a href=\"#\">If you want to assign this employee to a task, klick here</a>"
+					+ "<a href=\"#\">If you want to assign this employee to a task, klick here</a>" // TODO insert correct link
 					+ "</div></div>";			
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -174,8 +178,8 @@ public class NewEmployee extends HttpServlet {
 				  + "<head>"
 				  + "<meta charset=\"UTF-8\">"
 				  + "<title>New Employee</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
 				  + "</head>"
 				  + "<body>"
 				  + "<div id=\"wrapper\">"
@@ -188,11 +192,11 @@ public class NewEmployee extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">"
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"newProject\" class=\"button\">New Project</a> "
-				  + "<a href=\"newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"help\" class=\"button\">Help</a> "
-				  + "<a href=\"logout\" class=\"button\">Logout</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
 				  + "</div></div></div>"
 				  + "</header>"
 				  // HTML section with message and form
@@ -233,8 +237,8 @@ public class NewEmployee extends HttpServlet {
 				  + "</form>"
 				  + "</section>"
 				  // required JavaScript
-				  + "<script src=\"js/vendor/jquery.js\"></script>"
-				  + "<script src=\"js/vendor/foundation.min.js\"></script>"
+				  + "<script src=\"../js/vendor/jquery.js\"></script>"
+				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
 				  + "<script>$(document).foundation();</script>"
 				  + "</div>"
 				  + "</body></html>");

@@ -18,10 +18,16 @@ import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.time.SimpleTimePeriod;
 
-import ch.zhaw.walj.projectmanagement.Project;
-import ch.zhaw.walj.projectmanagement.ProjectTask;
-import ch.zhaw.walj.projectmanagement.Workpackage;
+import ch.zhaw.walj.projectmanagement.util.Project;
+import ch.zhaw.walj.projectmanagement.util.ProjectTask;
+import ch.zhaw.walj.projectmanagement.util.Workpackage;
 
+/**
+ * creates a gantt chart with data from a given project
+ * 
+ * @author Janine Walther, ZHAW
+ *
+ */
 public class GanttChart {
 
 	private Project project;
@@ -43,7 +49,7 @@ public class GanttChart {
 	         nbrOfObjects++;
 	         for (ProjectTask t : tasks){
 	        	 if (t.getWorkpackageID() == w.getID()){
-	    	         s1.add(new Task(w.getName(), new SimpleTimePeriod(t.getStartAsDate(), t.getEndAsDate())));	  
+	    	         s1.add(new Task(t.getName(), new SimpleTimePeriod(t.getStartAsDate(), t.getEndAsDate())));	  
 	    	         nbrOfObjects++;  
 	        	 }
 	         }
@@ -72,7 +78,7 @@ public class GanttChart {
         
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
-        renderer.setSeriesPaint(0, new Color(0, 101, 166)); 
+        renderer.setSeriesPaint(0, new Color(0, 62, 102)); 
 	    
 	    int width = 1200; /* Width of the image */
 	    int height = (40 * nbrOfObjects) + 200; /* Height of the image */ 

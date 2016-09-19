@@ -2,6 +2,8 @@ package ch.zhaw.walj.projectmanagement;
 
 import java.sql.SQLException;
 
+import ch.zhaw.walj.projectmanagement.util.DBConnection;
+
 public class TestDBConnection {
 	
 	public static void main(String[] args)

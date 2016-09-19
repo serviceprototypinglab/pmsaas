@@ -15,12 +15,18 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.walj.projectmanagement.chart.GanttChart;
 import ch.zhaw.walj.projectmanagement.chart.LineChart;
 import ch.zhaw.walj.projectmanagement.chart.PieChart;
+import ch.zhaw.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.walj.projectmanagement.util.DateHelper;
+import ch.zhaw.walj.projectmanagement.util.Effort;
+import ch.zhaw.walj.projectmanagement.util.Employee;
+import ch.zhaw.walj.projectmanagement.util.Expense;
+import ch.zhaw.walj.projectmanagement.util.Project;
 
 /**
  * Servlet implementation class Overview
  */
 @SuppressWarnings("serial")
-@WebServlet("/Overview/Project")
+@WebServlet("/Projects/Overview/Project")
 public class ProjectOverview extends HttpServlet {
 	
 	// database access information
@@ -43,7 +49,7 @@ public class ProjectOverview extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
-
+				
 		int projectID = Integer.parseInt(request.getParameter("id"));
 		
 		DBConnection con = new DBConnection(url, dbName, userName, password);
@@ -79,9 +85,9 @@ public class ProjectOverview extends HttpServlet {
 					  + "<head>" 
 					  + "<meta charset=\"UTF-8\">"
 					  + "<title>Projects</title>" 
-					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />" 
-					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\" />" 
+					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/foundation.css\" />"
+					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/style.css\" />" 
+					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/font-awesome/css/font-awesome.min.css\" />" 
 					  + "</head>" 
 					  + "<body>"
 					  + "<div id=\"wrapper\">" 
@@ -94,11 +100,11 @@ public class ProjectOverview extends HttpServlet {
 					  // menu
 					  + "<div class=\"small-12 medium-6 columns\">" 
 					  + "<div class=\"float-right menu\">"
-					  + "<a href=\"/Projektverwaltung/Overview\" class=\"button\">All Projects</a> "
-					  + "<a href=\"../newProject\" class=\"button\">New Project</a> " 
-					  + "<a href=\"../newEmployee\" class=\"button\">New Employee</a> "
-					  + "<a href=\"help\" class=\"button\">Help</a> " 
-					  + "<a href=\"logout\" class=\"button\">Logout</a> " 
+					  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
+					  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> " 
+					  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
+					  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> " 
+					  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> " 
 					  + "</div>" 
 					  + "</div>"
 					  + "</div>" 
@@ -137,7 +143,7 @@ public class ProjectOverview extends HttpServlet {
 					  + "</div>"
 					  + "<div class=\"small-12 medium-8 columns\">"
 					  // load pie chart
-					  + "<img src=\"../Charts/BudgetProject" + project.getID() + ".jpg\">"
+					  + "<img src=\"../../Charts/BudgetProject" + project.getID() + ".jpg\">"
 					  + "</div>"
 					  // pie chart legend
 					  + "<div class=\"small-12 medium-4 columns\">"
@@ -211,9 +217,9 @@ public class ProjectOverview extends HttpServlet {
 				  // button to book hours
 				  + "<a class=\"button\" href=\"bookHours?projectID=" + project.getID() + "\">"
 				  + "<i class=\"fa fa-clock-o\"></i> Book Hours</a></div>"
+				  // line chart
 				  + "<div class=\"small-12 no-padding columns\">"
-				  // load line chart
-				  + "<img src=\"../Charts/EffortProject" + project.getID() + ".jpg\">"
+				  + "<img src=\"../../Charts/EffortProject" + project.getID() + ".jpg\">"
 				  + "</div>"
 				  // Effort per employee
 				  + "<div class=\"small-6 columns\">"
@@ -259,22 +265,24 @@ public class ProjectOverview extends HttpServlet {
 				  + "<div class=\"small-7 columns\">"
 				  + "<h2>Workpackages & Tasks</h2>"
 				  + "</div>"
+				  + "<div class=\"small-5 columns align-right padding-top-10\">"
+				  // button to add workpackages
+				  + "<a class=\"button\" href=\"addWorkpackage?projectID=" + project.getID() + "\">"
+				  + "<i class=\"fa fa-plus\"></i> Add Workpackage</a> "
+				  // button to add tasks
+				  + "<a class=\"button\" href=\"addTask?projectID=" + project.getID() + "\">"
+				  + "<i class=\"fa fa-plus\"></i> Add Task</a></div>"
 				  + "<div class=\"small-12 no-padding columns\">"
 				  // load gantt chart
-				  + "<img src=\"../Charts/GanttProject" + project.getID() + ".jpg\">"
-				  + "</div>"
-				  + "<div class=\"small-12 columns align-right\">"
-				  + "<a class=\"button \">"
-				  + "<i class=\"fa fa-plus\"></i> Add Workpackage</a> "
-				  + "<a class=\"button\"> "
-				  + "<i class=\"fa fa-plus\"></i> Add Task</a>"				  
+				  + "<img src=\"../../Charts/GanttProject" + project.getID() + ".jpg\">"
 				  + "</div>"
 				  + "</div>"
 				  + "</div>"
 				  + "</section>"
 				  + "</div>"
-				  + "<script src=\"../js/vendor/jquery.js\"></script>"
-				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
+				  // required JavaScript
+				  + "<script src=\"../../js/vendor/jquery.js\"></script>"
+				  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
 				  + "<script>$(document).foundation();</script>"
 				  + "</body>"
 				  + "</html>");
