@@ -13,6 +13,8 @@
         <pathelement location="bin"/>
         <pathelement location="lib/mysql-connector-java-5.1.39-bin.jar"/>
         <pathelement location="lib/servlet-api.jar"/>
+        <pathelement location="lib/jfreechart-1.0.19.jar"/>
+        <pathelement location="lib/jcommon-1.0.23.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
