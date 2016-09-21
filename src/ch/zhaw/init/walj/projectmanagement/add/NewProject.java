@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement;
+package ch.zhaw.init.walj.projectmanagement.add;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 
 // TODO datum normale eingabe
 // TODO /** kommentare
@@ -331,7 +331,7 @@ public class NewProject extends HttpServlet {
 					  + "<p>Currency: " + pCurrency + ""
 					  + "<p>Duration: " + pStart + " - " + pEnd + "</p>"
 					  + "<p>Partners: " + pPartners + "</p>"
-					  + "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + pID + "\">Klick here to go to the project overview</a>"
+					  + "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + pID + "\">Click here to go to the project overview</a>"
 					  + "</div>";
 			
 		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException | ParseException e) {

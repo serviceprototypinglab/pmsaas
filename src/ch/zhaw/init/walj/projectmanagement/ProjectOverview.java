@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement;
+package ch.zhaw.init.walj.projectmanagement;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,15 +12,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.walj.projectmanagement.chart.GanttChart;
-import ch.zhaw.walj.projectmanagement.chart.LineChart;
-import ch.zhaw.walj.projectmanagement.chart.PieChart;
-import ch.zhaw.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.walj.projectmanagement.util.DateHelper;
-import ch.zhaw.walj.projectmanagement.util.Effort;
-import ch.zhaw.walj.projectmanagement.util.Employee;
-import ch.zhaw.walj.projectmanagement.util.Expense;
-import ch.zhaw.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.chart.GanttChart;
+import ch.zhaw.init.walj.projectmanagement.chart.LineChart;
+import ch.zhaw.init.walj.projectmanagement.chart.PieChart;
+import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.DateHelper;
+import ch.zhaw.init.walj.projectmanagement.util.Effort;
+import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.Expense;
+import ch.zhaw.init.walj.projectmanagement.util.Project;
 
 /**
  * Servlet implementation class Overview
@@ -278,6 +278,23 @@ public class ProjectOverview extends HttpServlet {
 				  + "</div>"
 				  + "</div>"
 				  + "</div>"
+				  // delete project button
+				  + "<div class=\"panel small-12 columns\">"
+				  + "<div class=\"row round\">"
+				  + "<a class=\"large expanded button\" id=\"editProject\"><i class=\"fa fa-pencil-square-o\"></i> Edit Project</a>"
+				  + "<a class=\"large expanded alert button\" id=\"deleteProject\" data-open=\"delete\"><i class=\"fa fa-trash\"></i> Delete Project</a>"
+				  + "</div>"
+				  + "</div>"
+				  
+				  + "<div class=\"reveal\" id=\"delete\" data-reveal>"
+				  + "<h1 class=\"align-left\">Are you sure?</h1>"
+				  + "<p class=\"lead\">The project can not be restored after delete.</p>"
+				  + "<a class=\"expanded alert button\" id=\"finalDelete\" href=\"../deleteProject?projectID=" + project.getID() + "\">Delete</a>"
+				  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
+				  + "<span aria-hidden=\"true\">&times;</span>"
+				  + "</button>"
+				  + "</div>"
+				  
 				  + "</section>"
 				  + "</div>"
 				  // required JavaScript

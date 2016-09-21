@@ -13,18 +13,18 @@
         <pathelement location="bin"/>
         <pathelement location="lib/mysql-connector-java-5.1.39-bin.jar"/>
         <pathelement location="lib/servlet-api.jar"/>
+        <pathelement location="lib/jcommon-1.0.23.jar"/>
+        <pathelement location="lib/jfreechart-1.0.19.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="src">
-                <exclude name="**/*.launch"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="test">
-                <exclude name="**/*.launch"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
@@ -57,8 +57,13 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
+    <target name="PieChart">
+        <java classname="ch.zhaw.init.walj.projectmanagement.chart.PieChart" failonerror="true" fork="yes">
+            <classpath refid="Projektverwaltung.classpath"/>
+        </java>
+    </target>
     <target name="TestDBConnection">
-        <java classname="ch.zhaw.walj.projectmanagement.TestDBConnection" failonerror="true" fork="yes">
+        <java classname="ch.zhaw.init.walj.projectmanagement.TestDBConnection" failonerror="true" fork="yes">
             <classpath refid="Projektverwaltung.classpath"/>
         </java>
     </target>

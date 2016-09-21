@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement;
+package ch.zhaw.init.walj.projectmanagement.add;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,9 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.walj.projectmanagement.util.Project;
-import ch.zhaw.walj.projectmanagement.util.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
 
 /**
  * Projectmanagement tool, Page to book hours (choose task)

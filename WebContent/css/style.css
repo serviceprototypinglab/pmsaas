@@ -115,6 +115,11 @@ h2, h3 {
 	float: none;
 }
 
+.align-left {
+	text-align: left;
+	float: none;
+}
+
 .right {
 	float: right;
 }
@@ -196,4 +201,12 @@ img {
 
 .button-group {
 	margin-left: 5px;
+}
+
+#deleteProject {
+	margin: 0;
+}
+
+#finalDelete {
+	margin-top: 25px;
 }

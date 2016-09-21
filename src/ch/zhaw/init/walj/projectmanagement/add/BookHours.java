@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement;
+package ch.zhaw.init.walj.projectmanagement.add;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,19 +11,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.walj.projectmanagement.util.Employee;
-import ch.zhaw.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.DateHelper;
+import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.Project;
 
 /**
- * Projectmanagement tool, Page to assign employees
+ * Projectmanagement tool, Page to book hours
  * 
  * @author Janine Walther, ZHAW
  *
  */
 @SuppressWarnings("serial")
-@WebServlet("/Projects/Overview/assignEmployee")
-public class AssignEmployee extends HttpServlet {
+@WebServlet("/Projects/Overview/bookHours")
+public class BookHours extends HttpServlet {
 
 	// Database access information
 	String url = "jdbc:mysql://localhost:3306/";
@@ -59,7 +60,7 @@ public class AssignEmployee extends HttpServlet {
 				  // HTML head
 				  + "<head>" 
 				  + "<meta charset=\"UTF-8\">"
-				  + "<title>Assign Employees</title>"
+				  + "<title>Book Hours</title>"
 				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/foundation.css\" />"
 				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/style.css\" />"
 				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/font-awesome/css/font-awesome.min.css\" />"
@@ -67,11 +68,11 @@ public class AssignEmployee extends HttpServlet {
 				  // HTML body
 				  + "<body>" 
 				  + "<div id=\"wrapper\">" 
-				  + "<header>"
+				  + "<header>" 
 				  + "<div class=\"row\">"
-				  + "<div class=\"small-8 medium-6 columns\">" 
+				  + "<div class=\"small-8 medium-6 columns\">"
 				  // title
-				  + "<h1>Assign Employees</h1><a href=\"Project?id=" + projectID + "\" class=\"back\">"
+				  + "<h1>Book Hours</h1><a href=\"Project?id=" + projectID + "\" class=\"back\">"
 				  + "<i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a></div>"
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">" 
@@ -81,19 +82,20 @@ public class AssignEmployee extends HttpServlet {
 				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
 				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> " 
 				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
-				  + "</div></div></div>"
-				  + "</header>"
+				  + "</div>" 
+				  + "</div>" 
+				  + "</div>" 
+				  + "</header>" 
 				  + "<section>");
 		
-		// print HTML section with form
-		out.println("<div class=\"row\">"
-				  + "<form method=\"post\" action=\"assignEmployee/chooseTask\" data-abide novalidate>"
+		out.println("<div class=\"row\">" 
+				  + "<form method=\"get\" action=\"bookHours/chooseTask\" data-abide novalidate>"
 
 				  // error message (if something's wrong with the form)
 				  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
 				  + "<p><i class=\"fa fa-exclamation-triangle\"></i> Please choose an employee.</p></div>"
 
-				  + "<h3>Choose an employee you want to assign to a task.</h3></br>"
+				  + "<h3></h3></br>" // TODO Titel überlegen
 				  // project ID
 				  + "<input type=\"hidden\" name=\"projectID\" value=\"" + projectID + "\">"
 
@@ -103,17 +105,16 @@ public class AssignEmployee extends HttpServlet {
 				  + "<select name=\"employee\" required>"
 				  + "<option></option>");
 
-		// Option for every Employee
+		// option for every employee
 		for (Employee employee : employees) {
 			out.println("<option value =\"" + employee.getID() + "\">" + employee.getName() + "</option>");
 		}
 
-		// submit button
 		out.println("</select></div>" 
-					+ "</div>" 
-					+ "<div class=\"row\">"
-					+ "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Choose Task  <i class=\"fa fa-chevron-right\"></i></button>"
-					+ "</div>");
+				  + "</div>" 
+				  + "<div class=\"row\">"
+				  + "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Choose Task  <i class=\"fa fa-chevron-right\"></i></button>"
+				  + "</div>");
 
 		out.println("</section>"
 				  + "</div>"
@@ -131,49 +132,62 @@ public class AssignEmployee extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
 
-		// variable declaration and get the parameters
+		// variable declaration, get parameters
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
-		int employeeID = Integer.parseInt(request.getParameter("employeeID"));
-		String[] task = request.getParameterValues("tasks");
-		ArrayList<Integer> taskIDs = new ArrayList<Integer>();
-		ArrayList<String> taskNames = new ArrayList<String>();
-		
+		String[] assignment = request.getParameterValues("assignmentID");
+		String[] hour = request.getParameterValues("hours");
+		String[] month = request.getParameterValues("months");
+		ArrayList<Integer> months = new ArrayList<Integer>();
+		ArrayList<Double> hours = new ArrayList<Double>();
+		ArrayList<Integer> assignments = new ArrayList<Integer>();
+
 		// error message
 		String message = "<div class=\"row\">" 
 					   + "<div class=\"callout alert\">" 
 					   + "<h5>Something went wrong</h5>"
-					   + "<p>The employee could not be assigned</p>" + "</div></div>";
+					   + "<p>The hours could not be booked.</p>" 
+					   + "</div></div>";
 
-		// Split the task string in name and ID
-		for (String s : task) {
-			String[] helper = s.split(";");
-			taskIDs.add(Integer.parseInt(helper[0]));
-			taskNames.add(helper[1]);
-		}
-
+		// get Project
 		Project project = null;
-		Employee employee = null;
-
 		try {
-			// create new assignment
-			for (int i : taskIDs) {
-				con.newAssignment(i, employeeID);
-			}
-
-			// get the assigned employee
 			project = con.getProject(projectID);
-			employee = project.getSpecificEmployee(employeeID);
-
-			// write success message
-			message = "<div class=\"row\">" + "<div class=\"callout success\">" + "<h5>" + employee.getName()
-					+ " has been added to the following tasks:</h5>";
-			for (String s : taskNames) {
-				message += "<p>" + s + "</p>";
-			}
-			message += "</div></div>";
-
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+
+		// parse the hour strings to double, add them to arraylist
+		for (String s : hour) {
+			hours.add(Double.parseDouble(s));
+		}
+
+		// get number of the month in the project, add month to arraylist
+		for (String s : month) {
+			DateHelper dh = new DateHelper();
+			int monthNbr = dh.getMonthsBetween(project.getStart(), s);
+			months.add(monthNbr);
+		}
+
+		// parse assignment IDs to integer, add them to arraylist
+		for (String s : assignment) {
+			assignments.add(Integer.parseInt(s));
+		}
+
+		// create new bookings in DB
+		for (int i = 0; i < hour.length; i++) {
+			try {
+				con.newBooking(assignments.get(i), months.get(i), hours.get(i));
+				// success message
+				message = "<div class=\"row\">" 
+						+ "<div class=\"callout success\">"
+						+ "<h5>Hours successfully booked</h5>" 
+						+ "<p>The hours were successfully booked to the project "
+						+ project.getName() 
+						+ ".</p>" 
+						+ "</div></div>";
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		// get all employees
@@ -193,7 +207,7 @@ public class AssignEmployee extends HttpServlet {
 				  // HTML head
 				  + "<head>" 
 				  + "<meta charset=\"UTF-8\">"
-				  + "<title>Assign Employees</title>"
+				  + "<title>Book Hours</title>"
 				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/foundation.css\" />"
 				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/style.css\" />"
 				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/font-awesome/css/font-awesome.min.css\" />"
@@ -203,9 +217,9 @@ public class AssignEmployee extends HttpServlet {
 				  + "<div id=\"wrapper\">" 
 				  + "<header>" 
 				  + "<div class=\"row\">"
-				  + "<div class=\"small-8 medium-6 columns\">"
+				  + "<div class=\"small-8 medium-6 columns\">" 
 				  // title
-				  + "<h1>Assign Employees</h1><a href=\"Project?id=" + projectID + "\" class=\"back\">"
+				  + "<h1>Book Hours</h1><a href=\"Project?id=" + projectID + "\" class=\"back\">"
 				  + "<i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a></div>"
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">" 
@@ -218,35 +232,36 @@ public class AssignEmployee extends HttpServlet {
 				  + "</div>" 
 				  + "</div>" 
 				  + "</div>" 
-				  + "</header>"
+				  + "</header>" 
 				  + "<section>" 
 				  + message);
-		
+
 		// print HTML section with form
-		out.println("<div class=\"row\">"
-				  + "<form method=\"post\" action=\"assignEmployee/chooseTask\" data-abide novalidate>"
-				  
-   				  // error message (if something's wrong with the form)
+		out.println("<div class=\"row\">" 
+
+				  // error message (if something's wrong with the form)
+				  + "<form method=\"get\" action=\"bookHours/chooseTask\" data-abide novalidate>"
 				  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
 				  + "<p><i class=\"fa fa-exclamation-triangle\"></i> Please choose an employee.</p></div>"
 
+				  + "<h3></h3></br>" // TODO Titel überlegen
 				  // project ID
-				  + "<h3>Choose an employee you want to assign to a task.</h3></br>"
 				  + "<input type=\"hidden\" name=\"projectID\" value=\"" + projectID + "\">"
 
 				  // select employee
 				  + "<h5 class=\"small-12 medium-2 columns\">Employee</h5>"
-				  + "<div class=\"small-12 medium-6 end columns\">" + "<select name=\"employee\" required>"
+				  + "<div class=\"small-12 medium-6 end columns\">" 
+				  + "<select name=\"employee\" required>"
 				  + "<option></option>");
 
-		// print option for every employee
-		for (Employee e : employees) {
-			out.println("<option value =\"" + e.getID() + "\">" + e.getName() + "</option>");
+		// option for every employee
+		for (Employee employee : employees) {
+			out.println("<option value =\"" + employee.getID() + "\">" + employee.getName() + "</option>");
 		}
 
 		// submit button
-		out.println("</select></div>" 
-				  + "</div>" + "<div class=\"row\">"
+		out.println("</select></div></div>" 
+				  + "<div class=\"row\">"
 				  + "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Choose Task  <i class=\"fa fa-chevron-right\"></i></button>"
 				  + "</div>");
 
@@ -257,5 +272,6 @@ public class AssignEmployee extends HttpServlet {
 				  + "<script>$(document).foundation();</script>"
 				  + "</body>"
 				  + "</html>");
+
 	}
 }

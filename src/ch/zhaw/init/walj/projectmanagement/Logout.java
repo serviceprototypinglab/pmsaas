@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement;
+package ch.zhaw.init.walj.projectmanagement;
 
 import java.io.IOException;
 import java.io.PrintWriter;

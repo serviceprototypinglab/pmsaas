@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement.chart;
+package ch.zhaw.init.walj.projectmanagement.chart;
 
 import java.awt.Color;
 import java.io.File;
@@ -16,9 +16,9 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
-import ch.zhaw.walj.projectmanagement.util.Employee;
-import ch.zhaw.walj.projectmanagement.util.Project;
-import ch.zhaw.walj.projectmanagement.util.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
 
 public class PieChart {
 	

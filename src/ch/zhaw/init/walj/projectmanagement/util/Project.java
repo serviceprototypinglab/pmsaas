@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement.util;
+package ch.zhaw.init.walj.projectmanagement.util;
 
 import java.util.ArrayList;
 import java.util.Date;

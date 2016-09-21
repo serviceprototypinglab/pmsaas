@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement;
+package ch.zhaw.init.walj.projectmanagement;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.walj.projectmanagement.chart.PieChart;
-import ch.zhaw.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.walj.projectmanagement.util.DateHelper;
-import ch.zhaw.walj.projectmanagement.util.Employee;
-import ch.zhaw.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.chart.PieChart;
+import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.DateHelper;
+import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.Project;
 
 /**
  * Servlet implementation class Overview

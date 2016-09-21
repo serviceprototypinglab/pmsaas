@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement.chart;
+package ch.zhaw.init.walj.projectmanagement.chart;
 
 import java.awt.Color;
 import java.io.File;
@@ -16,9 +16,9 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import ch.zhaw.walj.projectmanagement.util.Effort;
-import ch.zhaw.walj.projectmanagement.util.Project;
-import ch.zhaw.walj.projectmanagement.util.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.Effort;
+import ch.zhaw.init.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
 
 public class LineChart {
 

@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement.util;
+package ch.zhaw.init.walj.projectmanagement.util;
 
 /**
  * class to create employees, usually filled with data from the employee table

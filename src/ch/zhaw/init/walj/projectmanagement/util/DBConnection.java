@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement.util;
+package ch.zhaw.init.walj.projectmanagement.util;
 
 import java.security.SecureRandom;
 import java.sql.Connection;
@@ -428,6 +428,37 @@ public class DBConnection {
 		st.executeUpdate(query);
 
 	}
+	
+	
+	/**
+	 * creates a new task in the database
+	 * 
+	 * @param projectID
+	 *            ID of the project the task belongs to
+	 * @param wpID
+	 *            ID of the workpackage the task belongs to
+	 * @param taskName
+	 *            name of the task
+	 * @param taskStart
+	 *            start date of the task
+	 * @param taskEnd
+	 *            end date of the task
+	 * @param taskPM
+	 *            total PMs planned for the task
+	 * @param taskBudget
+	 *            total budget planned for the task
+	 * 
+	 * @throws SQLException
+	 */
+	public void newTask(int pID, int wpID, String taskName, String taskStart, String taskEnd, String taskPM, String taskBudget) throws SQLException {
+		query = "INSERT INTO Tasks (" + "WorkpackageIDFS, TaskName, TaskStart, TaskEnd, PMs, Budget" + ") VALUES ("
+				+ wpID + ", '" + taskName + "', '" + taskStart + "', '" + taskEnd + "', " + taskPM + ", "
+				+ taskBudget + ");";
+
+		st.executeUpdate(query);
+	}
+	
+	
 
 	/**
 	 * create a new employee in the database
@@ -640,7 +671,7 @@ public class DBConnection {
 	
 	public int findUser(String user, String password){
 		try {
-			query = "SELECT * from Employees WHERE Mail ='" + user + "' and Password = '" + password + "'";
+			query = "SELECT * from Employees WHERE (Mail ='" + user + "' OR Kuerzel ='" + user + "') and Password = '" + password + "'";
 			res = st.executeQuery(query);
 			res.next();
 			return res.getInt("EmployeeID");
@@ -648,4 +679,10 @@ public class DBConnection {
 			return 0;
 		}
 	}
+
+	public void deleteProject(int projectID) throws SQLException {
+		query = "DELETE FROM `projectmanagement`.`Projects` WHERE `Projects`.`ProjectIDFS` = " + projectID;
+		st.executeUpdate(query);
+	}
+
 }

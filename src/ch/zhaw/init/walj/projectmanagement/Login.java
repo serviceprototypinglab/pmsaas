@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement;
+package ch.zhaw.init.walj.projectmanagement;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 
 @SuppressWarnings("serial")
 @WebServlet("/login")
@@ -62,14 +62,14 @@ public class Login extends HttpServlet {
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-6 small-offset-3 end columns\">"
 				  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
-				  + "<p><i class=\"fa fa-exclamation-triangle\"></i> There are some errors in your form.</p></div>"
+				  + "<p><i class=\"fa fa-exclamation-triangle\"></i> Fill in your username and your password</p></div>"
 				  + "</div>"
 				  + "</div>"
 				  + message
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-6 small-offset-3 end columns\">"
   				  +	"<div class=\"input-group\">"
-  				  +	"<span class=\"input-group-label\"><i class=\"fa fa-at\"></i></span>"
+  				  +	"<span class=\"input-group-label\"><i class=\"fa fa-user\"></i></span>"
 				  + "<input type=\"text\" class=\"input-group-field\" name=\"mail\" required>" 
 				  + "</div>"
 				  + "</div>"

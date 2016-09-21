@@ -1,4 +1,4 @@
-package ch.zhaw.walj.projectmanagement.chart;
+package ch.zhaw.init.walj.projectmanagement.chart;
 
 import java.awt.Color;
 import java.io.File;
@@ -18,9 +18,9 @@ import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.time.SimpleTimePeriod;
 
-import ch.zhaw.walj.projectmanagement.util.Project;
-import ch.zhaw.walj.projectmanagement.util.ProjectTask;
-import ch.zhaw.walj.projectmanagement.util.Workpackage;
+import ch.zhaw.init.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.Workpackage;
 
 /**
  * creates a gantt chart with data from a given project
