@@ -74,10 +74,10 @@ public class NewProject extends HttpServlet {
 				  					  + "<input type=\"text\" name=\"wpName\">"
 				  					  + "</div>"
 				  					  + "<div class=\"small-4 columns\">"
-				  					  + "<input type=\"date\" name=\"wpStart\">"
+				  					  + "<input type=\"text\" name=\"wpStart\">"
 				  					  + "</div>	"
 				  					  + "<div class=\"small-4 columns\">"
-				  					  + "<input type=\"date\" name=\"wpEnd\">"
+				  					  + "<input type=\"text\" name=\"wpEnd\">"
 				  					  + "</div>'; "
 				  + "document.getElementById(divName).appendChild(newdiv);}"
 				  // add fields for Tasks
@@ -87,10 +87,10 @@ public class NewProject extends HttpServlet {
 				  					  + "<input type=\"text\" name=\"taskName\">"
 				  					  + "</div>"
 				  					  + "<div class=\"small-2 columns\">"
-				  					  + "<input type=\"date\" name=\"taskStart\">"
+				  					  + "<input type=\"text\" name=\"taskStart\">"
 				  					  + "</div>"
 				  					  + "<div class=\"small-2 columns\">"
-				  					  + "<input type=\"date\" name=\"taskEnd\">"
+				  					  + "<input type=\"text\" name=\"taskEnd\">"
 				  					  + "</div>"
 				  					  + "<div class=\"small-2 columns\">"
 				  					  + "<input type=\"number\" name=\"taskPM\">"
@@ -114,11 +114,12 @@ public class NewProject extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">"
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
 				  + "</div>"
 				  + "</div>"
 				  + "</div>"
@@ -162,10 +163,10 @@ public class NewProject extends HttpServlet {
 				  + "<div class=\"row\">"
 				  + "<p class=\"small-4 large-2 columns\">Duration<span class =\"grey\"></br>(dd.mm.yyyy)</span></p>"
 				  + "<div class=\"small-4 large-5 end columns\">"
-				  + "<input type=\"date\" name=\"pStart\" required>"
+				  + "<input type=\"text\" name=\"pStart\" required>"
 				  + "</div>"
 				  + "<div class=\"small-4 large-5 end columns\">"
-				  + "<input type=\"date\" name=\"pEnd\" required>"
+				  + "<input type=\"text\" name=\"pEnd\" required>"
 				  + "</div></div>"
 				  // fields for the partners
 				  + "<div class=\"row\">"
@@ -189,11 +190,11 @@ public class NewProject extends HttpServlet {
 				  + "</div>"
 				  + "<div class=\"small-4 columns\">"
 				  // field for start
-				  + "<input type=\"date\" name=\"wpStart\" required>"
+				  + "<input type=\"text\" name=\"wpStart\" required>"
 				  + "</div>"
 				  + "<div class=\"small-4 columns\">"
 				  // field for end
-				  + "<input type=\"date\" name=\"wpEnd\" required>"
+				  + "<input type=\"text\" name=\"wpEnd\" required>"
 				  + "</div></div>"
 				  // button to add more fields
 				  + "<i id=\"addWP\" class=\"fa fa-plus small-1 columns button add float-left\" aria-hidden=\"true\" onclick=\"addWP('workpackage')\"></i>"
@@ -217,11 +218,11 @@ public class NewProject extends HttpServlet {
 				  + "</div>"
 				  + "<div class=\"small-2 columns\">"
 				  // field for start date
-				  + "<input type=\"date\" name=\"taskStart\" required>"
+				  + "<input type=\"text\" name=\"taskStart\" required>"
 				  + "</div>"
 				  + "<div class=\"small-2 columns\">"
 				  // field for end date
-				  + "<input type=\"date\" name=\"taskEnd\" required>"
+				  + "<input type=\"text\" name=\"taskEnd\" required>"
 				  + "</div>"
 				  + "<div class=\"small-2 columns\">"
 				  // field for amount of PMs
@@ -280,7 +281,7 @@ public class NewProject extends HttpServlet {
 		taskWP = request.getParameterValues("taskWP");
 		
 
-		SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
 		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			Date sDate = format.parse(pStart);
@@ -360,10 +361,10 @@ public class NewProject extends HttpServlet {
 				  					  + "<input type=\"text\" name=\"wpName\">"
 				  					  + "</div>"
 				  					  + "<div class=\"small-4 columns\">"
-				  					  + "<input type=\"date\" name=\"wpStart\">"
+				  					  + "<input type=\"text\" name=\"wpStart\">"
 				  					  + "</div>	"
 				  					  + "<div class=\"small-4 columns\">"
-				  					  + "<input type=\"date\" name=\"wpEnd\">"
+				  					  + "<input type=\"text\" name=\"wpEnd\">"
 				  					  + "</div>'; "
 				  + "document.getElementById(divName).appendChild(newdiv);}"
 				  // add fields for Tasks
@@ -373,10 +374,10 @@ public class NewProject extends HttpServlet {
 				  					  + "<input type=\"text\" name=\"taskName\">"
 				  					  + "</div>"
 				  					  + "<div class=\"small-2 columns\">"
-				  					  + "<input type=\"date\" name=\"taskStart\">"
+				  					  + "<input type=\"text\" name=\"taskStart\">"
 				  					  + "</div>"
 				  					  + "<div class=\"small-2 columns\">"
-				  					  + "<input type=\"date\" name=\"taskEnd\">"
+				  					  + "<input type=\"text\" name=\"taskEnd\">"
 				  					  + "</div>"
 				  					  + "<div class=\"small-2 columns\">"
 				  					  + "<input type=\"number\" name=\"taskPM\">"
@@ -400,11 +401,12 @@ public class NewProject extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">"
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
 				  + "</div>"
 				  + "</div>"
 				  + "</header>"
@@ -450,10 +452,10 @@ public class NewProject extends HttpServlet {
 				  + "<div class=\"row\">"
 				  + "<p class=\"small-4 large-2 columns\">Duration<span class =\"grey\"></br>(dd.mm.yyyy)</span></p>"
 				  + "<div class=\"small-4 large-5 end columns\">"
-				  + "<input type=\"date\" name=\"pStart\" required>"
+				  + "<input type=\"text\" name=\"pStart\" required>"
 				  + "</div>"
 				  + "<div class=\"small-4 large-5 end columns\">"
-				  + "<input type=\"date\" name=\"pEnd\" required>"
+				  + "<input type=\"text\" name=\"pEnd\" required>"
 				  + "</div></div>"
 				  // fields for the partners
 				  + "<div class=\"row\">"
@@ -477,11 +479,11 @@ public class NewProject extends HttpServlet {
 				  + "</div>"
 				  + "<div class=\"small-4 columns\">"
 				  // field for start
-				  + "<input type=\"date\" name=\"wpStart\" required>"
+				  + "<input type=\"text\" name=\"wpStart\" required>"
 				  + "</div>"
 				  + "<div class=\"small-4 columns\">"
 				  // field for end
-				  + "<input type=\"date\" name=\"wpEnd\" required>"
+				  + "<input type=\"text\" name=\"wpEnd\" required>"
 				  + "</div></div>"
 				  // button to add more fields
 				  + "<i id=\"addWP\" class=\"fa fa-plus small-1 columns button add float-left\" aria-hidden=\"true\" onclick=\"addWP('workpackage')\"></i>"
@@ -505,11 +507,11 @@ public class NewProject extends HttpServlet {
 				  + "</div>"
 				  + "<div class=\"small-2 columns\">"
 				  // field for start date
-				  + "<input type=\"date\" name=\"taskStart\" required>"
+				  + "<input type=\"text\" name=\"taskStart\" required>"
 				  + "</div>"
 				  + "<div class=\"small-2 columns\">"
 				  // field for end date
-				  + "<input type=\"date\" name=\"taskEnd\" required>"
+				  + "<input type=\"text\" name=\"taskEnd\" required>"
 				  + "</div>"
 				  + "<div class=\"small-2 columns\">"
 				  // field for amount of PMs

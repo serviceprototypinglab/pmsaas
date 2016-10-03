@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class Effort {
 	
 	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
-	private DateHelper dateHelper = new DateHelper();
 	
 
 	private String driver = "com.mysql.jdbc.Driver";
@@ -31,12 +30,98 @@ public class Effort {
 	private ResultSet res2;
 	
 	
+	
 	/**
 	 * constructor of the Effort class
 	 * @param tasks ArrayList with all tasks
 	 */
 	public Effort (ArrayList<ProjectTask> tasks){
 		this.tasks = tasks;
+	}
+	
+	
+	public ArrayList<Booking> getBookings () throws SQLException {
+		
+		int bookingID;
+		int assignmentID;
+		int month;
+		double hours;
+		int taskID;
+		int employeeID;
+		
+		ArrayList<Booking> bookings = new ArrayList<Booking>();
+		
+		try {
+			Class.forName(driver).newInstance();
+			conn = DriverManager.getConnection(url + dbName, userName, password);
+			st = conn.createStatement();
+			st2 = conn.createStatement();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		for (ProjectTask task : tasks){
+			// get assignments to the task
+    		res = st.executeQuery("select * from Assignments where TaskIDFS = " + task.getID());
+    		while (res.next()){
+    			assignmentID = res.getInt("AssignmentID");
+    			taskID = task.getID();
+    			employeeID = res.getInt("EmployeeIDFS"); 
+    			// get bookings to the assignment
+    			res2 = st2.executeQuery("select * from Bookings where AssignmentIDFS = " + assignmentID);
+    			while (res2.next()){
+    				bookingID = res2.getInt("BookingID");
+    				month = res2.getInt("Month");
+    				hours = res2.getDouble("Hours");
+    				Booking booking = new Booking(bookingID, assignmentID, month, hours, taskID, employeeID);
+    				bookings.add(booking);
+    			}
+    		}
+    	}	
+		
+		return bookings;
+	}
+	
+public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
+		
+		int bookingID;
+		int assignmentID;
+		int month;
+		double hours;
+		int taskID;
+		
+		ArrayList<Booking> bookings = new ArrayList<Booking>();
+		
+		try {
+			Class.forName(driver).newInstance();
+			conn = DriverManager.getConnection(url + dbName, userName, password);
+			st = conn.createStatement();
+			st2 = conn.createStatement();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		for (ProjectTask task : tasks){
+			// get assignments to the task
+    		res = st.executeQuery("select * from Assignments where TaskIDFS = " + task.getID() + " and EmployeeIDFS = " + employeeID);
+    		while (res.next()){
+    			assignmentID = res.getInt("AssignmentID");
+    			taskID = task.getID();
+    			// get bookings to the assignment
+    			res2 = st2.executeQuery("select * from Bookings where AssignmentIDFS = " + assignmentID);
+    			while (res2.next()){
+    				bookingID = res2.getInt("BookingID");
+    				month = res2.getInt("Month");
+    				hours = res2.getDouble("Hours");
+    				Booking booking = new Booking(bookingID, assignmentID, month, hours, taskID, employeeID);
+    				bookings.add(booking);
+    			}
+    		}
+    	}	
+		
+		return bookings;
 	}
 	
 	/**
@@ -62,7 +147,6 @@ public class Effort {
 				}
 			}
 		}		
-
 		return effort;
 	}
 	
@@ -110,7 +194,7 @@ public class Effort {
 	}
 	
 	/**
-	 * get the effort on the project for a specific employee
+	 * get the effort on the project for a specific employee (in hours)
 	 * 
 	 * @param employeeID
 	 * 				ID of the employee
@@ -141,6 +225,42 @@ public class Effort {
     			}
 			}
 		}
+		
+		conn.close();
+		return effort;
+	}
+
+
+	public double getBookedEffort(double month, int employee) throws SQLException {
+		double effort = 0.0;
+		int projectMonth = 0;
+		
+		try {
+			Class.forName(driver).newInstance();
+			conn = DriverManager.getConnection(url + dbName, userName, password);
+			st = conn.createStatement();
+			st2 = conn.createStatement();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		for (ProjectTask task : tasks){
+			// get assignments to the task
+    		res = st.executeQuery("select * from Assignments where TaskIDFS = " + task.getID() + " and EmployeeIDFS = " + employee);
+    		while (res.next()){
+    			// get bookings to the assignment
+    			res2 = st2.executeQuery("select * from Bookings where AssignmentIDFS = " + res.getInt("AssignmentID"));
+    			while (res2.next()){
+    				projectMonth = res2.getInt("Month");
+    				// compare month of the booking to the given month
+    				if (projectMonth == month){
+    					effort += res2.getDouble("Hours");
+    				} 		
+    			}
+    		}
+    	}		
+		
 		
 		conn.close();
 		return effort;

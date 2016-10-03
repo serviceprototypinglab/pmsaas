@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.PasswordService;
 
 @SuppressWarnings("serial")
 @WebServlet("/login")
@@ -102,7 +104,9 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    	response.setContentType("text/html;charset=UTF8");
+    	
+    	
     	// Database access information
     	String url = "jdbc:mysql://localhost:3306/";
     	String dbName = "projectmanagement";
@@ -114,10 +118,14 @@ public class Login extends HttpServlet {
     	
     	String user = request.getParameter("mail");
         String password = request.getParameter("password");
-        int id = con.findUser(user, password);
+        
+        password = PasswordService.getInstance().encrypt(password);
+        Employee e = con.findUser(user, password);
+        
+        int id = e.getID();
         
         if (id > 0) {
-            request.getSession().setAttribute("user", user);
+            request.getSession().setAttribute("user", e.getFirstName());
             request.getSession().setAttribute("ID", id);
             response.sendRedirect(request.getContextPath() + "/Projects/Overview");
         } else {

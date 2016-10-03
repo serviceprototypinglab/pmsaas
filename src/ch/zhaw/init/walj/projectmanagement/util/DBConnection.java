@@ -72,13 +72,10 @@ public class DBConnection {
 	 *            id of the current user
 	 * 
 	 * @return all projects with current user as project leader
+	 * @throws SQLException 
 	 */
-	public ResultSet getProjects(int id) {
-		try {
-			res = st.executeQuery("SELECT * FROM  Projects where ProjectLeader=" + id + "");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public ResultSet getProjects(int id) throws SQLException {
+		res = st.executeQuery("SELECT * FROM  Projects where ProjectLeader=" + id + " and Archive=0");
 		return res;
 	}
 
@@ -112,6 +109,7 @@ public class DBConnection {
 		Project project;
 		String pName;
 		String pShortname;
+		int pLeader;
 		String pStart;
 		String pEnd;
 		String pCurrency;
@@ -159,13 +157,14 @@ public class DBConnection {
 		resProject.next();
 		pName = resProject.getString("ProjectName");
 		pShortname = resProject.getString("ProjectShortname");
+		pLeader = resProject.getInt("ProjectLeader");
 		pStart = dateFormatter.getFormattedDate(resProject.getString("ProjectStart"));
 		pEnd = dateFormatter.getFormattedDate(resProject.getString("ProjectEnd"));
 		pCurrency = resProject.getString("Currency");
 		pBudget = resProject.getDouble("TotalBudget");
 		pPartner = resProject.getString("Partner");
 
-		project = new Project(pID, pName, pShortname, pStart, pEnd, pCurrency, pBudget, pPartner);
+		project = new Project(pID, pName, pShortname, pLeader, pStart, pEnd, pCurrency, pBudget, pPartner);
 
 		// get all expenses
 		resExpenses = stExpenses.executeQuery("Select * from Expenses where ProjectIDFS=" + pID + "");
@@ -481,7 +480,7 @@ public class DBConnection {
 	 * @throws IllegalAccessException
 	 * @throws ClassNotFoundException
 	 */
-	public void newEmployee(int employeeID, String firstname, String lastname, String kuerzel, String mail, String wage)
+	public String newEmployee(int employeeID, String firstname, String lastname, String kuerzel, String mail, String wage)
 			throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Class.forName(driver).newInstance();
 		conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
@@ -495,10 +494,12 @@ public class DBConnection {
 		}
 
 		String password = pass.toString();
+		
+		String passwordEncrypted = PasswordService.getInstance().encrypt(password);
 
 		// create new employee
 		query = "INSERT INTO Employees (" + "Firstname, Lastname, Kuerzel, Password, Mail, Supervisor" + ") VALUES ('"
-				+ firstname + "', '" + lastname + "', '" + kuerzel + "', '" + password + "', '" + mail + "', "
+				+ firstname + "', '" + lastname + "', '" + kuerzel + "', '" + passwordEncrypted + "', '" + mail + "', "
 				+ employeeID + ");";
 
 		st.executeUpdate(query);
@@ -518,6 +519,8 @@ public class DBConnection {
 				+ wage + ", '" + date + "');";
 
 		st.executeUpdate(query);
+		
+		return password;
 	}
 
 	/**
@@ -669,19 +672,65 @@ public class DBConnection {
 		st.executeUpdate(query);
 	}
 	
-	public int findUser(String user, String password){
+	public Employee findUser(String user, String password){
 		try {
 			query = "SELECT * from Employees WHERE (Mail ='" + user + "' OR Kuerzel ='" + user + "') and Password = '" + password + "'";
 			res = st.executeQuery(query);
 			res.next();
-			return res.getInt("EmployeeID");
+			Employee e = new Employee(res.getInt("EmployeeID"), res.getString("Firstname"), res.getString("Lastname"), res.getString("Kuerzel"), res.getString("Mail"), 0, res.getInt("Supervisor"));
+			return e;
 		} catch (SQLException e) {
-			return 0;
+			return null;
 		}
 	}
 
-	public void deleteProject(int projectID) throws SQLException {
-		query = "DELETE FROM `projectmanagement`.`Projects` WHERE `Projects`.`ProjectIDFS` = " + projectID;
+	public void archiveProject(int projectID) throws SQLException {
+		query = "UPDATE `projectmanagement`.`Projects` SET `Archive`=1 WHERE `Projects`.`ProjectIDFS` = " + projectID;
+		st.executeUpdate(query);
+	}
+	
+	public void updateProject(int id, String name, String shortname, double budget, String currency, String start, String end, String partners) throws SQLException {
+		query = "UPDATE `Projects` SET `ProjectShortname`='" + shortname + "',`ProjectName`='" + name + "',`TotalBudget`='" + budget + "',`Currency`='" + currency + "',`ProjectStart`='" + start + "',`ProjectEnd`='" + end + "',`Partner`='" + partners + "' WHERE `Projects`.`ProjectIDFS` = " + id;
+		st.executeUpdate(query);		
+	}
+
+	public void updateWorkpackage(int id, String name, String start, String end) throws SQLException {
+		query = "UPDATE `Workpackages` SET `WPName`='" + name + "',`WPStart`='" + start + "',`WPEnd`='" + end + "' WHERE `WorkpackageID` = " + id;
+		st.executeUpdate(query);
+	}
+
+	public void updateTask(int id, String name, String start, String end, int pm, double budget, String wp) throws SQLException {
+		query = "UPDATE `Tasks` SET `WorkpackageIDFS`='" + wp + "',`TaskName`='" + name + "',`TaskStart`='" + start + "',`TaskEnd`='" + end + "',`PMs`='" + pm + "',`Budget`='" + budget + "' WHERE `TaskID` = " + id;
+		st.executeUpdate(query);
+	}
+
+	public void updateExpense(int id, String employee, double costs, String type, String description, String date) throws SQLException {
+		query = "UPDATE `Expenses` SET `EmployeeIDFS`='" + employee + "',`Costs`='" + costs + "',`Type`='" + type + "',`Description`='" + description + "',`Date`='" + date + "' WHERE `ExpenseID` = " + id;
+		st.executeUpdate(query);
+	}
+
+	public void updateEffort(int id, String month, String hours) throws SQLException {
+		query = "UPDATE `Bookings` SET `Month`='" + month + "',`Hours`='" + hours + "' WHERE `BookingID` = " + id;
+		st.executeUpdate(query);
+	}
+
+	public void deleteWorkpackage(int workpackageID) throws SQLException {
+		query = "DELETE FROM Workpackages WHERE `WorkpackageID` = " + workpackageID;
+		st.executeUpdate(query);
+	}
+
+	public void deleteTask(int taskID) throws SQLException {
+		query = "DELETE FROM Tasks WHERE `TaskID` = " + taskID;
+		st.executeUpdate(query);
+	}
+
+	public void deleteExpense(int expenseID) throws SQLException {
+		query = "DELETE FROM Expenses WHERE `ExpenseID` = " + expenseID;
+		st.executeUpdate(query);
+	}
+
+	public void deleteEffort(int effortID) throws SQLException {
+		query = "DELETE FROM Bookings WHERE `BookingID` = " + effortID;
 		st.executeUpdate(query);
 	}
 

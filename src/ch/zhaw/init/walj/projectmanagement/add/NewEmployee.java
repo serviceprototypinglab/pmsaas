@@ -29,6 +29,7 @@ public class NewEmployee extends HttpServlet {
 	private String mail;
 	private String wage;
 	
+	
 	// database access information
 	String url = "jdbc:mysql://localhost:3306/";
 	String dbName = "projectmanagement";
@@ -57,6 +58,7 @@ public class NewEmployee extends HttpServlet {
 				  + "<meta charset=\"UTF-8\">"
 				  + "<title>New Employee</title>"
 				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\" />"
 				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
 				  + "</head>"
 				  // HTML body
@@ -71,11 +73,12 @@ public class NewEmployee extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">"
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
 				  + "</div>"
 				  + "</div>"
 				  + "</div>"
@@ -153,7 +156,7 @@ public class NewEmployee extends HttpServlet {
 		
 		// create new employee
 		try {
-			con.newEmployee(1, firstname, lastname, kuerzel, mail, wage);
+			String password = con.newEmployee(1, firstname, lastname, kuerzel, mail, wage);
 			// success message
 			message = "<div class=\"row\">"
 					+ "<div class=\"callout success\">"
@@ -163,6 +166,7 @@ public class NewEmployee extends HttpServlet {
 					+ "<p>Kuerzel: " + kuerzel + "</p>"
 					+ "<p>Mail: " + mail + "</p>"
 					+ "<p>Wage: " + wage + "</p>"
+					+ "<p>Password: " + password + "</p>"
 					+ "<a href=\"#\">If you want to assign this employee to a task, klick here</a>" // TODO insert correct link
 					+ "</div></div>";			
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
@@ -192,11 +196,12 @@ public class NewEmployee extends HttpServlet {
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">"
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
 				  + "</div></div></div>"
 				  + "</header>"
 				  // HTML section with message and form

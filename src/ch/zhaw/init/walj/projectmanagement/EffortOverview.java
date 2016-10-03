@@ -3,7 +3,11 @@ package ch.zhaw.init.walj.projectmanagement;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,11 +15,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.zhaw.init.walj.projectmanagement.util.Booking;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateHelper;
 import ch.zhaw.init.walj.projectmanagement.util.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
 
 /**
  * Servlet implementation class Overview
@@ -33,6 +39,7 @@ public class EffortOverview extends HttpServlet {
 	// variable declaration
 	private Project project;
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
+	private ArrayList<Booking> bookings = new ArrayList<Booking>();
 	private Effort effort;
 	
 	private DateHelper dateFormatter = new DateHelper();
@@ -40,156 +47,246 @@ public class EffortOverview extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
-				
+
+		int id = (int) request.getSession(false).getAttribute("ID");
+		
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		
-		DBConnection con = new DBConnection(url, dbName, userName, password);
-		
+		int employeeID;
 		try {
-			project = con.getProject(projectID);
-			employees = project.getEmployees();
-			effort = new Effort(project.getTasks());
-		} catch (SQLException e) {
-			e.printStackTrace();
+			employeeID = Integer.parseInt(request.getParameter("employeeID"));
+		} catch (NumberFormatException ex) {
+			employeeID = 0;
 		}
-		
-		PrintWriter out = response.getWriter();
-		
-		
-		out.println("<!DOCTYPE html>" 
-				  + "<html>" 
-				  // HTML head
-				  + "<head>" 
-				  + "<meta charset=\"UTF-8\">"
-				  + "<title>Projects</title>" 
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/style.css\" />" 
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/font-awesome/css/font-awesome.min.css\" />" 
-				  + "</head>" 
-				  + "<body>"
-				  + "<div id=\"wrapper\">" 
-				  + "<header>" 
-				  + "<div class=\"row\">" 
-				  + "<div class=\"small-8 medium-6 columns\">"
-				  // title
-				  + "<h1>Effort</h1>"
-				  + "</div>"
-				  // menu
-				  + "<div class=\"small-12 medium-6 columns\">" 
-				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> " 
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> " 
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> " 
-				  + "</div>" 
-				  + "</div>"
-				  + "</div>" 
-				  + "</header>" 
-				  // HTML section
-				  + "<section>"
-				  + "<div class=\"row\">"
-				  + "<div class=\"small-12 columns\">"
-				  + "<h2>Effort</h2>"
-				  + "</div>"
-				  // line chart
-				  + "<div class=\"small-12 no-padding columns\">"
-				  + "<img src=\"../../Charts/EffortProject" + project.getID() + ".jpg\">"
-				  + "</div>"
-				  + "<div class=\"small-3 columns\">"
-				  + "<span class=\"bold\">Employee</span>"
-				  + "</div>"
-				  + "<div class=\"small-3 columns\">"
-				  + "<span class=\"bold\">Month</span>"
-				  + "</div>"
-				  + "<div class=\"small-3 end columns\">"
-				  + "<span class=\"bold\">Task</span>"
-				  + "</div>"
-				  + "<div class=\"small-1 end columns\">"
-				  + "<span class=\"bold\">Hours</span>"
-				  + "</div>"
-				  + "<div class=\"small-1 end columns\">"
-				  + "<span class=\"bold\">~" + project.getCurrency() + "</span>"
-				  + "</div>"
-				  + "<div class=\"small-1 end columns\">"
-				  + "<span class=\"bold\">" + project.getCurrency() + "/h</span>"
-				  + "</div>"
-				  + "");
-
-		// effort for every employee and total effort
-		double totalEffort = 0;		
-		for(Employee employee : employees){
+			
+			DBConnection con = new DBConnection(url, dbName, userName, password);
+			
 			try {
-				double effortEmployee = effort.getEffortPerEmployee(employee.getID());
-				totalEffort += effortEmployee;
-				out.println("<div class=\"small-6 columns\">" + employee.getName() + "</div>"
-						   +"<div class=\"small-3 columns\">" + effortEmployee + "h</div>"
-						   + "<div class=\"small-3 columns\">"
-						   + "<a class=\"button float-right\">"
-						   + "<i class=\"fa fa-info\"></i> Details</a>"
-						   + "</div>");
-				
-			} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				project = con.getProject(projectID);
+			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
+			
+		if (project.getLeader() == id){
+			employees = project.getEmployees();
+			Employee selectedEmployee = project.getSpecificEmployee(employeeID);
+			effort = new Effort(project.getTasks());
+			PrintWriter out = response.getWriter();
+			
+			out.println("<!DOCTYPE html>" 
+					  + "<html>" 
+					  // HTML head
+					  + "<head>" 
+					  + "<meta charset=\"UTF-8\">"
+					  + "<title>" + project.getShortname() + " Effort Details</title>" 
+					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/foundation.css\" />"
+					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/style.css\" />" 
+					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/font-awesome/css/font-awesome.min.css\" />" 
+					  + "</head>" 
+					  + "<body>"
+					  + "<div id=\"wrapper\">" 
+					  + "<header>" 
+					  + "<div class=\"row\">" 
+					  // title
+					  + "<div class=\"small-12 medium-6 columns\">"
+					  + "<h1>Effort</h1>"
+					  + "<a href=\"Project?id=" + projectID + "\" class=\"back\">"
+					  + "<i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"
+					  + "</div>"
+					  // menu
+					  + "<div class=\"small-12 medium-6 columns\">" 
+					  + "<div class=\"float-right menu\">"
+					  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
+					  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
+					  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
+					  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
+					  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
+					  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
+					  + "</div>" 
+					  + "</div>"
+					  + "</div>" 
+					  + "</header>");
+					  // HTML section
+			if (employeeID == 0){
+				try {
+					bookings = effort.getBookings();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				out.println("<section>"
+						  + "<div class=\"row\">"
+						  + "<div class=\"small-12 columns\">"
+						  + "<h2>Effort " + project.getShortname() + "  <small>" + project.getStart() + "-" + project.getEnd() + "</small></h2>"
+						  + "</div>"
+						  // line chart
+						  + "<div class=\"small-12 no-padding columns\">"
+						  + "<img src=\"../../Charts/EffortProject" + project.getID() + "_large.jpg\">"
+						  + "</div>"
+						  + "</div>"
+						  + "<div class=\"row\" id=\"effortTable\">"
+						  + "<table class=\"stack\">"
+						  + "<thead>"
+						  + "<tr>"
+						  + "<th>Employee</th>"
+						  + "<th>Month</th>"
+						  + "<th>Task</th>"
+						  + "<th>Hours</th>"
+						  + "<th>~" + project.getCurrency() + "</th>"
+						  + "<th>" + project.getCurrency() + "/h</th>"
+						  + "</tr>"
+						  + "</thead>"
+						  + "<tbody>");
 		
-		out.println("<div class=\"small-6 columns\">"
-				  + "<span class=\"bold\">Total</span>"
-				  + "</div>"
-				  + "<div class=\"small-3 columns\">"
-				  + "<span class=\"bold\">" + totalEffort + "h</span>"
-				  + "</div>"
-				  +"<div class=\"small-3 columns\">"
-				  + "<a class=\"button float-right\">"
-				  + "<i class=\"fa fa-info\"></i> Details</a>"
-				  + "</div>"
-				  + "</div>"
-				  + "</div>"
-				  // Panel for workpackages and tasks (Gantt chart)
-				  + "<div class=\"panel small-12 columns\">"
-				  + "<div class=\"row round\">"
-				  + "<div class=\"small-7 columns\">"
-				  + "<h2>Workpackages & Tasks</h2>"
-				  + "</div>"
-				  + "<div class=\"small-5 columns align-right padding-top-10\">"
-				  // button to add workpackages
-				  + "<a class=\"button\" href=\"addWorkpackage?projectID=" + project.getID() + "\">"
-				  + "<i class=\"fa fa-plus\"></i> Add Workpackage</a> "
-				  // button to add tasks
-				  + "<a class=\"button\" href=\"addTask?projectID=" + project.getID() + "\">"
-				  + "<i class=\"fa fa-plus\"></i> Add Task</a></div>"
-				  + "<div class=\"small-12 no-padding columns\">"
-				  // load gantt chart
-				  + "<img src=\"../../Charts/GanttProject" + project.getID() + ".jpg\">"
-				  + "</div>"
-				  + "</div>"
-				  + "</div>"
-				  // delete project button
-				  + "<div class=\"panel small-12 columns\">"
-				  + "<div class=\"row round\">"
-				  + "<a class=\"large expanded button\" id=\"editProject\"><i class=\"fa fa-pencil-square-o\"></i> Edit Project</a>"
-				  + "<a class=\"large expanded alert button\" id=\"deleteProject\" data-open=\"delete\"><i class=\"fa fa-trash\"></i> Delete Project</a>"
-				  + "</div>"
-				  + "</div>"
-				  
-				  + "<div class=\"reveal\" id=\"delete\" data-reveal>"
-				  + "<h1 class=\"align-left\">Are you sure?</h1>"
-				  + "<p class=\"lead\">The project can not be restored after delete.</p>"
-				  + "<a class=\"expanded alert button\" id=\"finalDelete\" href=\"../deleteProject?projectID=" + project.getID() + "\">Delete</a>"
-				  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
-				  + "<span aria-hidden=\"true\">&times;</span>"
-				  + "</button>"
-				  + "</div>"
-				  
-				  + "</section>"
-				  + "</div>"
-				  // required JavaScript
-				  + "<script src=\"../../js/vendor/jquery.js\"></script>"
-				  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
-				  + "<script>$(document).foundation();</script>"
-				  + "</body>"
-				  + "</html>");
+				// effort for every employee and total effort
+				double totalEffort = 0;		
+				for(Employee e: employees){
+					if ((e.getID() == employeeID) || (employeeID == 0)){
+						for (Booking b : bookings){
+							if (b.getEmployeeID() == e.getID()){
+								
+								String month = "";
+								SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+								SimpleDateFormat formatMonthYear = new SimpleDateFormat("MMMM yyyy");
+								try {
+									Calendar c = Calendar.getInstance();
+									Date date = format.parse(project.getStart());
+									c.setTime(date);
+									for (int y = 1; y < b.getMonth(); y++){
+										c.add(Calendar.MONTH, 1);
+									}
+									month = formatMonthYear.format(c.getTime());
+								} catch (ParseException ex) {
+									ex.printStackTrace();
+								}
+								
+								String task = "";
+								for (ProjectTask t : project.getTasks()){
+									if (t.getID() == b.getTaskID()){
+										task = t.getName();
+									}
+								}
+								
+								double expense = b.getHours() * e.getWage();
+								
+													
+													
+								out.println("<tr>"
+										  + "<td>" + e.getName() + "</td>"
+										  + "<td>" + month + "</td>"
+										  + "<td>" + task + "</div>"
+										  + "<td>" + b.getHours() + "</td>"
+										  + "<td>" + expense + "</td>"
+										  + "<td>" + e.getWage()+ "</td>"
+										  + "</tr>");
+							}
+						}
+					}
+				}
+
+				out.println("</tbody>"
+						  + "</table>");
+				
+			} else {
+				try {
+					bookings = effort.getBookings(employeeID);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				out.println("<section>"
+						  + "<div class=\"row\">"
+						  + "<div class=\"small-12 columns\">"
+						  + "<h2>Effort " + project.getShortname() + "  <small>" + project.getStart() + "-" + project.getEnd() + "</small></h2>"
+						  + "</div>"
+						  + "<div class=\"small-12 columns\">"
+						  + "<h3>" + selectedEmployee.getName() + "</h3>"
+						  + "</div>"
+						  // line chart
+						  + "<div class=\"small-12 no-padding columns\">"
+						  + "<img src=\"../../Charts/EffortProject" + project.getID() + "_Employee" + employeeID + ".jpg\">"
+						  + "</div>"
+						  + "</div>"
+						  + "<div class=\"row\" id=\"effortTable\">"
+						  + "<table class=\"stack\">"
+						  + "<thead>"
+						  + "<tr>"
+						  + "<th>Month</th>"
+						  + "<th>Task</th>"
+						  + "<th>Hours</th>"
+						  + "<th>~" + project.getCurrency() + "</th>"
+						  + "<th>" + project.getCurrency() + "/h</th>"
+						  + "</tr>"
+						  + "</thead>"
+						  + "<tbody>");
+		
+				// effort for every employee and total effort
+				double totalEffort = 0;		
+				for (Booking b : bookings){
+						
+						String month = "";
+						SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+						SimpleDateFormat formatMonthYear = new SimpleDateFormat("MMMM yyyy");
+						try {
+							Calendar c = Calendar.getInstance();
+							Date date = format.parse(project.getStart());
+							c.setTime(date);
+							for (int y = 1; y < b.getMonth(); y++){
+								c.add(Calendar.MONTH, 1);
+							}
+							month = formatMonthYear.format(c.getTime());
+						} catch (ParseException ex) {
+							ex.printStackTrace();
+						}
+						
+						String task = "";
+						for (ProjectTask t : project.getTasks()){
+							if (t.getID() == b.getTaskID()){
+								task = t.getName();
+							}
+						}
+						
+						double expense = b.getHours() * selectedEmployee.getWage();
+						
+											
+											
+						out.println("<tr>"
+								  + "<td>" + month + "</td>"
+								  + "<td>" + task + "</div>"
+								  + "<td>" + b.getHours() + "</td>"
+								  + "<td>" + expense + "</td>"
+								  + "<td>" + selectedEmployee.getWage()+ "</td>"
+								  + "</tr>");
+				}
+
+				out.println("</tbody>"
+						  + "</table>");
+				
+			}
+			out.println("</div>"
+					  + "<div class=\"row\">"
+					  + "<div class=\"small-4 columns\">"
+					  + "<a class=\"button expanded\" href=\"/Projektverwaltung/Projects/Overview/addWorkpackage?projectID=" + project.getID() + "\">"
+					  + "<i class=\"fa fa-plus\"></i> Add Workpackage</a> "
+					  + "</div>"
+					  + "<div class=\"small-4 columns\">"
+					  + "<a class=\"button expanded\" href=\"/Projektverwaltung/Projects/Overview/addTask?projectID=" + project.getID() + "\">"
+					  + "<i class=\"fa fa-plus\"></i> Add Task</a>"
+					  + "</div>"
+					  + "<div class=\"small-4 columns\">"
+					  + "<a class=\"button expanded\" href=\"/Projektverwaltung/Projects/Overview/bookHours?projectID=" + project.getID() + "\">"
+					  + "<i class=\"fa fa-clock-o\"></i> Book Hours</a>"
+					  + "</div>"
+					  + "</section>"
+					  + "</div>"
+					  // required JavaScript
+					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
+					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
+					  + "<script>$(document).foundation();</script>"
+					  + "</body>"
+					  + "</html>");
+		} else {
+			String url = request.getContextPath() + "/AccessDenied";
+            response.sendRedirect(url);
+		}
 	}
-	
 }

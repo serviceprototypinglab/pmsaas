@@ -3,7 +3,6 @@ package ch.zhaw.init.walj.projectmanagement.delete;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,19 +11,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.Employee;
-import ch.zhaw.init.walj.projectmanagement.util.Project;
 
 /**
- * Projectmanagement tool, Page to delete projects
+ * Projectmanagement tool, Page to delete tasks
  * 
  * @author Janine Walther, ZHAW
  * 
  */
 
 @SuppressWarnings("serial")
-@WebServlet("/Projects/deleteProject")
-public class DeleteProject extends HttpServlet {
+@WebServlet("/Projects/deleteExpense")
+public class DeleteExpense extends HttpServlet {
 
 	// Database access information
 	String url = "jdbc:mysql://localhost:3306/";
@@ -42,45 +39,35 @@ public class DeleteProject extends HttpServlet {
 		response.setContentType("text/html;charset=UTF8");
 
 		// get project given from get-parameter projectID
+		int expenseID = Integer.parseInt(request.getParameter("expenseID"));
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		
 		String message = "";
 
-		// get project
-		Project project = null;
-		try {
-			project = con.getProject(projectID);
-		} catch (SQLException e) {
-		}
-
 		// delete project from database
 		try {
-			con.deleteProject(projectID);
+			con.deleteExpense(expenseID);
 			// success message
 			message = "<div class=\"row\">"
 					+ "<div class=\"small-12 columns align-center\">" 
-				    + "<h2>The Project " + project.getName() + " has sucessfully been deleted.</h2>"
-					+ "<a href=\"/Projektverwaltung/Projects/Overview\">"
-					+ "<i class=\"fa fa-chevron-left fa-4x\" aria-hidden=\"true\"></i></br>"
-					+ "Click here to go back to overview</a>"
+				    + "<h2>The expense has sucessfully been deleted.</h2>"
+					+ "<a href=\"/Projektverwaltung/Projects/Edit?projectID=" + projectID + "#expenses\">Click here to go back to the edit page</a>"
+					+ "<br>"
+					+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + projectID + "\">Click here to go to the project overview</a>"
 					+ "</div>"
 					+ "</div>";
 		} catch (SQLException e) {
 			// error message
-			message =  "<div class=\"row\">"
+			message = "<div class=\"row\">"
 					+ "<div class=\"small-12 columns align-center\">" 
-				    + "<h2>The Project " + project.getName() + " could not be deleted</h2>"
-					+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + project.getID() + "\">"
-					+ "<i class=\"fa fa-chevron-left fa-4x\" aria-hidden=\"true\"></i></br>"
-					+ "Click here to go back to project</a>"
+				    + "<h2>The expense could not be deleted</h2>"
+					+ "<a href=\"/Projektverwaltung/Projects/Edit?projectID=" + projectID + "#expenses\">Click here to go back to the edit page</a>"
+					+ "<br>"
+					+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + projectID + "\">Click here to go to the project overview</a>"
 					+ "</div>"
 					+ "</div>";			
 		}
 		
-		// get the employees assigned to the project and add them to the ArrayList
-		ArrayList<Employee> employees = new ArrayList<Employee>();
-		employees = project.getEmployees();
-
 		PrintWriter out = response.getWriter();
 
 		// Print HTML head and header
@@ -100,16 +87,18 @@ public class DeleteProject extends HttpServlet {
 				  + "<header>" 
 				  + "<div class=\"row\">"
 				  // title
-				  + "<div class=\"small-12 medium-6 columns\"><h1>Delete Project</h1>"
-				  + "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a></div>"
+				  + "<div class=\"small-12 medium-6 columns\">"
+				  + "<h1>Delete Expense</h1>"
+				  + "</div>"
 				  // menu
 				  + "<div class=\"small-12 medium-6 columns\">" 
 				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> " 
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> "
+				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
+				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
 				  + "</div>"
 				  + "</div>"
 				  + "</div>"

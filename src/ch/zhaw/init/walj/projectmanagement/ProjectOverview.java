@@ -50,20 +50,25 @@ public class ProjectOverview extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
 				
+		int id = (int) request.getSession(false).getAttribute("ID");
+		
 		int projectID = Integer.parseInt(request.getParameter("id"));
 		
 		DBConnection con = new DBConnection(url, dbName, userName, password);
 		
 		try {
 			project = con.getProject(projectID);
-			expenses = project.getExpenses();
-			employees = project.getEmployees();
-			effort = new Effort(project.getTasks());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 		PrintWriter out = response.getWriter();
+				
+		if (project.getLeader() == id) {
+	
+		expenses = project.getExpenses();
+		employees = project.getEmployees();
+		effort = new Effort(project.getTasks());
 		
 		pieChart = new PieChart(project);
 		lineChart = new LineChart(project);
@@ -77,6 +82,11 @@ public class ProjectOverview extends HttpServlet {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		
+		for (Employee e : employees){
+			lineChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/", e.getID());
+		}
+		
 		
 		try {
 			out.println("<!DOCTYPE html>" 
@@ -95,16 +105,17 @@ public class ProjectOverview extends HttpServlet {
 					  + "<div class=\"row\">" 
 					  + "<div class=\"small-8 medium-6 columns\">"
 					  // title
-					  + "<h1>" + project.getName() + "</h1>"
+					  + "<h1>" + project.getShortname() + "</h1>"
 					  + "</div>"
 					  // menu
 					  + "<div class=\"small-12 medium-6 columns\">" 
 					  + "<div class=\"float-right menu\">"
-					  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\">All Projects</a> "
-					  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\">New Project</a> " 
-					  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\">New Employee</a> "
-					  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\">Help</a> " 
-					  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\">Logout</a> " 
+					  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
+					  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
+					  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
+					  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
+					  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
+					  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
 					  + "</div>" 
 					  + "</div>"
 					  + "</div>" 
@@ -119,7 +130,7 @@ public class ProjectOverview extends HttpServlet {
 					  + "<div class=\"small-4 medium-2 columns bold\">Projectduration</div>" 
 					  + "<div class=\"small-8 medium-4 columns\">" + project.getDuration() + "</div>"
 					  // total budget
-					  + "<div class=\"small-4 medium-2 columns bold\">Total Budget</div>"
+					  + "<div class=\"small-4 medium-2 columns bold\">Budget</div>"
 					  + "<div class=\"small-8 medium-4 columns\">" + project.getBudgetFormatted() + "</div>"
 					  // number of workpackages
 					  + "<div class=\"small-4 medium-2 columns bold\">Workpackages</div>" 
@@ -165,18 +176,17 @@ public class ProjectOverview extends HttpServlet {
 					  + "<a class=\"button\" href=\"addExpense?projectID=" + project.getID() + "\">"
 					  + "<i class=\"fa fa-plus\"></i> Add Expenses</a>"
 					  + "</div>"
-					  + "<div class=\"small-4 columns\">"
-					  + "<span class=\"bold\">Employee</span>"
-					  + "</div>"
-					  + "<div class=\"small-2 columns\">"
-					  + "<span class=\"bold\">Type</span>"
-					  + "</div>"
-					  + "<div class=\"small-3 columns\">"
-					  + "<span class=\"bold\">Date</span>"
-					  + "</div>"
-					  + "<div class=\"small-3 columns\">"
-					  + "<span class=\"bold\">Costs</span>"
-					  + "</div>");
+					  + "<table class=\"scroll\">"
+					  + "<thead>"
+					  + "<tr>"
+					  + "<th>Employee</th>"
+					  + "<th>Type</th>"
+					  + "<th>Date</th>"
+					  + "<th>Costs</th>"
+					  + "<th></th>"
+					  + "</tr>"
+					  + "</thead>"
+					  + "<tbody>");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
@@ -185,25 +195,32 @@ public class ProjectOverview extends HttpServlet {
 		for(Expense ex : expenses){
 			Employee employee = project.getSpecificEmployee(ex.getEmployeeID());
 			try {
-				out.println("<div class=\"small-4 columns\">" + employee.getName() + "</div>"
-						  + "<div class=\"small-2 columns\" title=\"" + ex.getDescription() + "\">" + ex.getType() + "</div>"
-						  + "<div class=\"small-3 columns\">" + dateFormatter.getFormattedDate(ex.getDate()) + "</div>"
-						  + "<div class=\"small-3 columns\">" + project.getCurrency() + " " + ex.getCostsAsString() + "</div>");
+				out.println("<tr>"
+						  + "<td>" + employee.getName() + "</td>"
+						  + "<td title=\"" + ex.getDescription() + "\">" + ex.getType() + "</td>"
+						  + "<td>" + dateFormatter.getFormattedDate(ex.getDate()) + "</td>"
+						  + "<td>" + project.getCurrency() + "</td>"
+						  + "<td class=\"align-right\">" + ex.getCostsAsString() + "</td>"
+						  + "</tr>");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		out.println("<span class=\"bold\">"
-				  + "<div class=\"small-3 small-offset-6 columns\">"
-				  // Total expenses
-				  + "</br>Total</div>"
-				  + "<div class=\"small-3 columns\">"
-				  + "</br>" + project.getCurrency() + " " + project.getTotalExpensesAsString() 
+		out.println("</tbody>"
+				  + "</tfoot>"
+				  + "<tr>"
+				  + "<td></td>"
+				  + "<td></td>"
+				  + "<td>Total</td>"
+				  + "<td>" + project.getCurrency() + "</td>"
+				  + "<td class=\"align-right\">" + project.getTotalExpensesAsString() + "</td>"
+				  + "</tr>"
+				  + "</tfoot>"
+				  + "</table>"
 				  + "</div>"
-				  + "</span>"
 				  + "</div>"
-				  + "</div>"
+				  
 				  // effort panel
 				  + "<div class=\"panel small-12 medium-6 columns\">"
 				  + "<div class=\"row round\">"
@@ -216,7 +233,8 @@ public class ProjectOverview extends HttpServlet {
 				  + "<i class=\"fa fa-plus\"></i> Assign Employees</a> "
 				  // button to book hours
 				  + "<a class=\"button\" href=\"bookHours?projectID=" + project.getID() + "\">"
-				  + "<i class=\"fa fa-clock-o\"></i> Book Hours</a></div>"
+				  + "<i class=\"fa fa-clock-o\"></i> Book Hours</a>"
+				  + "</div>"
 				  // line chart
 				  + "<div class=\"small-12 no-padding columns\">"
 				  + "<img src=\"../../Charts/EffortProject" + project.getID() + ".jpg\">"
@@ -226,25 +244,42 @@ public class ProjectOverview extends HttpServlet {
 				  + "<span class=\"bold\">Employee</span>"
 				  + "</div>"
 				  + "<div class=\"small-4 end columns\">"
-				  + "<span class=\"bold\">Total Effort</span>"
+				  + "<span class=\"bold\">Effort</span>"
 				  + "</div>");
 
 		// effort for every employee and total effort
 		double totalEffort = 0;		
+		String disabled = "";
+		String link = "";
 		for(Employee employee : employees){
 			try {
 				double effortEmployee = effort.getEffortPerEmployee(employee.getID());
 				totalEffort += effortEmployee;
+				if (effortEmployee == 0){
+					disabled ="disabled ";	
+					link = "";
+				} else {
+					disabled = "";
+					link = "Effort?projectID=" + project.getID() + "&employeeID=" + employee.getID();
+				}
+				
 				out.println("<div class=\"small-6 columns\">" + employee.getName() + "</div>"
 						   +"<div class=\"small-3 columns\">" + effortEmployee + "h</div>"
 						   + "<div class=\"small-3 columns\">"
-						   + "<a class=\"button float-right\">"
+						   + "<a class=\"" + disabled + "button float-right\" href=\"" + link + "\">"
 						   + "<i class=\"fa fa-info\"></i> Details</a>"
 						   + "</div>");
 				
 			} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+		}
+		if (totalEffort == 0) {
+			disabled ="disabled ";	
+			link = "";
+		} else {
+			disabled = "";
+			link = "Effort?projectID=" + project.getID();
 		}
 		
 		out.println("<div class=\"small-6 columns\">"
@@ -254,7 +289,7 @@ public class ProjectOverview extends HttpServlet {
 				  + "<span class=\"bold\">" + totalEffort + "h</span>"
 				  + "</div>"
 				  +"<div class=\"small-3 columns\">"
-				  + "<a class=\"button float-right\">"
+				  + "<a class=\"" + disabled + "button float-right\" href=\"" + link + "\">"
 				  + "<i class=\"fa fa-info\"></i> Details</a>"
 				  + "</div>"
 				  + "</div>"
@@ -271,7 +306,8 @@ public class ProjectOverview extends HttpServlet {
 				  + "<i class=\"fa fa-plus\"></i> Add Workpackage</a> "
 				  // button to add tasks
 				  + "<a class=\"button\" href=\"addTask?projectID=" + project.getID() + "\">"
-				  + "<i class=\"fa fa-plus\"></i> Add Task</a></div>"
+				  + "<i class=\"fa fa-plus\"></i> Add Task</a>"
+				  + "</div>"
 				  + "<div class=\"small-12 no-padding columns\">"
 				  // load gantt chart
 				  + "<img src=\"../../Charts/GanttProject" + project.getID() + ".jpg\">"
@@ -281,15 +317,15 @@ public class ProjectOverview extends HttpServlet {
 				  // delete project button
 				  + "<div class=\"panel small-12 columns\">"
 				  + "<div class=\"row round\">"
-				  + "<a class=\"large expanded button\" id=\"editProject\"><i class=\"fa fa-pencil-square-o\"></i> Edit Project</a>"
-				  + "<a class=\"large expanded alert button\" id=\"deleteProject\" data-open=\"delete\"><i class=\"fa fa-trash\"></i> Delete Project</a>"
+				  + "<a class=\"large expanded button\" id=\"editProject\" href=\"../Edit?projectID=" + project.getID() + "\"><i class=\"fa fa-pencil-square-o\"></i> Edit Project</a>"
+				  + "<a class=\"large expanded warning button\" id=\"deleteProject\" data-open=\"delete\"><i class=\"fa fa-archive\"></i> Archive Project</a>"
 				  + "</div>"
 				  + "</div>"
 				  
 				  + "<div class=\"reveal\" id=\"delete\" data-reveal>"
 				  + "<h1 class=\"align-left\">Are you sure?</h1>"
-				  + "<p class=\"lead\">The project can not be restored after delete.</p>"
-				  + "<a class=\"expanded alert button\" id=\"finalDelete\" href=\"../deleteProject?projectID=" + project.getID() + "\">Delete</a>"
+				  + "<p class=\"lead\"></p>"
+				  + "<a class=\"expanded warning button\" id=\"finalDelete\" href=\"../archiveProject?projectID=" + project.getID() + "\"><i class=\"fa fa-archive\"></i> Archive Project</a>"
 				  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
 				  + "<span aria-hidden=\"true\">&times;</span>"
 				  + "</button>"
@@ -303,6 +339,9 @@ public class ProjectOverview extends HttpServlet {
 				  + "<script>$(document).foundation();</script>"
 				  + "</body>"
 				  + "</html>");
+		} else {
+	        String url = request.getContextPath() + "/AccessDenied";
+            response.sendRedirect(url);
+		}
 	}
-	
 }

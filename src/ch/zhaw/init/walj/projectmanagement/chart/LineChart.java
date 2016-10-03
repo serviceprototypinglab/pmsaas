@@ -55,10 +55,33 @@ public class LineChart {
     	
     	return dataset;
     }
+    
+	private XYSeriesCollection createDataset(int employee) throws SQLException {
+		Effort effort = new Effort(tasks);
+    	double bookedEffort = 0;
+    	XYSeries booked = new XYSeries("Booked");
+    	int projectMonths = project.getNumberOfMonths();
+    	for (double i = 1; i <= projectMonths; i++){
+    		
+    		bookedEffort += effort.getBookedEffort(i, employee);
+    		booked.add(i, bookedEffort);
+    			
+    	}
+    	XYSeriesCollection dataset = new XYSeriesCollection();
+    	dataset.addSeries(booked);
         
-    public void createChart(String path) throws NumberFormatException, SQLException, IOException{
     	
-    	XYSeriesCollection dataset = (XYSeriesCollection) createDataset();
+    	return dataset;
+	}
+        
+    public void createChart(String path) {
+    	
+    	XYSeriesCollection dataset = null;
+		try {
+			dataset = (XYSeriesCollection) createDataset();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
     	
     	JFreeChart xylineChart = ChartFactory.createXYLineChart(
     	         "",
@@ -78,10 +101,56 @@ public class LineChart {
 	    int width = 600; /* Width of the image */
 	    int height = 400; /* Height of the image */ 
 	    File lineChart = new File(path + "EffortProject" + project.getID() + ".jpg" ); 
-	    ChartUtilities.saveChartAsJPEG( lineChart , xylineChart , width , height );
+	    try {
+			ChartUtilities.saveChartAsJPEG( lineChart , xylineChart , width , height );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    
+	    width = 1200; /* Width of the image */
+	    height = 600; /* Height of the image */ 
+	    lineChart = new File(path + "EffortProject" + project.getID() + "_large.jpg" ); 
+	    try {
+			ChartUtilities.saveChartAsJPEG( lineChart , xylineChart , width , height );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
     
+    public void createChart(String path, int employee) {
+    	XYSeriesCollection dataset = null;
+		try {
+			dataset = createDataset(employee);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	
+    	JFreeChart xylineChart = ChartFactory.createXYLineChart(
+    	         "",
+    	         "Month" ,
+    	         "Hours" ,
+    	         dataset ,
+    	         PlotOrientation.VERTICAL ,
+    	         true , true , false);
+    	
+	    XYPlot plot = xylineChart.getXYPlot( );
+	    XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer( );
+	    renderer.setSeriesPaint( 0 , new Color(0, 101, 166) );
+	    renderer.setSeriesPaint( 1 , new Color(0, 62, 102) );
+	    plot.setRenderer(renderer); 
+	    
+	    
+	    int width = 1200; /* Width of the image */
+	    int height = 600; /* Height of the image */ 
+	    File lineChart = new File(path + "EffortProject" + project.getID() + "_Employee" + employee + ".jpg" ); 
+	    try {
+			ChartUtilities.saveChartAsJPEG( lineChart , xylineChart , width , height );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+
     
     
 }

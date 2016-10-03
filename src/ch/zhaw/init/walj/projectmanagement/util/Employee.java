@@ -54,6 +54,21 @@ public class Employee {
 	}
 	
 	/**
+	 * @return the firstname of the employee as a string
+	 */
+	public String getFirstName(){
+		return firstname;
+	}
+	
+	
+	/**
+	 * @return the lastname of the employee as a string
+	 */
+	public String getLastName(){
+		return lastname;
+	}
+	
+	/**
 	 * @return the firstname and lastname of the employee together as a string
 	 */
 	public String getName(){

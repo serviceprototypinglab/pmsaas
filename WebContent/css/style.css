@@ -4,10 +4,6 @@
 	border: none;
 }
 
-hr {
-	display: none;
-}
-
 body {
 	background-color: #0065a6;
 }
@@ -40,8 +36,32 @@ h2, h3 {
 	margin-left: 15px;	
 }
 
+h4 {
+	font-size: 1.8em;
+}
+
+h5 {
+	font-size: 1.4em;
+	margin-bottom: 10px;
+}
+
+.blue {
+	color: #0065a6;	
+}
+
 .panel h2, .panel h3 {
 	margin-left: 0;
+}
+
+.no-margin{
+	margin: 0;
+}
+
+.edit {
+	color: #0065a6;
+	font-size: 2.5em;
+	margin-bottom: 10px;
+	font-weight: bold;
 }
 
 .add {
@@ -71,7 +91,7 @@ h2, h3 {
 }
 
 .accordion-content {
-	height: 200px;
+	min-height: 200px;
 	border: none !important;
 }
 
@@ -209,4 +229,12 @@ img {
 
 #finalDelete {
 	margin-top: 25px;
+}
+
+#effortTable {
+	padding: 24px;
+}
+
+#project {
+	margin-top: 20px;
 }
