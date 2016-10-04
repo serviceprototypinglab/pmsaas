@@ -50,7 +50,7 @@ public class Login extends HttpServlet {
 				  + "<section>" 
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-4 small-offset-4 end columns\">"
-				  + "<img src=\"img/service_engineering_logo.png\">"
+				  + "<img src=\"img/logo.png\">"
 				  + "</div>"
 				  + "</div>"
 				  + "<div class=\"row\">" 
@@ -122,15 +122,14 @@ public class Login extends HttpServlet {
         password = PasswordService.getInstance().encrypt(password);
         Employee e = con.findUser(user, password);
         
-        int id = e.getID();
-        
-        if (id > 0) {
+        try {
+        	int id = e.getID();
             request.getSession().setAttribute("user", e.getFirstName());
             request.getSession().setAttribute("ID", id);
             response.sendRedirect(request.getContextPath() + "/Projects/Overview");
-        } else {
+        } catch (NullPointerException ex){
             request.setAttribute("error", "Unknown login, try again");
-            doGet(request, response);
+            doGet(request, response);        	
         }
     }
 }

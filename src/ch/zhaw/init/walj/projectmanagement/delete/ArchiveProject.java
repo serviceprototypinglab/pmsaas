@@ -100,10 +100,12 @@ public class ArchiveProject extends HttpServlet {
 				  + "<header>" 
 				  + "<div class=\"row\">"
 				  // title
-				  + "<div class=\"small-12 medium-6 columns\"><h1>Archive Project</h1>"
+				  + "<div class=\"small-12 medium-8 columns\">"
+				  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
+				  + "<h1>Archive Project</h1>"
 				  + "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a></div>"
 				  // menu
-				  + "<div class=\"small-12 medium-6 columns\">" 
+				  + "<div class=\"small-12 medium-4 columns\">" 
 				  + "<div class=\"float-right menu\">"
 				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
 				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "

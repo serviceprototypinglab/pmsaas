@@ -91,7 +91,7 @@ h5 {
 }
 
 .accordion-content {
-	min-height: 200px;
+	min-height: 230px;
 	border: none !important;
 }
 
@@ -237,4 +237,14 @@ img {
 
 #project {
 	margin-top: 20px;
+}
+
+.big-icon {
+	font-size: 7em !important;
+	margin-left: 25px;
+}
+
+.small-img {
+	height: 65px;
+	margin-right: 20px;
 }

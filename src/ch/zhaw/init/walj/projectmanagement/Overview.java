@@ -41,11 +41,22 @@ public class Overview extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
-
+		
+		ArrayList<Project> projects = new ArrayList<Project>();
+		
 		int id = (int) request.getSession(false).getAttribute("ID");
 		String name = (String) request.getSession(false).getAttribute("user");
 		
+		
 		DBConnection con = new DBConnection(url, dbName, userName, password);
+		
+		ArrayList<Employee> employeeList = null;
+		try {
+			employeeList = con.getAllEmployees(id);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 				
 		PrintWriter out = response.getWriter();
 		
@@ -65,12 +76,13 @@ public class Overview extends HttpServlet {
 				  + "<div id=\"wrapper\">" 
 				  + "<header>" 
 				  + "<div class=\"row\">" 
-				  + "<div class=\"small-8 medium-6 columns\">"
+				  + "<div class=\"small-8 columns\">"
+				  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
 				  // title
-				  + "<h1>Projects</h1>"
+				  + "<h1> Projects</h1>"
 				  + "</div>"
 				  // menu
-				  + "<div class=\"small-12 medium-6 columns\">" 
+				  + "<div class=\"small-12 medium-4 columns\">" 
 				  + "<div class=\"float-right menu\">"
 				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
 				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
@@ -190,14 +202,121 @@ public class Overview extends HttpServlet {
 						  + "<a href=\"/Projektverwaltung/Projects/newProject\">Click here to create a new project</a>"
 						  + "</div>");				
 			}
+		
+			out.println("</div>");
+			
+			if (employeeList.size() > 1) {
+							
+				for (Employee e : employeeList){
+					if (e.getID() != id){
+						// get all projects where the current user is supervisor
+						try {
+							resProjects = con.getProjects(e.getID());
+							while (resProjects.next()) {								
+								// new project with data from the database
+								Project project = con.getProject(resProjects.getInt("ProjectIDFS"));
+								projects.add(project);	
+							}	
+						} catch (SQLException e1) {
+						}	
+					}
+				}
+				if (!projects.isEmpty()){
+					out.println("<div class=\"row\">"
+				     	  + "<h3>Other Projects</h3>"
+					      + "</div>"
+				     	  + "<div class=\"row\">"
+					      + "<ul class=\"accordion\" data-accordion data-multi-expand=\"true\" data-allow-all-closed=\"true\">");
+					for (Project p : projects){
+						// get all employees
+						ArrayList <Employee> employee = p.getEmployees();
+						
+						Employee supervisor = con.getEmployee(p.getLeader());
+						
+						String employees = "";
+						
+						// string of all employee names
+						if (!employee.isEmpty()){
+							employees = employee.get(0).getName();
+							for (int i = 1; i < employee.size(); i++){
+								employees += ", " + employee.get(i).getName();
+							}
+						} else {
+							employees = "no employees assigned";
+						}
+						
+						// get number of days left to end of project
+						Date date = new Date();
+						String daysUntilEnd = "";
+						int days = dateHelper.getDaysBetween(date, p.getEnd());
+						if (days == 0){
+							daysUntilEnd = "Project finished";
+						} else {
+							daysUntilEnd = "Project ends in " + days + " days";
+						}
+				
+						piechart = new PieChart(p);
+						
+						
+						// print list item
+						out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
+								  + "<span class=\"bigtext small-3 columns down\">" + p.getShortname() + "</span>"
+								  + "<span class=\"middletext small-6 columns down\">" + p.getName() + "</span>"
+								  + "<span class=\"success badge errorbadge\">0</span>"
+								  + "</a>"
+								  + "<div class=\"accordion-content\" data-tab-content>"
+								  // Write ProjectLeader
+								  + "<p><span class=\"small-3 columns\">Project Leader</span>"
+								  + "<span class=\"small-9 end columns\">" + supervisor.getName() + "</span>"
+								  + "</p>"
+								  // Write Duration
+								  + "<p>"
+								  + "<span class=\"small-3 columns\">Projectduration</span>"
+								  + "<span class=\"small-4 columns\">" 
+								  + dateHelper.getFormattedDate(p.getStart()) + " - " + dateHelper.getFormattedDate(p.getEnd()) + "</span>"
+						  		  + "<span class=\"small-4 end columns align-right\">" + daysUntilEnd + "</span>"
+				  		  		  + "</p>"
+				  		  		  // Write Budget
+				  		  		  + "<p>"
+				  		  		  + "<span class=\"small-3 columns\">Budget</span>"
+				  		  		  + "<span class=\"small-4 columns\">" + p.getBudgetFormatted() + "</span>"
+				  		  		  + "<span class=\"small-4 end columns align-right\">" + p.getCurrency()
+				  		  		  + " " + piechart.getRemainingBudgetAsString() + " left</span>"
+				  		  		  + "</p>"
+								  // Write Workpackages
+								  + "<p>"
+								  + "<span class=\"small-3 columns\">Workpackages</span>"
+								  + "<span class=\"small-4 columns\">" + p.nbrOfWorkpackages() + "</span>"
+								  + "<span class=\"small-4 end columns align-right\">"
+								  + "-"
+								  + "</span>"
+								  + "</p>"
+								  // Write Tasks
+								  + "<p>"
+								  + "<span class=\"small-3 columns\">Tasks</span>"
+								  + "<span class=\"small-4 columns\">" + p.nbrOfTasks() + "</span>"
+								  + "<span class=\"small-4 end columns align-right\">" 
+								  + "-"
+								  + "</span>"
+								  + "</p>"
+								  // Write Employees
+								  + "<p>"
+								  + "<span class=\"small-3 columns\">Employees</span>"
+								  + "<span class=\"small-4 columns\">" + p.nbrOfEmployees() 
+								  + "</span><span class=\"small-4 end columns align-right\">" + employees
+								  + "</span></p>"
+								  // Write Partners
+								  + "<p><span class=\"small-3 columns\">Partner</span>"
+								  + "<span class=\"small-9 end columns\">" + p.getPartners() + "</span>"
+								  + "</p>"
+								  + "</div>"
+								  + "</li>");
+					}					
+				}				
+			}		
 		} catch (SQLException e) {
 		}
-		
-		out.println("</div>"
-				  + "<div class=\"row\">"
-				  + "<h3>Other Projects</h3>"
-				  + "</div>"
-				  + "</section>"
+		out.println("</section>"
 				  + "</div>"
 				  + "<script src=\"../js/vendor/jquery.js\"></script>"
 				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"

@@ -13,7 +13,7 @@ public class Employee {
 	private String lastname;
 	private String kuerzel;
 	private String mail;
-	private double wage;
+	private int wage;
 	private int supervisor;
 	
 	/**
@@ -34,7 +34,7 @@ public class Employee {
 	 * @param supervisor
 	 * 			supervisor of the employee
 	 */
-	public Employee(int id, String firstname, String lastname, String kuerzel, String mail, double wage, int supervisor){
+	public Employee(int id, String firstname, String lastname, String kuerzel, String mail, int wage, int supervisor){
 		
 		this.id = id;
 		this.firstname = firstname;
@@ -93,7 +93,7 @@ public class Employee {
 	/**
 	 * @return the employees wage per hour
 	 */
-	public double getWage(){
+	public int getWage(){
 		return wage;
 	}
 	

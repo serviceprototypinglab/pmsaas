@@ -38,7 +38,7 @@ public class Logout extends HttpServlet {
 				  + "<section>" 
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-4 small-offset-4 end columns\">"
-				  + "<img src=\"../img/service_engineering_logo.png\">"
+				  + "<img src=\"../img/logo.png\">"
 				  + "</div>"
 				  + "</div>"
 				  + "<div class=\"row\">" 

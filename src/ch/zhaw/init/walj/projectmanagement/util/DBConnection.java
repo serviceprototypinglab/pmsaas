@@ -138,7 +138,7 @@ public class DBConnection {
 		String eLastname;
 		String eKuerzel;
 		String eMail;
-		double eWage;
+		int eWage;
 		int eSupervisor;
 
 		// variables for data from expense table
@@ -225,7 +225,7 @@ public class DBConnection {
 					resWage = stWage.executeQuery(
 							"SELECT WagePerHour FROM  Wage where EmployeeIDFS=" + eID + " order by ValidFrom desc");
 					resWage.next();
-					eWage = resWage.getDouble("WagePerHour");
+					eWage = resWage.getInt("WagePerHour");
 
 					Employee employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, eWage, eSupervisor);
 					
@@ -538,17 +538,30 @@ public class DBConnection {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
 		Employee employee;
 
+		Statement stWage = conn.createStatement();
+
 		try {
 
 			// get the employees
-			res = st.executeQuery(
-					"SELECT * from Employees WHERE Supervisor =" + supervisor + " or EmployeeID = " + supervisor);
+			res = st.executeQuery("SELECT * from Employees WHERE Supervisor =" + supervisor + " or EmployeeID = " + supervisor);
 
 			while (res.next()) {
-
+				
 				// create new employees and add them to the ArrayList
-				employee = new Employee(res.getInt("EmployeeID"), res.getString("Firstname"), res.getString("Lastname"),
-						res.getString("Kuerzel"), res.getString("Mail"), 0, supervisor);
+				int eID = res.getInt("EmployeeID");
+				String eFirstname = res.getString("Firstname");
+				String eLastname = res.getString("Lastname");
+				String eKuerzel = res.getString("Kuerzel");
+				String eMail = res.getString("Mail");
+				int eSupervisor = res.getInt("Supervisor");
+
+				// get the wage of the employee
+				ResultSet resWage = stWage.executeQuery("SELECT WagePerHour FROM  Wage where EmployeeIDFS=" + eID + " order by ValidFrom desc");
+				resWage.next();
+				int eWage = resWage.getInt("WagePerHour");
+
+				employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, eWage, eSupervisor);
+				
 				employees.add(employee);
 			}
 
@@ -731,6 +744,55 @@ public class DBConnection {
 
 	public void deleteEffort(int effortID) throws SQLException {
 		query = "DELETE FROM Bookings WHERE `BookingID` = " + effortID;
+		st.executeUpdate(query);
+	}
+
+	public Employee getEmployee(int id) {
+		Employee employee = null;
+		
+		try {
+
+			// get the employees
+			res = st.executeQuery("SELECT * from Employees WHERE EmployeeID = " + id);
+
+			res.next();
+			
+			String firstname = res.getString("Firstname");
+			String lastname = res.getString("Lastname");
+			String kuerzel = res.getString("Kuerzel");
+			String mail = res.getString("Mail");
+			int supervisor =  res.getInt("Supervisor");
+			
+			res = st.executeQuery("SELECT WagePerHour FROM  Wage where EmployeeIDFS=" + id + " order by ValidFrom desc");
+
+			res.next();
+			
+			int wage = res.getInt("WagePerHour");
+			
+			
+			// create new employee
+			employee = new Employee(id, firstname, lastname, kuerzel, mail, wage, supervisor);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return employee;
+	}
+
+	public void updateUser(int userID, String firstname, String lastname, String kuerzel, String mail) throws SQLException {
+		query = "UPDATE `Employees` SET `Firstname`='" + firstname + "',`Lastname`='" + lastname + "',`Kuerzel`='" + kuerzel + "',`Mail`='" + mail + "' WHERE `EmployeeID`='" + userID + "'";
+		st.executeUpdate(query);
+	}
+
+	public void newWage(int userID, double wage, String date) throws SQLException {
+		query = "INSERT INTO Wage (EmployeeIDFS, WagePerHour, ValidFrom) VALUES (" + userID + ", "
+				+ wage + ", '" + date + "');";
+		st.executeUpdate(query);
+	}
+
+	public void updatePassword(int userID, String password) throws SQLException {
+		query = "UPDATE `Employees` SET `Password`='" + password + "' WHERE `EmployeeID`='" + userID + "'";
 		st.executeUpdate(query);
 	}
 

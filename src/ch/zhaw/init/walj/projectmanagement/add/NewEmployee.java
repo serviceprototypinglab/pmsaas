@@ -67,11 +67,12 @@ public class NewEmployee extends HttpServlet {
 				  + "<header>"
 				  + "<div class=\"row\">"
 				  // title
-				  + "<div class=\"small-8 medium-6 columns\">"
+				  + "<div class=\"small-8 medium-8 columns\">"
+				  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
 				  + "<h1>New Employee</h1>"
 				  + "</div>"
 				  // menu
-				  + "<div class=\"small-12 medium-6 columns\">"
+				  + "<div class=\"small-12 medium-4 columns\">"
 				  + "<div class=\"float-right menu\">"
 				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
 				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
@@ -190,11 +191,12 @@ public class NewEmployee extends HttpServlet {
 				  + "<header>"
 				  + "<div class=\"row\">"
 				  // title
-				  + "<div class=\"small-8 medium-6 columns\">"
+				  + "<div class=\"small-8 medium-8 columns\">"
+				  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
 				  + "<h1>New Employee</h1>"
 				  + "</div>"
 				  // menu
-				  + "<div class=\"small-12 medium-6 columns\">"
+				  + "<div class=\"small-12 medium-4 columns\">"
 				  + "<div class=\"float-right menu\">"
 				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
 				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
