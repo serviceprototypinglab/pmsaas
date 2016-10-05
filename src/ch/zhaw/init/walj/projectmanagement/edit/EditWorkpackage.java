@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 
-// TODO datum normale eingabe
 // TODO /** kommentare
 @SuppressWarnings("serial")
 @WebServlet("/Projects/EditWorkpackage")

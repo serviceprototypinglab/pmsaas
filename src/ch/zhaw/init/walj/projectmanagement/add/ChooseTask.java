@@ -37,7 +37,7 @@ public class ChooseTask extends HttpServlet{
 	
 	@Override
 	// method to handle post-requests
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
 
 		int id = (int) request.getSession(false).getAttribute("ID");
@@ -105,6 +105,7 @@ public class ChooseTask extends HttpServlet{
 					  + "<section>");
 			// print HTML section with form
 			out.println("<div class=\"row\">"
+					  + "<h3>Choose Task(s)</h3>" 
 					  + "<form method=\"post\" action=\"../assignEmployee\" data-abide novalidate>"
 				
 					  // error message (if something's wrong with the form)

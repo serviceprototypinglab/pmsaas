@@ -157,7 +157,7 @@ public class NewEmployee extends HttpServlet {
 		
 		// create new employee
 		try {
-			String password = con.newEmployee(1, firstname, lastname, kuerzel, mail, wage);
+			String password = con.newEmployee(1, firstname, lastname, kuerzel, mail, wage); // //TODO ID von session
 			// success message
 			message = "<div class=\"row\">"
 					+ "<div class=\"callout success\">"
@@ -168,7 +168,6 @@ public class NewEmployee extends HttpServlet {
 					+ "<p>Mail: " + mail + "</p>"
 					+ "<p>Wage: " + wage + "</p>"
 					+ "<p>Password: " + password + "</p>"
-					+ "<a href=\"#\">If you want to assign this employee to a task, klick here</a>" // TODO insert correct link
 					+ "</div></div>";			
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

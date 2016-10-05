@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Overview
  */
-
-// TODO übersicht richtige werte (anstatt XX days until...)
 @SuppressWarnings("serial")
 @WebServlet("/Projects/help")
 public class Help extends HttpServlet {

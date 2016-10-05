@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
 
-// TODO datum normale eingabe
+
 // TODO /** kommentare
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview/addWorkpackage")
@@ -220,7 +220,7 @@ public class AddWorkpackage extends HttpServlet {
 					  + "<section>"
 					  + "<div class=\"row\">"
 					  + message
-					  + "<h2 class=\"small-12 columns\">Add Workpackage</h2>"// TODO Titel überlegen
+					  + "<h2 class=\"small-12 columns\"></h2>"// TODO Titel überlegen
 					  + "</div>"
 					  + "<form method=\"post\" action=\"addWorkpackage\" data-abide novalidate>"
 					  // project ID

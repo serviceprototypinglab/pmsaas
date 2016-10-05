@@ -146,8 +146,8 @@ public class Overview extends HttpServlet {
 					out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
 							  + "<span class=\"bigtext small-3 columns down\">" + project.getShortname() + "</span>"
 							  + "<span class=\"middletext small-6 columns down\">" + project.getName() + "</span>"
-							  + "<button class=\"button small-2 columns down smalltext\" onclick=\"Redirect(" + project.getID() + ");\">Select</button>"
-							  + "<span class=\"success badge errorbadge\">0</span>"
+							  + "<button class=\"button small-2 columns end down smalltext\" onclick=\"Redirect(" + project.getID() + ");\">Select</button>"
+							// TODO  + "<span class=\"success badge errorbadge\">0</span>"
 							  + "</a>"
 							  + "<div class=\"accordion-content\" data-tab-content>"
 							  // Write Duration
@@ -261,8 +261,8 @@ public class Overview extends HttpServlet {
 						// print list item
 						out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
 								  + "<span class=\"bigtext small-3 columns down\">" + p.getShortname() + "</span>"
-								  + "<span class=\"middletext small-6 columns down\">" + p.getName() + "</span>"
-								  + "<span class=\"success badge errorbadge\">0</span>"
+								  + "<span class=\"middletext small-6 columns end down\">" + p.getName() + "</span>"
+								 // TODO + "<span class=\"success badge errorbadge\">0</span>"
 								  + "</a>"
 								  + "<div class=\"accordion-content\" data-tab-content>"
 								  // Write ProjectLeader

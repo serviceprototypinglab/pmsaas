@@ -140,6 +140,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			
 			// print HTML section with form
 			out.println("<div class=\"row\">"
+					  + "<h3>Choose Task(s)</h3>" 
 					  + "<form method=\"post\" action=\"../bookHours/chooseTask\" data-abide novalidate>"
 					  
 					  // error message (if something's wrong with the form)
@@ -273,13 +274,13 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			
 			// print HTML section with form
 			out.println("<div class=\"row\">"
+					  + "<h3>Book Hours</h3>"
 					  + "<form method=\"post\" action=\"../bookHours\" data-abide novalidate>"
 	
 					  // error message (if something's wrong with the form)
 					  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
 					  + "<p><i class=\"fa fa-exclamation-triangle\"></i> There are some errors in the form</p></div>"
 					
-					  + "<h3></h3></br>" //TODO Titel überlegen
 					  + "<input type=\"hidden\" name=\"projectID\" value=\"" + projectID + "\">"
 					  + "<input type=\"hidden\" name=\"employeeID\" value=\"" + employeeID + "\">");
 					
@@ -346,7 +347,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			out.println("</div>"
 					+"<div class=\"row\">"
 					+ "<a href=\"chooseTask?projectID=" + projectID +"&employee=" + employeeID + "\" class=\"small-3 columns large button back-button\"><i class=\"fa fa-chevron-left\"></i>  Choose Task</a>"
-					+ "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Book Hours  <i class=\"fa fa-chevron-right\"></i></button>"
+					+ "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Book Hours</button>"
 					+ "</div>");
 			
 			out.println("</section>"

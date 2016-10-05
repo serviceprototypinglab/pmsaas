@@ -101,13 +101,13 @@ public class BookHours extends HttpServlet {
 					  + "<section>");
 			
 			out.println("<div class=\"row\">" 
+					  + "<h3>Choose Employee</h3>"
 					  + "<form method=\"get\" action=\"bookHours/chooseTask\" data-abide novalidate>"
 	
 					  // error message (if something's wrong with the form)
 					  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
 					  + "<p><i class=\"fa fa-exclamation-triangle\"></i> Please choose an employee.</p></div>"
 	
-					  + "<h3></h3></br>" // TODO Titel überlegen
 					  // project ID
 					  + "<input type=\"hidden\" name=\"projectID\" value=\"" + projectID + "\">"
 	
@@ -258,13 +258,13 @@ public class BookHours extends HttpServlet {
 	
 			// print HTML section with form
 			out.println("<div class=\"row\">" 
+					  + "<h3>Choose Employee</h3>"
 	
 					  // error message (if something's wrong with the form)
 					  + "<form method=\"get\" action=\"bookHours/chooseTask\" data-abide novalidate>"
 					  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
 					  + "<p><i class=\"fa fa-exclamation-triangle\"></i> Please choose an employee.</p></div>"
-	
-					  + "<h3></h3></br>" // TODO Titel überlegen
+
 					  // project ID
 					  + "<input type=\"hidden\" name=\"projectID\" value=\"" + projectID + "\">"
 	

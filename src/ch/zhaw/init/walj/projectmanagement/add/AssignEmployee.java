@@ -99,7 +99,7 @@ public class AssignEmployee extends HttpServlet {
 			
 			// print HTML section with form
 			out.println("<div class=\"row\">"
-					  + "<form method=\"post\" action=\"assignEmployee/chooseTask\" data-abide novalidate>"
+					  + "<form method=\"get\" action=\"assignEmployee/chooseTask\" data-abide novalidate>"
 	
 					  // error message (if something's wrong with the form)
 					  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"

@@ -15,7 +15,6 @@ import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
 import ch.zhaw.init.walj.projectmanagement.util.Workpackage;
 
-// TODO datum normale eingabe
 // TODO /** kommentare
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview/addTask")
