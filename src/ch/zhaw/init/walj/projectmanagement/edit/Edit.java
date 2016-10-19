@@ -21,6 +21,7 @@ import ch.zhaw.init.walj.projectmanagement.util.DateHelper;
 import ch.zhaw.init.walj.projectmanagement.util.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.Expense;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
 import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
 import ch.zhaw.init.walj.projectmanagement.util.Workpackage;
@@ -63,39 +64,7 @@ public class Edit extends HttpServlet {
 		PrintWriter out = response.getWriter();
 				
 		if (project.getLeader() == id) {
-			out.println("<!DOCTYPE html>" 
-					  + "<html>"
-					  // HTML head
-					  + "<head>" 
-					  + "<meta charset=\"UTF-8\">"
-					  + "<title>Edit " + project.getShortname() + "</title>" 
-					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />" 
-					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\" />" 
-					  + "</head>" 
-					  + "<body>"
-					  + "<div id=\"wrapper\">" 
-					  + "<header>" 
-					  + "<div class=\"row\">" 
-					  + "<div class=\"small-8 columns\">"
-					  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
-					  // title
-					  + "<h1>" + project.getShortname() + "</h1>"
-					  + "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"
-					  + "</div>"
-					  // menu
-					  + "<div class=\"small-12 medium-4 columns\">" 
-					  + "<div class=\"float-right menu\">"
-					  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
-					  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
-					  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
-					  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
-					  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
-					  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
-					  + "</div>" 
-					  + "</div>"
-					  + "</div>" 
-					  + "</header>" 
+			out.println(HTMLHeader.getInstance().getHeader("Edit " + project.getShortname(), "../", "Edit " + project.getShortname(), "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  // HTML section with list of all projects
 					  + "<section>"
 					  + "<div class=\"row\">"

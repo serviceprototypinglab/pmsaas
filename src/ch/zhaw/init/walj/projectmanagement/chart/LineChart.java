@@ -63,7 +63,7 @@ public class LineChart {
     	int projectMonths = project.getNumberOfMonths();
     	for (double i = 1; i <= projectMonths; i++){
     		
-    		bookedEffort += effort.getBookedEffort(i, employee);
+    		bookedEffort = effort.getBookedEffort(i, employee);
     		booked.add(i, bookedEffort);
     			
     	}

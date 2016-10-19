@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
+import ch.zhaw.init.walj.projectmanagement.util.Mail;
 
 /**
  * Projectmanagement tool, Page to assign employees (choose task)
@@ -51,39 +54,7 @@ public class NewEmployee extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		// Print HTML
-		out.println("<!DOCTYPE html>"
-				  + "<html>"
-				  // HTML head
-				  + "<head>"
-				  + "<meta charset=\"UTF-8\">"
-				  + "<title>New Employee</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
-				  + "</head>"
-				  // HTML body
-				  + "<body>"
-				  + "<div id=\"wrapper\">"
-				  + "<header>"
-				  + "<div class=\"row\">"
-				  // title
-				  + "<div class=\"small-8 medium-8 columns\">"
-				  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
-				  + "<h1>New Employee</h1>"
-				  + "</div>"
-				  // menu
-				  + "<div class=\"small-12 medium-4 columns\">"
-				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
-				  + "</div>"
-				  + "</div>"
-				  + "</div>"
-				  + "</header>"
+		out.println(HTMLHeader.getInstance().getHeader("New Employee", "../", "New Employee")
 				  // HTML section with form
 				  + "<section>"
 				  + "<form method=\"post\" action=\"newEmployee\" data-abide novalidate>"
@@ -140,6 +111,8 @@ public class NewEmployee extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
 		
+		int id = (int) request.getSession(false).getAttribute("ID");
+		
 		// get parameters
 		firstname = request.getParameter("firstname");
 		lastname = request.getParameter("lastname");
@@ -157,17 +130,21 @@ public class NewEmployee extends HttpServlet {
 		
 		// create new employee
 		try {
-			String password = con.newEmployee(1, firstname, lastname, kuerzel, mail, wage); // //TODO ID von session
+			Employee user = con.newEmployee(id, firstname, lastname, kuerzel, mail, wage);
+			
+			Mail mail = new Mail(user);
+			mail.sendWelcomeMail(""); // TODO correct path
+			
 			// success message
 			message = "<div class=\"row\">"
 					+ "<div class=\"callout success\">"
 					+ "<h5>Employee successfully created</h5>"
 					+ "<p>The new employee was successfully created with the following data:</p>"
-					+ "<p>Name: " + firstname + " " + lastname + "</p>"
-					+ "<p>Kuerzel: " + kuerzel + "</p>"
-					+ "<p>Mail: " + mail + "</p>"
+					+ "<p>Name: " + user.getName()+ "</p>"
+					+ "<p>Kuerzel: " + user.getKuerzel() + "</p>"
+					+ "<p>Mail: " + user.getMail() + "</p>"
 					+ "<p>Wage: " + wage + "</p>"
-					+ "<p>Password: " + password + "</p>"
+					+ "<p>Password: " + user.getPassword() + "</p>"
 					+ "</div></div>";			
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -176,35 +153,8 @@ public class NewEmployee extends HttpServlet {
 		final PrintWriter out = response.getWriter();
 		
 		// print HTML
-		out.println("<!DOCTYPE html>"
-				  + "<html>"
-				  // HTML head
-				  + "<head>"
-				  + "<meta charset=\"UTF-8\">"
-				  + "<title>New Employee</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
-				  + "</head>"
-				  + "<body>"
-				  + "<div id=\"wrapper\">"
-				  + "<header>"
-				  + "<div class=\"row\">"
-				  // title
-				  + "<div class=\"small-8 medium-8 columns\">"
-				  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
-				  + "<h1>New Employee</h1>"
-				  + "</div>"
-				  // menu
-				  + "<div class=\"small-12 medium-4 columns\">"
-				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
-				  + "</div></div></div>"
-				  + "</header>"
+		out.println(HTMLHeader.getInstance().getHeader("New Employee", "../", "New Employee")
+				
 				  // HTML section with message and form
 				  + "<section>"
 				  + message

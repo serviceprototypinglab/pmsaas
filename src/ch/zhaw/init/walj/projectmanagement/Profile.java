@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.PasswordService;
 
 /**
@@ -46,38 +47,7 @@ public class Profile extends HttpServlet {
 		
 		PrintWriter out = response.getWriter();
 				
-			out.println("<!DOCTYPE html>" 
-					  + "<html>"
-					  // HTML head
-					  + "<head>" 
-					  + "<meta charset=\"UTF-8\">"
-					  + "<title>" + employee.getName() + "</title>" 
-					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\" />" 
-					  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />" 
-					  + "</head>" 
-					  + "<body>"
-					  + "<div id=\"wrapper\">" 
-					  + "<header>" 
-					  + "<div class=\"row\">" 
-					  + "<div class=\"small-8 columns\">"
-					  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
-					  // title
-					  + "<h1>" + employee.getName() + "</h1>"
-					  + "</div>"
-					  // menu
-					  + "<div class=\"small-12 medium-4 columns\">" 
-					  + "<div class=\"float-right menu\">"
-					  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
-					  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
-					  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
-					  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
-					  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
-					  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
-					  + "</div>" 
-					  + "</div>"
-					  + "</div>" 
-					  + "</header>" 
+			out.println(HTMLHeader.getInstance().getHeader(employee.getName(), "../", "Profile " + employee.getName())
 					  // HTML section with list of all projects
 					  + "<section>"
 					  + "<div class=\"row\">"
@@ -112,10 +82,6 @@ public class Profile extends HttpServlet {
 					  + "<label class=\"small-10 end columns\">E-Mail "
 					  + "<input type=\"text\" value=\"" + employee.getMail() + "\" name=\"mail\" required>"
 					  + "</label>"
-					  + "<label class=\"small-10 end columns\">Wage "
-					  + "<input type=\"number\" value=\"" + employee.getWage() + "\" name=\"wage\" required>"
-					  + "</label>"
-					  + "<input type=\"hidden\" name=\"oldwage\" value=\"" + employee.getWage() + "\">"
 					  + "<div class=\"small-3 small-offset-7 columns end\">" 			  
 					  + "<input type=\"submit\" class=\"expanded button\" value=\"Apply\">"
 					  + "</div>"
@@ -239,6 +205,7 @@ public class Profile extends HttpServlet {
 		int oldWage;
 		
 		String message = "";
+		String title = "";
 		
 		String password = request.getParameter("password");
 		
@@ -247,8 +214,14 @@ public class Profile extends HttpServlet {
 			lastname = request.getParameter("lastname");
 			kuerzel = request.getParameter("kuerzel");
 			mail = request.getParameter("mail");
-			wage = Integer.parseInt(request.getParameter("wage"));
-			oldWage = Integer.parseInt(request.getParameter("oldwage"));
+			try {
+				wage = Integer.parseInt(request.getParameter("wage"));
+				oldWage = Integer.parseInt(request.getParameter("oldwage"));
+			} catch (NumberFormatException e){
+				wage = oldWage = 0;
+			}
+			
+			title = "Update User";
 			
 			Date today = new Date();
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -268,9 +241,11 @@ public class Profile extends HttpServlet {
 						+ "<p>First Name: " + firstname + "</p>"
 						+ "<p>Last Name: " + lastname + "</p>"
 						+ "<p>Kuerzel: " + kuerzel + "</p>"
-						+ "<p>E-Mail: " + mail + "</p>"
-						+ "<p>Wage per Hour: " + wage + "</p>"
-						+ "<a href=\"/Projektverwaltung/Projects/employee\">Click here to go back to the user page</a>"
+						+ "<p>E-Mail: " + mail + "</p>";
+				if (wage != 0){
+					message += "<p>Wage per Hour: " + wage + "</p>";
+				}
+				message += "<a href=\"/Projektverwaltung/Projects/employee\">Click here to go back to the user page</a>"
 						+ "</div>";
 				
 			} catch (SQLException e) {
@@ -282,6 +257,8 @@ public class Profile extends HttpServlet {
 			}	
 		} else {
 			password = PasswordService.getInstance().encrypt(password);
+			title = "Change Password";
+			
 			try {
 				con.updatePassword(userID, password);
 				
@@ -298,36 +275,7 @@ public class Profile extends HttpServlet {
 			}
 		}		
 		
-		out.println("<!DOCTYPE html>"
-				  + "<html>"
-				  // HTML head
-				  + "<head>"
-				  + "<meta charset=\"UTF-8\">"
-				  + "<title>New Project</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\">"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
-				  + "</head>"
-				  + "<body>"
-				  + "<div id=\"wrapper\"><header>"
-				  + "<div class=\"row\">"
-				  + "<div class=\"small-8 columns\">"
-				  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
-				  // title
-				  + "<h1>Update User</h1>"
-				  + "</div>"
-				  // menu
-				  + "<div class=\"small-12 medium-4 columns\">"
-				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
-				  + "</div>"
-				  + "</div>"
-				  + "</header>"
+		out.println(HTMLHeader.getInstance().getHeader(title, "../", title)
 				  // HTML section with form
 				  + "<section>"
 				  + "<div class=\"row\">"

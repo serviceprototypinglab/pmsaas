@@ -13,6 +13,7 @@ public class Employee {
 	private String lastname;
 	private String kuerzel;
 	private String mail;
+	private String password;
 	private int wage;
 	private int supervisor;
 	
@@ -29,18 +30,21 @@ public class Employee {
 	 * 			kuerzel of the employee
 	 * @param mail
 	 * 			mail of the employee
+	 * @param ePassword 
+	 * 			password of the employee
 	 * @param wage
 	 * 			the employee's wage per hour
 	 * @param supervisor
 	 * 			supervisor of the employee
 	 */
-	public Employee(int id, String firstname, String lastname, String kuerzel, String mail, int wage, int supervisor){
+	public Employee(int id, String firstname, String lastname, String kuerzel, String mail, String password, int wage, int supervisor){
 		
 		this.id = id;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.kuerzel = kuerzel;
 		this.mail = mail;
+		this.password = password;
 		this.wage = wage;
 		this.supervisor = supervisor;
 		
@@ -89,6 +93,15 @@ public class Employee {
 	public String getMail(){
 		return mail;
 	}
+	
+	
+	/**
+	 * @return the password of the employee
+	 */
+	public String getPassword(){
+		return password;
+	}
+	
 	
 	/**
 	 * @return the employees wage per hour

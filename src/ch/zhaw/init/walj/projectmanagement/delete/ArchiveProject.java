@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
 
 /**
@@ -84,39 +85,7 @@ public class ArchiveProject extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		// Print HTML head and header
-		out.println("<!DOCTYPE html>" 
-				  + "<html>" 
-				  // HTML head
-				  + "<head>" 
-				  + "<meta charset=\"UTF-8\">" 
-				  + "<title>Add Expenses</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\" />"
-				  + "</head>" 
-				  // HTML body
-				  + "<body>" 
-				  + "<div id=\"wrapper\">" 
-				  + "<header>" 
-				  + "<div class=\"row\">"
-				  // title
-				  + "<div class=\"small-12 medium-8 columns\">"
-				  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
-				  + "<h1>Archive Project</h1>"
-				  + "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a></div>"
-				  // menu
-				  + "<div class=\"small-12 medium-4 columns\">" 
-				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
-				  + "</div>"
-				  + "</div>"
-				  + "</div>"
-				  + "</header>"
+		out.println(HTMLHeader.getInstance().getHeader("Archive Project", "../", "Archive Project")
 				  + "<section>"
 				  + message
 				  + "</section>"

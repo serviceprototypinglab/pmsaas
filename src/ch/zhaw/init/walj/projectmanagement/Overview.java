@@ -22,8 +22,6 @@ import ch.zhaw.init.walj.projectmanagement.util.Project;
 /**
  * Servlet implementation class Overview
  */
-
-// TODO übersicht richtige werte (anstatt XX days until...)
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview")
 public class Overview extends HttpServlet {
@@ -46,8 +44,7 @@ public class Overview extends HttpServlet {
 		
 		int id = (int) request.getSession(false).getAttribute("ID");
 		String name = (String) request.getSession(false).getAttribute("user");
-		
-		
+				
 		DBConnection con = new DBConnection(url, dbName, userName, password);
 		
 		ArrayList<Employee> employeeList = null;
@@ -106,14 +103,12 @@ public class Overview extends HttpServlet {
 		
 		try {
 			// get all projects where the current user is supervisor
-			resProjects = con.getProjects(id);
-			if (resProjects.next()){
+			projects = con.getProjects(id, false);
+			if (projects != null){
 				out.println("<ul class=\"accordion\" data-accordion data-multi-expand=\"true\" data-allow-all-closed=\"true\">");
 				// write project information
-				do {
+				for (Project project : projects) {
 					
-					// new project with data from the database
-					Project project = con.getProject(resProjects.getInt("ProjectIDFS"));
 					// get all employees
 					ArrayList <Employee> employee = project.getEmployees();
 					
@@ -194,7 +189,7 @@ public class Overview extends HttpServlet {
 							  + "</li>");
 					
 					
-				} while (resProjects.next());
+				}
 				out.println("</ul>");
 			} else {
 				out.println("<div class=\"callout warning\">"
@@ -207,21 +202,16 @@ public class Overview extends HttpServlet {
 			
 			if (employeeList.size() > 1) {
 							
+				projects = new ArrayList<Project>();
 				for (Employee e : employeeList){
 					if (e.getID() != id){
 						// get all projects where the current user is supervisor
-						try {
-							resProjects = con.getProjects(e.getID());
-							while (resProjects.next()) {								
-								// new project with data from the database
-								Project project = con.getProject(resProjects.getInt("ProjectIDFS"));
-								projects.add(project);	
-							}	
-						} catch (SQLException e1) {
-						}	
+						if (con.getProjects(e.getID(), false) != null){
+							projects.addAll(con.getProjects(e.getID(), false));
+						}
 					}
 				}
-				if (!projects.isEmpty()){
+				if (projects != null){
 					out.println("<div class=\"row\">"
 				     	  + "<h3>Other Projects</h3>"
 					      + "</div>"
@@ -286,18 +276,12 @@ public class Overview extends HttpServlet {
 								  // Write Workpackages
 								  + "<p>"
 								  + "<span class=\"small-3 columns\">Workpackages</span>"
-								  + "<span class=\"small-4 columns\">" + p.nbrOfWorkpackages() + "</span>"
-								  + "<span class=\"small-4 end columns align-right\">"
-								  + "-"
-								  + "</span>"
+								  + "<span class=\"small-9 columns\">" + p.nbrOfWorkpackages() + "</span>"
 								  + "</p>"
 								  // Write Tasks
 								  + "<p>"
 								  + "<span class=\"small-3 columns\">Tasks</span>"
-								  + "<span class=\"small-4 columns\">" + p.nbrOfTasks() + "</span>"
-								  + "<span class=\"small-4 end columns align-right\">" 
-								  + "-"
-								  + "</span>"
+								  + "<span class=\"small-9 columns\">" + p.nbrOfTasks() + "</span>"
 								  + "</p>"
 								  // Write Employees
 								  + "<p>"
@@ -313,7 +297,79 @@ public class Overview extends HttpServlet {
 								  + "</li>");
 					}					
 				}				
-			}		
+			}	
+
+			out.println("</div>");
+			
+			
+			projects = con.getProjects(id, true);
+			if (projects != null){
+				out.println("<div class=\"row\">"
+				     	  + "<h3>Archived Projects</h3>"
+					      + "</div>"
+				     	  + "<div class=\"row\">"
+					      + "<ul class=\"accordion\" data-accordion data-multi-expand=\"true\" data-allow-all-closed=\"true\">");
+				// write project information
+				for (Project project : projects) {
+					
+					// get all employees
+					ArrayList <Employee> employee = project.getEmployees();
+					
+					String employees = "";
+					
+					// string of all employee names
+					if (!employee.isEmpty()){
+						employees = employee.get(0).getName();
+						for (int i = 1; i < employee.size(); i++){
+							employees += ", " + employee.get(i).getName();
+						}
+					} else {
+						employees = "no employees assigned";
+					}
+																		
+					// print list item
+					out.println("<li class=\"accordion-item\" data-accordion-item>"
+							  + "<a href=\"#\" class=\"accordion-title\">"
+							  + "<span class=\"bigtext small-3 columns down\">" + project.getShortname() + "</span>"
+							  + "<span class=\"middletext small-6 columns end down\">" + project.getName() + "</span>"
+							  + "</a>"
+							  + "<div class=\"accordion-content\" data-tab-content>"
+							  // Write Duration
+							  +"<p>"
+							  + "<span class=\"small-3 columns\">Projectduration</span>"
+							  + "<span class=\"small-9 end columns\">" 
+							  + dateHelper.getFormattedDate(project.getStart()) + " - " + dateHelper.getFormattedDate(project.getEnd()) + "</span>"
+			  		  		  + "</p>"
+			  		  		  // Write Budget
+			  		  		  + "<p>"
+			  		  		  + "<span class=\"small-3 columns\">Budget</span>"
+			  		  		  + "<span class=\"small-9 columns\">" + project.getBudgetFormatted() + "</span>"
+			  		  		  + "</p>"
+							  // Write Workpackages
+							  + "<p>"
+							  + "<span class=\"small-3 columns\">Workpackages</span>"
+							  + "<span class=\"small-9 columns\">" + project.nbrOfWorkpackages() + "</span>"
+							  + "</p>"
+							  // Write Tasks
+							  + "<p>"
+							  + "<span class=\"small-3 columns\">Tasks</span>"
+							  + "<span class=\"small-9 columns\">" + project.nbrOfTasks() + "</span>"
+							  + "</p>"
+							  // Write Employees
+							  + "<p>"
+							  + "<span class=\"small-3 columns\">Employees</span>"
+							  + "</span><span class=\"small-9 end columns\">" + employees
+							  + "</span></p>"
+							  // Write Partners
+							  + "<p><span class=\"small-3 columns\">Partner</span>"
+							  + "<span class=\"small-9 end columns\">" + project.getPartners() + "</span>"
+							  + "</p>"
+							  + "</div>"
+							  + "</li>");
+				}
+				out.println("</ul>");
+			}
+			
 		} catch (SQLException e) {
 		}
 		out.println("</section>"

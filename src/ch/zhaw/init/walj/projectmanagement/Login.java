@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.PasswordService;
 
 @SuppressWarnings("serial")
@@ -35,16 +36,7 @@ public class Login extends HttpServlet {
     	
 		PrintWriter out = response.getWriter();
     	
-    	out.println("<!DOCTYPE html>" 
-				  + "<html>" 
-				  // HTML head
-				  + "<head>" 
-				  + "<meta charset=\"UTF-8\">"
-				  + "<title>Login</title>" 
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\" />" 
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/font-awesome/css/font-awesome.min.css\" />" 
-				  + "</head>" 
+    	out.println(HTMLHeader.getInstance().getHeader("Login", "") 
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
 				  + "<section>" 

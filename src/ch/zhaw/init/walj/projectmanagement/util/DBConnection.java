@@ -1,6 +1,5 @@
 package ch.zhaw.init.walj.projectmanagement.util;
 
-import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -29,8 +28,6 @@ public class DBConnection {
 	private String query;
 	private int idToUse;
 
-	private String characters = "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
-	private int pwLength = 8;
 
 	private DateHelper dateFormatter = new DateHelper();
 
@@ -74,9 +71,22 @@ public class DBConnection {
 	 * @return all projects with current user as project leader
 	 * @throws SQLException 
 	 */
-	public ResultSet getProjects(int id) throws SQLException {
-		res = st.executeQuery("SELECT * FROM  Projects where ProjectLeader=" + id + " and Archive=0");
-		return res;
+	public ArrayList<Project> getProjects(int id, boolean archive) throws SQLException {
+		ArrayList<Project> projects = new ArrayList<Project>();
+		
+		if (archive){
+			res = st.executeQuery("SELECT * FROM  Projects where ProjectLeader=" + id + " and Archive=1");
+		} else {
+			res = st.executeQuery("SELECT * FROM  Projects where ProjectLeader=" + id + " and Archive=0");			
+		}
+		
+		while (res.next()){
+			projects.add(getProject(res.getInt("ProjectIDFS")));
+		}
+		if (projects.isEmpty()){
+			return null;
+		}
+		return projects;
 	}
 
 	/**
@@ -138,6 +148,7 @@ public class DBConnection {
 		String eLastname;
 		String eKuerzel;
 		String eMail;
+		String ePassword;
 		int eWage;
 		int eSupervisor;
 
@@ -219,6 +230,7 @@ public class DBConnection {
 					eLastname = resEmployee.getString("Lastname");
 					eKuerzel = resEmployee.getString("Kuerzel");
 					eMail = resEmployee.getString("Mail");
+					ePassword = resEmployee.getString("Password");
 					eSupervisor = resEmployee.getInt("Supervisor");
 
 					// get the wage of the employee
@@ -227,7 +239,7 @@ public class DBConnection {
 					resWage.next();
 					eWage = resWage.getInt("WagePerHour");
 
-					Employee employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, eWage, eSupervisor);
+					Employee employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, ePassword, eWage, eSupervisor);
 					
 					// add employee to the task
 					task.addEmployee(employee);
@@ -480,20 +492,13 @@ public class DBConnection {
 	 * @throws IllegalAccessException
 	 * @throws ClassNotFoundException
 	 */
-	public String newEmployee(int employeeID, String firstname, String lastname, String kuerzel, String mail, String wage)
+	public Employee newEmployee(int employeeID, String firstname, String lastname, String kuerzel, String mail, String wage)
 			throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Class.forName(driver).newInstance();
 		conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
 		st = conn.createStatement();
 
-		// generate random password
-		SecureRandom random = new SecureRandom();
-		StringBuilder pass = new StringBuilder(pwLength);
-		for (int i = 0; i < pwLength; i++) {
-			pass.append(characters.charAt(random.nextInt(characters.length())));
-		}
-
-		String password = pass.toString();
+		String password = PasswordGenerator.getInstance().getNewPassword();
 		
 		String passwordEncrypted = PasswordService.getInstance().encrypt(password);
 
@@ -505,9 +510,18 @@ public class DBConnection {
 		st.executeUpdate(query);
 
 		// get the ID of the employee
-		res = st.executeQuery("Select EmployeeID from Employees order by EmployeeID desc");
+		res = st.executeQuery("Select * from Employees order by EmployeeID desc");
 
 		res.next();
+		
+		int eID = res.getInt("EmployeeID");
+		String eFirstname = res.getString("Firstname");
+		String eLastname = res.getString("Lastname");
+		String eKuerzel = res.getString("Kuerzel");
+		String eMail = res.getString("Mail");
+		int eSupervisor = res.getInt("Supervisor");	
+		
+		Employee user = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, password, 0, eSupervisor);
 
 		// create new date from the current time
 		Calendar cal = Calendar.getInstance();
@@ -515,12 +529,12 @@ public class DBConnection {
 		String date = format.format(cal.getTime());
 
 		// create new wage
-		query = "INSERT INTO Wage (EmployeeIDFS, WagePerHour, ValidFrom) VALUES (" + res.getInt("EmployeeID") + ", "
+		query = "INSERT INTO Wage (EmployeeIDFS, WagePerHour, ValidFrom) VALUES (" + eID + ", "
 				+ wage + ", '" + date + "');";
 
 		st.executeUpdate(query);
 		
-		return password;
+		return user;
 	}
 
 	/**
@@ -553,6 +567,7 @@ public class DBConnection {
 				String eLastname = res.getString("Lastname");
 				String eKuerzel = res.getString("Kuerzel");
 				String eMail = res.getString("Mail");
+				String ePassword = res.getString("Password");
 				int eSupervisor = res.getInt("Supervisor");
 
 				// get the wage of the employee
@@ -560,7 +575,7 @@ public class DBConnection {
 				resWage.next();
 				int eWage = resWage.getInt("WagePerHour");
 
-				employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, eWage, eSupervisor);
+				employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, ePassword, eWage, eSupervisor);
 				
 				employees.add(employee);
 			}
@@ -690,7 +705,7 @@ public class DBConnection {
 			query = "SELECT * from Employees WHERE (Mail ='" + user + "' OR Kuerzel ='" + user + "') and Password = '" + password + "'";
 			res = st.executeQuery(query);
 			res.next();
-			Employee e = new Employee(res.getInt("EmployeeID"), res.getString("Firstname"), res.getString("Lastname"), res.getString("Kuerzel"), res.getString("Mail"), 0, res.getInt("Supervisor"));
+			Employee e = new Employee(res.getInt("EmployeeID"), res.getString("Firstname"), res.getString("Lastname"), res.getString("Kuerzel"), res.getString("Mail"), res.getString("Password"), 0, res.getInt("Supervisor"));
 			return e;
 		} catch (SQLException e) {
 			return null;
@@ -761,6 +776,7 @@ public class DBConnection {
 			String lastname = res.getString("Lastname");
 			String kuerzel = res.getString("Kuerzel");
 			String mail = res.getString("Mail");
+			String password = res.getString("Password");
 			int supervisor =  res.getInt("Supervisor");
 			
 			res = st.executeQuery("SELECT WagePerHour FROM  Wage where EmployeeIDFS=" + id + " order by ValidFrom desc");
@@ -771,7 +787,7 @@ public class DBConnection {
 			
 			
 			// create new employee
-			employee = new Employee(id, firstname, lastname, kuerzel, mail, wage, supervisor);
+			employee = new Employee(id, firstname, lastname, kuerzel, mail, password, wage, supervisor);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
