@@ -29,11 +29,7 @@ import ch.zhaw.init.walj.projectmanagement.util.Workpackage;
 @WebServlet("/Projects/Edit")
 public class Edit extends HttpServlet {
 	
-	private String url = "jdbc:mysql://localhost:3306/";
-	private String dbName = "projectmanagement";
-	private String userName	= "Janine";
-	private String password	= "test123";
-	
+	// TODO Enum 
 	private String[] expenseTypes = {"Travel", "Overnight Stay", "Meals", "Office Supplies", "Events"};
 	
 	@Override
@@ -46,7 +42,7 @@ public class Edit extends HttpServlet {
 		
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		
-		DBConnection con = new DBConnection(url, dbName, userName, password);
+		DBConnection con = new DBConnection();
 		
 		Project project = null;
 		try {

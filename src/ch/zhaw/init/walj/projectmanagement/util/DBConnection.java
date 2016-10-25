@@ -19,11 +19,11 @@ import java.util.Calendar;
  */
 public class DBConnection {
 
-	private String driver = "com.mysql.jdbc.Driver";
-	private String url = "";
-	private String dbName = "";
-	private String userName = "";
-	private String password = "";
+	private String driver = DataBaseAccess.getInstance().getDriver();
+	private String url = DataBaseAccess.getInstance().getURL();
+	private String dbName = DataBaseAccess.getInstance().getDBName();
+	private String userName	= DataBaseAccess.getInstance().getUsername();
+	private String password	= DataBaseAccess.getInstance().getPassword();
 	private Connection conn;
 	private PreparedStatement st;
 	private ResultSet res;
@@ -41,12 +41,7 @@ public class DBConnection {
 	 * @param password
 	 * 			  password for login
 	 */
-	public DBConnection(String url, String dbName, String userName, String password) {
-		this.url = url;
-		this.dbName = dbName;
-		this.userName = userName;
-		this.password = password;
-
+	public DBConnection() {
 		// get connection to database
 		try {
 			Class.forName(driver).newInstance();

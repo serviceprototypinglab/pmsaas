@@ -24,14 +24,8 @@ import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 @WebServlet("/Projects/deleteWorkpackage")
 public class DeleteWorkpackage extends HttpServlet {
 
-	// Database access information
-	String url = "jdbc:mysql://localhost:3306/";
-	String dbName = "projectmanagement";
-	String userName = "Janine";
-	String password = "test123";
-
 	// connection to database
-	private DBConnection con = new DBConnection(url, dbName, userName, password);
+	private DBConnection con = new DBConnection();
 
 	@Override
 	// method to handle get-requests

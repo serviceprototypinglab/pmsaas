@@ -16,17 +16,19 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
+import ch.zhaw.init.walj.projectmanagement.util.DataBaseAccess;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
 import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
 
 public class PieChart {
 	
-	private String driver = "com.mysql.jdbc.Driver";
-	private String url = "jdbc:mysql://localhost:3306/";
-	private String dbName = "projectmanagement";
-	private String userName	= "Janine";
-	private String password	= "test123";
+	// database access information
+	private String driver = DataBaseAccess.getInstance().getDriver();
+	private String url = DataBaseAccess.getInstance().getURL();
+	private String dbName = DataBaseAccess.getInstance().getDBName();
+	private String userName	= DataBaseAccess.getInstance().getUsername();
+	private String password	= DataBaseAccess.getInstance().getPassword();
 	private Connection conn;
 	private Statement st;
 	private ResultSet res;

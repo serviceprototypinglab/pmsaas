@@ -32,15 +32,8 @@ public class NewEmployee extends HttpServlet {
 	private String mail;
 	private String wage;
 	
-	
-	// database access information
-	String url = "jdbc:mysql://localhost:3306/";
-	String dbName = "projectmanagement";
-	String userName	= "Janine";
-	String password	= "test123";
-	
 	// connection to database
-	private DBConnection con = new DBConnection(url, dbName, userName, password);
+	private DBConnection con = new DBConnection();
 	
 	
 	@Override

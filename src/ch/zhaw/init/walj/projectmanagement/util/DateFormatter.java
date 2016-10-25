@@ -136,6 +136,12 @@ public class DateFormatter {
 	}
 	
 	
+	/**
+	 * formats a string 
+	 * @param dateString
+	 * @param formatString
+	 * @return
+	 */
 	public Date stringToDate(String dateString, String formatString){
 		SimpleDateFormat format = new SimpleDateFormat(formatString);
 		Date date = null;

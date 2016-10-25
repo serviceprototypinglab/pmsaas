@@ -26,19 +26,12 @@ import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
  * @author Janine Walther, ZHAW
  * 
  */
-
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview/bookHours/chooseTask")
 public class ChooseTaskToBookHours extends HttpServlet{
 
-	// Database access information
-	String url = "jdbc:mysql://localhost:3306/";
-	String dbName = "projectmanagement";
-	String userName	= "Janine";
-	String password	= "test123";
-	
 	// connection to database
-	private DBConnection con = new DBConnection(url, dbName, userName, password);
+	private DBConnection con = new DBConnection();
 	
 	@Override
 	/*

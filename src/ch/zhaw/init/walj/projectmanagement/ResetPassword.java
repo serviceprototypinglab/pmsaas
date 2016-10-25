@@ -21,7 +21,7 @@ import ch.zhaw.init.walj.projectmanagement.util.PasswordService;
 @SuppressWarnings("serial")
 @WebServlet("/resetPassword")
 public class ResetPassword extends HttpServlet {
-
+		
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	response.setContentType("text/html;charset=UTF8");
@@ -93,16 +93,9 @@ public class ResetPassword extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	response.setContentType("text/html;charset=UTF8");
-    	
-    	
-    	// Database access information
-    	String url = "jdbc:mysql://localhost:3306/";
-    	String dbName = "projectmanagement";
-    	String userName = "Janine";
-    	String pw = "test123";
 
     	// connection to database
-    	DBConnection con = new DBConnection(url, dbName, userName, pw);
+    	DBConnection con = new DBConnection();
     	
     	String user = request.getParameter("mail");
         

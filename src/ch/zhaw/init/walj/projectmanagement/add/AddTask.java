@@ -21,14 +21,8 @@ import ch.zhaw.init.walj.projectmanagement.util.Workpackage;
 @WebServlet("/Projects/Overview/addTask")
 public class AddTask extends HttpServlet {
 	
-	// Variables for the database connection
-	String url = "jdbc:mysql://localhost:3306/";
-	String dbName = "projectmanagement";
-	String userName	= "Janine";
-	String password	= "test123";
-	
 	// create a new DB connection
-	private DBConnection con = new DBConnection(url, dbName, userName, password);
+	private DBConnection con = new DBConnection();
 	
 	// Variables for POST parameters
 	private int pID;
@@ -46,8 +40,7 @@ public class AddTask extends HttpServlet {
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
 		pID = Integer.parseInt(request.getParameter("projectID"));
-	
-		
+			
 		Project project = null;
 		
 		try {

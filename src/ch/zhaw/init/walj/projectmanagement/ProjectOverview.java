@@ -30,12 +30,6 @@ import ch.zhaw.init.walj.projectmanagement.util.Project;
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview/Project")
 public class ProjectOverview extends HttpServlet {
-	
-	// database access information
-	private String url = "jdbc:mysql://localhost:3306/";
-	private String dbName = "projectmanagement";
-	private String userName	= "Janine";
-	private String password	= "test123";
 
 	// variable declaration
 	private Project project;
@@ -54,7 +48,7 @@ public class ProjectOverview extends HttpServlet {
 		
 		int projectID = Integer.parseInt(request.getParameter("id"));
 		
-		DBConnection con = new DBConnection(url, dbName, userName, password);
+		DBConnection con = new DBConnection();
 		
 		try {
 			project = con.getProject(projectID);

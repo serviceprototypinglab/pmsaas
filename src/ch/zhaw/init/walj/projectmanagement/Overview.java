@@ -26,11 +26,6 @@ import ch.zhaw.init.walj.projectmanagement.util.Project;
 @WebServlet("/Projects/Overview")
 public class Overview extends HttpServlet {
 	
-	private String url = "jdbc:mysql://localhost:3306/";
-	private String dbName = "projectmanagement";
-	private String userName	= "Janine";
-	private String password	= "test123";
-
 	private PieChart piechart;
 	
 	@Override
@@ -42,7 +37,7 @@ public class Overview extends HttpServlet {
 		int id = (int) request.getSession(false).getAttribute("ID");
 		String name = (String) request.getSession(false).getAttribute("user");
 				
-		DBConnection con = new DBConnection(url, dbName, userName, password);
+		DBConnection con = new DBConnection();
 		
 		ArrayList<Employee> employeeList = null;
 		try {

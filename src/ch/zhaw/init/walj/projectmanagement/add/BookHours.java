@@ -26,15 +26,9 @@ import ch.zhaw.init.walj.projectmanagement.util.Project;
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview/bookHours")
 public class BookHours extends HttpServlet {
-
-	// Database access information
-	String url = "jdbc:mysql://localhost:3306/";
-	String dbName = "projectmanagement";
-	String userName = "Janine";
-	String password = "test123";
-
+	
 	// Database connection
-	private DBConnection con = new DBConnection(url, dbName, userName, password);
+	private DBConnection con = new DBConnection();
 
 	@Override
 	// method to handle get-requests

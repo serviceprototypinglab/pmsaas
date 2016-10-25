@@ -31,12 +31,6 @@ import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview/Effort")
 public class EffortOverview extends HttpServlet {
-	
-	// database access information
-	private String url = "jdbc:mysql://localhost:3306/";
-	private String dbName = "projectmanagement";
-	private String userName	= "Janine";
-	private String password	= "test123";
 
 	// variable declaration
 	private Project project;
@@ -59,7 +53,7 @@ public class EffortOverview extends HttpServlet {
 			employeeID = 0;
 		}
 			
-		DBConnection con = new DBConnection(url, dbName, userName, password);
+		DBConnection con = new DBConnection();
 		
 		try {
 			project = con.getProject(projectID);
