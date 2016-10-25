@@ -2,7 +2,6 @@ package ch.zhaw.init.walj.projectmanagement;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,8 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.chart.PieChart;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.DateHelper;
+import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
 
 /**
@@ -31,9 +31,6 @@ public class Overview extends HttpServlet {
 	private String userName	= "Janine";
 	private String password	= "test123";
 
-	private ResultSet resProjects;
-
-	private DateHelper dateHelper = new DateHelper();
 	private PieChart piechart;
 	
 	@Override
@@ -127,15 +124,14 @@ public class Overview extends HttpServlet {
 					// get number of days left to end of project
 					Date date = new Date();
 					String daysUntilEnd = "";
-					int days = dateHelper.getDaysBetween(date, project.getEnd());
+					int days = DateFormatter.getInstance().getDaysBetween(date, project.getEnd());
 					if (days == 0){
 						daysUntilEnd = "Project finished";
 					} else {
 						daysUntilEnd = "Project ends in " + days + " days";
 					}
-			
 					piechart = new PieChart(project);
-					
+
 					
 					// print list item
 					out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
@@ -149,15 +145,16 @@ public class Overview extends HttpServlet {
 							  +"<p>"
 							  + "<span class=\"small-3 columns\">Projectduration</span>"
 							  + "<span class=\"small-4 columns\">" 
-							  + dateHelper.getFormattedDate(project.getStart()) + " - " + dateHelper.getFormattedDate(project.getEnd()) + "</span>"
+							  + DateFormatter.getInstance().formatDate(project.getStart()) + " - " + DateFormatter.getInstance().formatDate(project.getEnd()) + "</span>"
 					  		  + "<span class=\"small-4 end columns align-right\">" + daysUntilEnd + "</span>"
 			  		  		  + "</p>"
 			  		  		  // Write Budget
 			  		  		  + "<p>"
 			  		  		  + "<span class=\"small-3 columns\">Budget</span>"
-			  		  		  + "<span class=\"small-4 columns\">" + project.getBudgetFormatted() + "</span>"
+			  		  		  + "<span class=\"small-4 columns\">" + project.getCurrency() 
+							  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
 			  		  		  + "<span class=\"small-4 end columns align-right\">" + project.getCurrency()
-			  		  		  + " " + piechart.getRemainingBudgetAsString() + " left</span>"
+			  		  		  + " " + NumberFormatter.getInstance().formatDouble(piechart.getRemainingBudget()) + " left</span>"
 			  		  		  + "</p>"
 							  // Write Workpackages
 							  + "<p>"
@@ -212,16 +209,17 @@ public class Overview extends HttpServlet {
 					}
 				}
 				if (projects != null){
+
 					out.println("<div class=\"row\">"
 				     	  + "<h3>Other Projects</h3>"
 					      + "</div>"
 				     	  + "<div class=\"row\">"
 					      + "<ul class=\"accordion\" data-accordion data-multi-expand=\"true\" data-allow-all-closed=\"true\">");
-					for (Project p : projects){
+					for (Project project : projects){
 						// get all employees
-						ArrayList <Employee> employee = p.getEmployees();
+						ArrayList <Employee> employee = project.getEmployees();
 						
-						Employee supervisor = con.getEmployee(p.getLeader());
+						Employee supervisor = con.getEmployee(project.getLeader());
 						
 						String employees = "";
 						
@@ -238,20 +236,20 @@ public class Overview extends HttpServlet {
 						// get number of days left to end of project
 						Date date = new Date();
 						String daysUntilEnd = "";
-						int days = dateHelper.getDaysBetween(date, p.getEnd());
+						int days = DateFormatter.getInstance().getDaysBetween(date, project.getEnd());
 						if (days == 0){
 							daysUntilEnd = "Project finished";
 						} else {
 							daysUntilEnd = "Project ends in " + days + " days";
 						}
 				
-						piechart = new PieChart(p);
+						piechart = new PieChart(project);
 						
 						
 						// print list item
 						out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
-								  + "<span class=\"bigtext small-3 columns down\">" + p.getShortname() + "</span>"
-								  + "<span class=\"middletext small-6 columns end down\">" + p.getName() + "</span>"
+								  + "<span class=\"bigtext small-3 columns down\">" + project.getShortname() + "</span>"
+								  + "<span class=\"middletext small-6 columns end down\">" + project.getName() + "</span>"
 								 // TODO + "<span class=\"success badge errorbadge\">0</span>"
 								  + "</a>"
 								  + "<div class=\"accordion-content\" data-tab-content>"
@@ -263,35 +261,36 @@ public class Overview extends HttpServlet {
 								  + "<p>"
 								  + "<span class=\"small-3 columns\">Projectduration</span>"
 								  + "<span class=\"small-4 columns\">" 
-								  + dateHelper.getFormattedDate(p.getStart()) + " - " + dateHelper.getFormattedDate(p.getEnd()) + "</span>"
+								  + DateFormatter.getInstance().formatDate(project.getStart()) + " - " + DateFormatter.getInstance().formatDate(project.getEnd()) + "</span>"
 						  		  + "<span class=\"small-4 end columns align-right\">" + daysUntilEnd + "</span>"
 				  		  		  + "</p>"
 				  		  		  // Write Budget
 				  		  		  + "<p>"
 				  		  		  + "<span class=\"small-3 columns\">Budget</span>"
-				  		  		  + "<span class=\"small-4 columns\">" + p.getBudgetFormatted() + "</span>"
-				  		  		  + "<span class=\"small-4 end columns align-right\">" + p.getCurrency()
-				  		  		  + " " + piechart.getRemainingBudgetAsString() + " left</span>"
+				  		  		  + "<span class=\"small-4 columns\">" + project.getCurrency() 
+								  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
+				  		  		  + "<span class=\"small-4 end columns align-right\">" + project.getCurrency()
+				  		  		  + " " + NumberFormatter.getInstance().formatDouble(piechart.getRemainingBudget()) + " left</span>"
 				  		  		  + "</p>"
 								  // Write Workpackages
 								  + "<p>"
 								  + "<span class=\"small-3 columns\">Workpackages</span>"
-								  + "<span class=\"small-9 columns\">" + p.nbrOfWorkpackages() + "</span>"
+								  + "<span class=\"small-9 columns\">" + project.nbrOfWorkpackages() + "</span>"
 								  + "</p>"
 								  // Write Tasks
 								  + "<p>"
 								  + "<span class=\"small-3 columns\">Tasks</span>"
-								  + "<span class=\"small-9 columns\">" + p.nbrOfTasks() + "</span>"
+								  + "<span class=\"small-9 columns\">" + project.nbrOfTasks() + "</span>"
 								  + "</p>"
 								  // Write Employees
 								  + "<p>"
 								  + "<span class=\"small-3 columns\">Employees</span>"
-								  + "<span class=\"small-4 columns\">" + p.nbrOfEmployees() 
+								  + "<span class=\"small-4 columns\">" + project.nbrOfEmployees() 
 								  + "</span><span class=\"small-4 end columns align-right\">" + employees
 								  + "</span></p>"
 								  // Write Partners
 								  + "<p><span class=\"small-3 columns\">Partner</span>"
-								  + "<span class=\"small-9 end columns\">" + p.getPartners() + "</span>"
+								  + "<span class=\"small-9 end columns\">" + project.getPartners() + "</span>"
 								  + "</p>"
 								  + "</div>"
 								  + "</li>");
@@ -338,12 +337,13 @@ public class Overview extends HttpServlet {
 							  +"<p>"
 							  + "<span class=\"small-3 columns\">Projectduration</span>"
 							  + "<span class=\"small-9 end columns\">" 
-							  + dateHelper.getFormattedDate(project.getStart()) + " - " + dateHelper.getFormattedDate(project.getEnd()) + "</span>"
+							  + DateFormatter.getInstance().formatDate(project.getStart()) + " - " + DateFormatter.getInstance().formatDate(project.getEnd()) + "</span>"
 			  		  		  + "</p>"
 			  		  		  // Write Budget
 			  		  		  + "<p>"
 			  		  		  + "<span class=\"small-3 columns\">Budget</span>"
-			  		  		  + "<span class=\"small-9 columns\">" + project.getBudgetFormatted() + "</span>"
+			  		  		  + "<span class=\"small-9 columns\">" + project.getCurrency() 
+							  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
 			  		  		  + "</p>"
 							  // Write Workpackages
 							  + "<p>"

@@ -172,10 +172,7 @@ public class Profile extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		   			
-			
-			
-			
+		   		
 			out.println("</section>"
 					  + "</div>"
 					  + "<script src=\"../js/vendor/jquery.js\"></script>"
@@ -183,7 +180,6 @@ public class Profile extends HttpServlet {
 					  + "<script>$(document).foundation();</script>"
 					  + "</body>"
 					  + "</html>");
-		
 	}
 	
 	@Override
@@ -191,8 +187,6 @@ public class Profile extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
 		PrintWriter out = response.getWriter();
-		
-		int id = (int) request.getSession(false).getAttribute("ID");
 		
 		// variable declaration, get parameters
 		int userID = Integer.parseInt(request.getParameter("id"));

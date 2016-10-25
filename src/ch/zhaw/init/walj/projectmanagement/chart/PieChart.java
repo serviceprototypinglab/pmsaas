@@ -84,29 +84,12 @@ public class PieChart {
     	return usedBudget;
     }
     
-    public String getUsedBudgetAsString() throws SQLException {
-    	String budget;
-    	
-    	double uBudget = getUsedBudget();
-    	budget = String.format("%.2f", uBudget);
-    	
-    	return budget;
-    }
-    
     
     public double getRemainingBudget() throws SQLException{
     	double remainingBudget = project.getBudget() - getUsedBudget();
     	return remainingBudget;
     }
     
-    public String getRemainingBudgetAsString() throws SQLException {
-    	String budget;
-    	
-    	double rBudget = getRemainingBudget();
-    	budget = String.format("%.2f", rBudget);
-    	
-    	return budget;
-    }
     
     public void createChart(String path) throws NumberFormatException, SQLException, IOException{
 	    DefaultPieDataset dataset = new DefaultPieDataset( );

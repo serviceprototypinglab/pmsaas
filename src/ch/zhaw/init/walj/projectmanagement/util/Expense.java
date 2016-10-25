@@ -1,7 +1,5 @@
 package ch.zhaw.init.walj.projectmanagement.util;
 
-import java.sql.SQLException;
-
 /**
  * class to create expenses 
  * 
@@ -71,14 +69,6 @@ public class Expense {
 	 */
 	public double getCosts() {
 		return costs;
-	}
-	
-	public String getCostsAsString() throws SQLException {
-    	String budget;
-    	
-    	budget = String.format("%.2f", costs);
-    	
-    	return budget;
 	}
 	
 	/**

@@ -1,7 +1,5 @@
 package ch.zhaw.init.walj.projectmanagement.util;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,8 +16,6 @@ public class ProjectTask {
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
 	private int startMonth;
 	private int endMonth;
-	private DateHelper dateHelper = new DateHelper();
-
 	
 	public ProjectTask(int id, int workpackageID, String name, String start, String projectStart, String end, int pms, double budget){
 		this.id = id;
@@ -65,20 +61,16 @@ public class ProjectTask {
 		return start;
 	}
 
-	public Date getStartAsDate() throws ParseException{
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-		Date date = format.parse(start);
-		return date;
+	public Date getStartAsDate(){
+		return DateFormatter.getInstance().stringToDate(start, "dd.MM.yyyy");
 	}
 	
 	public String getEnd(){
 		return end;
 	}
 	
-	public Date getEndAsDate() throws ParseException{
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-		Date date = format.parse(end);
-		return date;
+	public Date getEndAsDate(){
+		return DateFormatter.getInstance().stringToDate(end, "dd.MM.yyyy");
 	}
 	
 	public String getDuration(){
@@ -103,23 +95,23 @@ public class ProjectTask {
 	}	
 	
 	public int getStartMonth(){
-		startMonth = dateHelper.getMonthsBetween(projectStart, start);
+		startMonth = DateFormatter.getInstance().getMonthsBetween(projectStart, start);
 		return startMonth;
 	}	
 	
 	public int getEndMonth(){
-		endMonth = dateHelper.getMonthsBetween(projectStart, end);
+		endMonth = DateFormatter.getInstance().getMonthsBetween(projectStart, end);
 		return endMonth;
 	}	
 	
 	public int getNumberOfMonths(){
 		int numberOfMonths = 0;
-		numberOfMonths = dateHelper.getMonthsBetween(start, end);
+		numberOfMonths = DateFormatter.getInstance().getMonthsBetween(start, end);
 		return numberOfMonths;
 	}
 		
 	public double getPMsPerMonth(){
-		double pmsPerMonth = pms / this.getNumberOfMonths();
+		double pmsPerMonth = (double)pms / (double)this.getNumberOfMonths();
 		return pmsPerMonth;
 	}
 }

@@ -3,7 +3,6 @@ package ch.zhaw.init.walj.projectmanagement.delete;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
 
@@ -78,10 +76,6 @@ public class ArchiveProject extends HttpServlet {
 					+ "</div>";			
 		}
 		
-		// get the employees assigned to the project and add them to the ArrayList
-		ArrayList<Employee> employees = new ArrayList<Employee>();
-		employees = project.getEmployees();
-
 		PrintWriter out = response.getWriter();
 
 		// Print HTML head and header

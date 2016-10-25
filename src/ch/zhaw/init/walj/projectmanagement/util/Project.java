@@ -5,6 +5,8 @@ import java.util.Date;
 
 public class Project {
 	
+	protected double EUR = 0.9246;
+	
 	private int id;
 	private String shortname;
 	private String name;
@@ -18,7 +20,6 @@ public class Project {
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
 	private ArrayList<Expense> expenses = new ArrayList<Expense>();
 	private String partner;
-	private DateHelper date = new DateHelper();
 	
 	public Project(int id, String name, String shortname,int leader, String start, String end, String currency, double budget, String partner){
 
@@ -70,22 +71,16 @@ public class Project {
 	
 	public int getNumberOfMonths(){
 		
-		return date.getMonthsBetween(start, end);
+		return DateFormatter.getInstance().getMonthsBetween(start, end);
 	}
 
 	public int getMonthsBetween(String date){
-		return this.date.getMonthsBetween(start, date);
+		return DateFormatter.getInstance().getMonthsBetween(start, date);
 	}
 
 	public double getBudget(){
 		return budget;
-	}
-	
-	public String getBudgetFormatted(){
-		String formattedBudget = String.format("%.2f", budget);
-		return currency + " " + formattedBudget;
-	}
-	
+	}	
 	
 	public String getPartners(){
 		return partner;
@@ -106,6 +101,9 @@ public class Project {
 					}
 				}
 				if (flag == 0){
+					if (currency.equals("EUR")) {
+						employee.setWage(employee.getWage() * EUR);
+					}
 					employees.add(employee);
 				}
 			}
@@ -136,7 +134,7 @@ public class Project {
 	
 	public int nbrOfDaysUntilEnd(Date currentDate){
 		int days = 0;
-		days = date.getDaysBetween(currentDate, end);
+		days = DateFormatter.getInstance().getDaysBetween(currentDate, end);
 		return days;
 	}
 

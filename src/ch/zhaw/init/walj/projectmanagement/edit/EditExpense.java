@@ -39,7 +39,7 @@ public class EditExpense extends HttpServlet {
 		// get the parameters
 		int id = Integer.parseInt(request.getParameter("id"));
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
-		String employee = request.getParameter("employee");
+		int employee = Integer.parseInt(request.getParameter("employee"));
 		String type = request.getParameter("type");
 		double costs = Double.parseDouble(request.getParameter("costs"));
 		String description = request.getParameter("description");
@@ -68,7 +68,7 @@ public class EditExpense extends HttpServlet {
 		try {
 			con.updateExpense(id, employee, costs, type, description, date);
 			
-			Employee e = project.getSpecificEmployee(Integer.parseInt(employee));
+			Employee e = project.getSpecificEmployee(employee);
 			
 			message = "<div class=\"callout success\">"
 					+ "<h5>Expense successfully updated</h5>"

@@ -36,7 +36,7 @@ public class Login extends HttpServlet {
     	
 		PrintWriter out = response.getWriter();
     	
-    	out.println(HTMLHeader.getInstance().getHeader("Login", "") 
+    	out.println(HTMLHeader.getInstance().getHeader("Sign in - Project Management Saas", "") 
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
 				  + "<section>" 
@@ -47,7 +47,7 @@ public class Login extends HttpServlet {
 				  + "</div>"
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-6 small-offset-3 end columns\">"
-				  + "<h1 class=\"align-center\">Login</h1>"
+				  + "<h1 class=\"align-center\">Project Management SaaS</h1>"
 				  + "</div>"
 				  + "</div>"
 				  + "<div class=\"row\">" 
@@ -78,10 +78,15 @@ public class Login extends HttpServlet {
 				  + "</div>"
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-6 small-offset-3 end columns text-center\">"
-				  + "<input type=\"submit\" class=\"expanded button\" value=\"Login\">" 
+				  + "<input type=\"submit\" class=\"expanded button\" value=\"sign in\">" 
 				  + "</div>"
 				  + "</div>"
 				  + "</form"
+				  + "<div class=\"row\">" 
+				  + "<div class=\"small-6 small-offset-3 end columns text-center\">"
+				  + "<a href=\"resetPassword\">Forgot your password?</p>" 
+				  + "</div>"
+				  + "</div>"
 				  + "</div>"
 				  + "</div>"
 				  + "</section>"

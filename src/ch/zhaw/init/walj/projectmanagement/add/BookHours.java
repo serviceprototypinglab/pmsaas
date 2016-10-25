@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.DateHelper;
+import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
@@ -151,8 +151,7 @@ public class BookHours extends HttpServlet {
 	
 			// get number of the month in the project, add month to arraylist
 			for (String s : month) {
-				DateHelper dh = new DateHelper();
-				int monthNbr = dh.getMonthsBetween(project.getStart(), s);
+				int monthNbr = DateFormatter.getInstance().getMonthsBetween(project.getStart(), s);
 				months.add(monthNbr);
 			}
 	

@@ -3,11 +3,7 @@ package ch.zhaw.init.walj.projectmanagement.edit;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.Booking;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.DateHelper;
+import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.Expense;
@@ -37,8 +33,6 @@ public class Edit extends HttpServlet {
 	private String dbName = "projectmanagement";
 	private String userName	= "Janine";
 	private String password	= "test123";
-
-	private DateHelper dateHelper = new DateHelper();
 	
 	private String[] expenseTypes = {"Travel", "Overnight Stay", "Meals", "Office Supplies", "Events"};
 	
@@ -380,29 +374,11 @@ public class Edit extends HttpServlet {
 							  + "</div>");
 					
 					// get possible months where the hours can be booked
-					ArrayList<String> months = new ArrayList<String>();
-					ArrayList<String> dates = new ArrayList<String>();
-					String start = t.getStart();
-					int nbrOfMonths = t.getNumberOfMonths();
+					String dates [][] = DateFormatter.getInstance().getMonths(t.getStartAsDate(), t.getNumberOfMonths());
 					
 					// get dates in format "August 2016"
 					// add them to the ArrayList
-					SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-					SimpleDateFormat formatMonthYear = new SimpleDateFormat("MMMM yyyy");
-					try {
-						Calendar c = Calendar.getInstance();
-						Date date = format.parse(start);
-						c.setTime(date);
-						dates.add(format.format(c.getTime()));
-						months.add(formatMonthYear.format(c.getTime()));
-						for (int y = 0; y < nbrOfMonths; y++){
-							c.add(Calendar.MONTH, 1);
-							dates.add(format.format(c.getTime()));
-							months.add(formatMonthYear.format(c.getTime()));
-						}
-					} catch (ParseException ex) {
-						ex.printStackTrace();
-					}
+
 					out.println("<form method=\"post\" action=\"EditEffort\" data-abide novalidate>"
 							  + "<input type=\"hidden\" name=\"id\" value=\"" + b.getID() + "\">"
 							  + "<input type=\"hidden\" name=\"projectID\" value=\"" + project.getID() + "\">"
@@ -412,20 +388,18 @@ public class Edit extends HttpServlet {
 							  + "</div>"
 							  + "<div class=\"small-8 end columns\">" 
 							  + "<select name=\"month\" required>");
-					int z = 0;
-					for (String s : dates){
-						int monthNbr = dateHelper.getMonthsBetween(project.getStart(), s);						
+					
+					for (int z = 0; z < t.getNumberOfMonths(); z++){
+						int monthNbr = DateFormatter.getInstance().getMonthsBetween(project.getStart(), dates[0][z]);						
 						
 						if (monthNbr == b.getMonth()){
 							out.println("<option value=\"" + monthNbr + "\" selected>"
-										+ months.get(z)
+										+ dates[1][z]
 										+ "</option>");
-							z++;
 						} else {
 							out.println("<option value=\"" + monthNbr + "\">"
-									+ months.get(z)
-									+ "</option>");
-							z++;								
+									+ dates[1][z]
+									+ "</option>");			
 						}
 					}
 				    out.println("</select>"

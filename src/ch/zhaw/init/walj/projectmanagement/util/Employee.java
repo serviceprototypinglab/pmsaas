@@ -14,7 +14,7 @@ public class Employee {
 	private String kuerzel;
 	private String mail;
 	private String password;
-	private int wage;
+	private double wage;
 	private int supervisor;
 	
 	/**
@@ -104,11 +104,25 @@ public class Employee {
 	
 	
 	/**
+	 * set a new password for the employee
+	 * @param password
+	 */
+	public void setNewPassword(String password){
+		this.password = password;
+	}
+	
+	
+	/**
 	 * @return the employees wage per hour
 	 */
-	public int getWage(){
+	public double getWage(){
 		return wage;
 	}
+	
+	public void setWage(double wage){
+		this.wage = wage;
+	}
+	
 	
 	/**
 	 * @return the ID of the supervisor

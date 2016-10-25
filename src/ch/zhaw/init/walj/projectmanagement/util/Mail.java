@@ -39,7 +39,7 @@ public class Mail {
 			message.setSubject("Welcome to Project Management SaaS");
 			
 			// TODO better content
-			String content = "<h1>Hello " + user.getFirstName() + "</h1>\n"
+			String content = "<p>Hello " + user.getFirstName() + "</p>\n"
 						   + "<p>Someone created a new account with de following information:</p>"
 						   + "<p>Name: " + user.getName() + "</p>"			
 						   + "<p>Kuerzel: " + user.getKuerzel() + "</p>"			
@@ -60,26 +60,20 @@ public class Mail {
 		}
 	}
 	
-	public void sendResetPasswordMail(){
+	public void sendResetPasswordMail() throws MessagingException{
+		message.setSubject("Password reset");
 		
-		try {
-			message.setSubject("Password reset");
-			
-			// TODO better content
-			String content = "<h1>Hello " + user.getFirstName() + "</h1>\n"
-						   + "<p>Here is your new Password:</p>"
-						   + "<p>Password: " + user.getPassword() + "</p>"
-						   + "<br>"
-						   + "<p>This e-mail was generated automatically, please do not respond to it.</p>";			
-			
-			message.setContent(content, "text/html");
-			
-			Transport.send(message);
-			System.out.println("Sent password reset message to " + user.getMail());
-			
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
+		// TODO better content
+		String content = "<p>Hello " + user.getFirstName() + "</p>\n"
+					   + "<p>Here is your new Password:</p>"
+					   + "<p>Password: " + user.getPassword() + "</p>"
+					   + "<br>"
+					   + "<p>This e-mail was generated automatically, please do not respond to it.</p>";			
+		
+		message.setContent(content, "text/html");
+		
+		Transport.send(message);
+		System.out.println("Sent password reset message to " + user.getMail());
 	}
 
 }

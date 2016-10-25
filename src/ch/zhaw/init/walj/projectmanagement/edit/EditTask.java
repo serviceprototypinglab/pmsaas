@@ -44,7 +44,7 @@ public class EditTask extends HttpServlet {
 		String end = request.getParameter("end");
 		int pm = Integer.parseInt(request.getParameter("pm"));
 		double budget = Double.parseDouble(request.getParameter("budget"));
-		String wp = request.getParameter("workpackage");
+		int wp = Integer.parseInt(request.getParameter("workpackage"));
 		
 
 		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");

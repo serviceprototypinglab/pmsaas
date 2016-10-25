@@ -262,6 +262,8 @@ public class NewProject extends HttpServlet {
 		// set response content type to HTML
 		response.setContentType("text/html;charset=UTF8");
 		
+		int id = (int) request.getSession(false).getAttribute("ID");
+		
 		// get the parameters
 		pName = request.getParameter("pName");
 		pShortname = request.getParameter("pShortname");
@@ -299,7 +301,7 @@ public class NewProject extends HttpServlet {
 		try {
 			
 			// create a new project in the DB
-			pID = con.newProject(pName, pShortname, pBudget, pCurrency, pStart, pEnd, pPartners);
+			pID = con.newProject(pName, pShortname, id,  pBudget, pCurrency, pStart, pEnd, pPartners);
 			
 			// create the new workpackages in the DB
 			for (int i = 0; i < wpName.length; ++i) {

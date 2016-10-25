@@ -32,9 +32,6 @@ public class AddTask extends HttpServlet {
 	
 	// Variables for POST parameters
 	private int pID;
-	private String wpName;
-	private String wpStart;
-	private String wpEnd;
 	private String taskName;
 	private String taskStart;
 	private String taskEnd;
@@ -177,7 +174,7 @@ public class AddTask extends HttpServlet {
 			
 			try {	
 				// create the new workpackages in the DB
-				con.newTask(pID, taskWP, taskName, taskStart, taskEnd, taskPM, taskBudget);
+				con.newTask(taskWP, taskName, taskStart, taskEnd, taskPM, taskBudget);
 										
 				message = "<div class=\"callout success small-12 columns\">"
 						  + "<h5>Task successfully created</h5>"

@@ -17,10 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.Booking;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.DateHelper;
+import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
+import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
 import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
 
@@ -42,9 +43,7 @@ public class EffortOverview extends HttpServlet {
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
 	private ArrayList<Booking> bookings = new ArrayList<Booking>();
 	private Effort effort;
-	
-	private DateHelper dateFormatter = new DateHelper();
-	
+		
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
@@ -60,13 +59,13 @@ public class EffortOverview extends HttpServlet {
 			employeeID = 0;
 		}
 			
-			DBConnection con = new DBConnection(url, dbName, userName, password);
-			
-			try {
-				project = con.getProject(projectID);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		DBConnection con = new DBConnection(url, dbName, userName, password);
+		
+		try {
+			project = con.getProject(projectID);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 			
 		if (project.getLeader() == id){
 			employees = project.getEmployees();
@@ -111,26 +110,17 @@ public class EffortOverview extends HttpServlet {
 						  + "<tbody>");
 		
 				// effort for every employee and total effort
-				double totalEffort = 0;		
+				double totalEffort = 0;	
+				double totalHours = 0;		
 				for(Employee e: employees){
 					if ((e.getID() == employeeID) || (employeeID == 0)){
 						for (Booking b : bookings){
 							if (b.getEmployeeID() == e.getID()){
 								
-								String month = "";
-								SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-								SimpleDateFormat formatMonthYear = new SimpleDateFormat("MMMM yyyy");
-								try {
-									Calendar c = Calendar.getInstance();
-									Date date = format.parse(project.getStart());
-									c.setTime(date);
-									for (int y = 1; y < b.getMonth(); y++){
-										c.add(Calendar.MONTH, 1);
-									}
-									month = formatMonthYear.format(c.getTime());
-								} catch (ParseException ex) {
-									ex.printStackTrace();
-								}
+								String month [][] = DateFormatter.getInstance().getMonths(
+										DateFormatter.getInstance().stringToDate(project.getStart(), "dd.MM.yyyy"), 
+										b.getMonth()
+										);
 								
 								String task = "";
 								for (ProjectTask t : project.getTasks()){
@@ -140,23 +130,31 @@ public class EffortOverview extends HttpServlet {
 								}
 								
 								double expense = b.getHours() * e.getWage();
+								totalEffort += expense;
+								totalHours += b.getHours();
 								
-													
-													
 								out.println("<tr>"
 										  + "<td>" + e.getName() + "</td>"
-										  + "<td>" + month + "</td>"
+										  + "<td>" + month[1][b.getMonth()-1] + "</td>"
 										  + "<td>" + task + "</div>"
-										  + "<td>" + b.getHours() + "</td>"
-										  + "<td>" + expense + "</td>"
-										  + "<td>" + e.getWage()+ "</td>"
+										  + "<td>" + NumberFormatter.getInstance().formatHours(b.getHours()) + "</td>"
+										  + "<td>" + NumberFormatter.getInstance().formatDouble(expense) + "</td>"
+										  + "<td>" + NumberFormatter.getInstance().formatDouble(e.getWage())+ "</td>"
 										  + "</tr>");
 							}
 						}
 					}
 				}
 
-				out.println("</tbody>"
+				out.println("<tr class=\"bold\">"
+						  + "<td>Total</td>"
+						  + "<td></td>"
+						  + "<td></div>"
+						  + "<td>" + NumberFormatter.getInstance().formatHours(totalHours) + "</td>"
+						  + "<td>" + NumberFormatter.getInstance().formatDouble(totalEffort) + "</td>"
+						  + "<td></td>"
+						  + "</tr>"
+						  + "</tbody>"
 						  + "</table>");
 				
 			} else {
@@ -193,7 +191,8 @@ public class EffortOverview extends HttpServlet {
 						  + "<tbody>");
 		
 				// effort for every employee and total effort
-				double totalEffort = 0;		
+				double totalEffort = 0;	
+				double totalHours = 0;			
 				for (Booking b : bookings){
 						
 						String month = "";
@@ -219,7 +218,9 @@ public class EffortOverview extends HttpServlet {
 						}
 						
 						double expense = b.getHours() * selectedEmployee.getWage();
-						
+
+						totalEffort += expense;
+						totalHours += b.getHours();
 											
 											
 						out.println("<tr>"
@@ -231,7 +232,15 @@ public class EffortOverview extends HttpServlet {
 								  + "</tr>");
 				}
 
-				out.println("</tbody>"
+				out.println("<tr class=\"bold\">"
+						  + "<td>Total</td>"
+						  + "<td></td>"
+						  + "<td></div>"
+						  + "<td>" + NumberFormatter.getInstance().formatHours(totalHours) + "</td>"
+						  + "<td>" + NumberFormatter.getInstance().formatDouble(totalEffort) + "</td>"
+						  + "<td></td>"
+						  + "</tr>"
+						  + "</tbody>"
 						  + "</table>");
 				
 			}
