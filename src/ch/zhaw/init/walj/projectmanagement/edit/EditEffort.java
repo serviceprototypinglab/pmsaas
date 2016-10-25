@@ -72,7 +72,7 @@ public class EditEffort extends HttpServlet {
 					+ "</div>";
 		}
 						
-		out.println(HTMLHeader.getInstance().getHeader("Edit Effort", "../", project.getName())
+		out.println(HTMLHeader.getInstance().getHeader("Edit Effort", "../", project.getName(), "")
 				  // HTML section with form
 				  + "<section>"
 				  + "<div class=\"row\">"

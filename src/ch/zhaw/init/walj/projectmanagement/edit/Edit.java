@@ -54,7 +54,7 @@ public class Edit extends HttpServlet {
 		PrintWriter out = response.getWriter();
 				
 		if (project.getLeader() == id) {
-			out.println(HTMLHeader.getInstance().getHeader("Edit " + project.getShortname(), "../", "Edit " + project.getShortname(), "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().getHeader("Edit " + project.getShortname(), "../", "Edit " + project.getShortname(), "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  // HTML section with list of all projects
 					  + "<section>"
 					  + "<div class=\"row\">"

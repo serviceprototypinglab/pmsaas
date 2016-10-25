@@ -17,8 +17,7 @@ public class DataBaseAccess {
 	    } 
 	    return instance;
 	}
-	
-	
+		
 	public String getURL(){
 		return URL;
 	}

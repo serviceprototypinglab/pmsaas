@@ -24,7 +24,7 @@ public class Help extends HttpServlet {
 		
 		PrintWriter out = response.getWriter();
 		
-		out.println(HTMLHeader.getInstance().getHeader("Help", "../", "Help")
+		out.println(HTMLHeader.getInstance().getHeader("Help", "../", "Help", "")
 				  // HTML section with list of all projects
 				  + "<section>"
 				  + "<div class=\"row\">" 

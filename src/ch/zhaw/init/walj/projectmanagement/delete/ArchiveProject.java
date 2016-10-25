@@ -73,7 +73,7 @@ public class ArchiveProject extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		// Print HTML head and header
-		out.println(HTMLHeader.getInstance().getHeader("Archive Project", "../", "Archive Project")
+		out.println(HTMLHeader.getInstance().getHeader("Archive Project", "../", "Archive Project", "")
 				  + "<section>"
 				  + message
 				  + "</section>"

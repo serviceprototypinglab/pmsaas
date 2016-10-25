@@ -83,7 +83,7 @@ public class ProjectOverview extends HttpServlet {
 			
 			
 			try {
-				out.println(HTMLHeader.getInstance().getHeader(project.getShortname(), "../../", project.getShortname())
+				out.println(HTMLHeader.getInstance().getHeader(project.getShortname(), "../../", project.getShortname(), "")
 						  // HTML section with panels
 						  + "<section>"
 						  + "<div class=\"row\">"

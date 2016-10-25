@@ -9,34 +9,38 @@ public final class HTMLHeader {
 	  
 	  
 	  public String getHeader(String tabTitle, String path){
-		    String header = "<!DOCTYPE html>"
-						  + "<html>"
-						  // HTML head
-						  + "<head>"
-						  + "<meta charset=\"UTF-8\">"
-						  + "<title>" + tabTitle + "</title>"
-						  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "css/font-awesome/css/font-awesome.min.css\">"
-						  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "css/foundation.css\" />"
-						  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "css/style.css\" />"
-						  + "</head>";
-		    return header;
+		  return getHeader(tabTitle, path, "", "");
+	  }
+	  
+	  public String getHeader(String tabTitle, String path, String script){
+		  String header = "<!DOCTYPE html>"
+				  + "<html>"
+				  // HTML head
+				  + "<head>"
+				  + "<meta charset=\"UTF-8\">"
+				  + "<title>" + tabTitle + "</title>"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "css/font-awesome/css/font-awesome.min.css\">"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "css/foundation.css\" />"
+				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + path + "css/style.css\" />"
+				  + script
+				  + "</head>";
+	    return header;
 	  }
 	  
 	  
-	  public String getHeader(String tabTitle, String path, String title){
-		    String header = getHeader(tabTitle, path, title, "");
-		    return header;
+	  public String getHeader(String tabTitle, String path, String title, String script){
+		  return getHeader(tabTitle, path, title, script, "");
 	  }
 	  
 	  
-	  public String getHeader(String tabTitle, String path, String title, String link){
-		    String header = getHeader(tabTitle, path);
+	  public String getHeader(String tabTitle, String path, String title, String script, String link){
+		    String header = getHeader(tabTitle, path, script);
 		    header += "<body>"
 				    + "<div id=\"wrapper\">"
 				    + "<header>"
 				    + "<div class=\"row\">"
 				    + "<div class=\"small-8 columns\">"
-				    + "<img src=\"" + path + "img/logo_small.png\" class=\"small-img left\">"
+				    + "<a href=\"/Projektverwaltung/Projects/Overview\" title=\"Home\"><img src=\"" + path + "img/logo_small.png\" class=\"small-img left\"></a>"
 				    + "<h1>" + title + "</h1>"
 				    + link
 				    + "</div>"
@@ -53,7 +57,6 @@ public final class HTMLHeader {
 				    + "</header>";
 		    return header;
 	  }
-	  
 	  
 	  public static synchronized HTMLHeader getInstance(){
 		    if(instance == null){

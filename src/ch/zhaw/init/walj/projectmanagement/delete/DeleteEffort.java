@@ -66,7 +66,7 @@ public class DeleteEffort extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		// Print HTML head and header
-		out.println(HTMLHeader.getInstance().getHeader("Delete Effort", "../", "Delete Effort")
+		out.println(HTMLHeader.getInstance().getHeader("Delete Effort", "../", "Delete Effort", "")
 				  + "<section>"
 				  + message
 				  + "</section>"

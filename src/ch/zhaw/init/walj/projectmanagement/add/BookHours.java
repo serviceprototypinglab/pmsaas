@@ -60,7 +60,7 @@ public class BookHours extends HttpServlet {
 			PrintWriter out = response.getWriter();
 	
 			// print HTML
-			out.println(HTMLHeader.getInstance().getHeader("Book Hours", "../../", "Book Hours", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
+			out.println(HTMLHeader.getInstance().getHeader("Book Hours", "../../", "Book Hours", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
 			
 			out.println("<section>"
 					  + "<div class=\"row\">" 
@@ -182,7 +182,7 @@ public class BookHours extends HttpServlet {
 			PrintWriter out = response.getWriter();
 	
 			// print HTML
-			out.println(HTMLHeader.getInstance().getHeader("Book Hours", "../../", "Book Hours", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
+			out.println(HTMLHeader.getInstance().getHeader("Book Hours", "../../", "Book Hours", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
 	
 			// print HTML section with form
 			out.println("<section>" 

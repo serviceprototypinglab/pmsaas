@@ -16,6 +16,7 @@ import ch.zhaw.init.walj.projectmanagement.chart.PieChart;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.Project;
 
@@ -43,46 +44,14 @@ public class Overview extends HttpServlet {
 		try {
 			employeeList = con.getAllEmployees(id);
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 				
 		PrintWriter out = response.getWriter();
 		
-		out.println("<!DOCTYPE html>" 
-				  + "<html>"
-				  // HTML head
-				  + "<head>" 
-				  + "<meta charset=\"UTF-8\">"
-				  + "<title>Projects</title>" 
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />" 
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\" />" 
-				  // function to redirect after click on select button
-				  + "<script>function Redirect(ID) {var url = \"Overview/Project?id=\" + ID; window.location=url;}</script>"
-				  + "</head>" 
-				  + "<body>"
-				  + "<div id=\"wrapper\">" 
-				  + "<header>" 
-				  + "<div class=\"row\">" 
-				  + "<div class=\"small-8 columns\">"
-				  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
-				  // title
-				  + "<h1> Projects</h1>"
-				  + "</div>"
-				  // menu
-				  + "<div class=\"small-12 medium-4 columns\">" 
-				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
-				  + "</div>" 
-				  + "</div>"
-				  + "</div>" 
-				  + "</header>" 
+		String script = "<script>function Redirect(ID) {var url = \"Overview/Project?id=\" + ID; window.location=url;}</script>";
+		
+		out.println(HTMLHeader.getInstance().getHeader("Projects", "../", "Projects", script, "")
 				  // HTML section with list of all projects
 				  + "<section>" 
 				  + "<div class=\"row\">"

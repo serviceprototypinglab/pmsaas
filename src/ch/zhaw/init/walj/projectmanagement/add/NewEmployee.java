@@ -47,7 +47,7 @@ public class NewEmployee extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		// Print HTML
-		out.println(HTMLHeader.getInstance().getHeader("New Employee", "../", "New Employee")
+		out.println(HTMLHeader.getInstance().getHeader("New Employee", "../", "New Employee", "")
 				  // HTML section with form
 				  + "<section>"
 				  + "<form method=\"post\" action=\"newEmployee\" data-abide novalidate>"

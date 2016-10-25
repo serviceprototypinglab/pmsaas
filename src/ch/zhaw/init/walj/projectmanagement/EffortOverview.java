@@ -71,7 +71,7 @@ public class EffortOverview extends HttpServlet {
 						+ "<i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i>"
 						+ " back to Project</a>";
 			
-			out.println(HTMLHeader.getInstance().getHeader(project.getShortname(), "../../", "Effort", link));
+			out.println(HTMLHeader.getInstance().getHeader(project.getShortname(), "../../", "Effort", "", link));
 			// HTML section
 			if (employeeID == 0){
 				try {

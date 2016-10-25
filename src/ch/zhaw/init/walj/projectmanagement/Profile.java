@@ -42,7 +42,7 @@ public class Profile extends HttpServlet {
 		
 		PrintWriter out = response.getWriter();
 				
-			out.println(HTMLHeader.getInstance().getHeader(employee.getName(), "../", "Profile " + employee.getName())
+			out.println(HTMLHeader.getInstance().getHeader(employee.getName(), "../", "Profile " + employee.getName(), "")
 					  // HTML section with list of all projects
 					  + "<section>"
 					  + "<div class=\"row\">"
@@ -264,7 +264,7 @@ public class Profile extends HttpServlet {
 			}
 		}		
 		
-		out.println(HTMLHeader.getInstance().getHeader(title, "../", title)
+		out.println(HTMLHeader.getInstance().getHeader(title, "../", title, "")
 				  // HTML section with form
 				  + "<section>"
 				  + "<div class=\"row\">"

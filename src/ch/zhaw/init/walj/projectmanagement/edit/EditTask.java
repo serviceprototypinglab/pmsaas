@@ -82,7 +82,7 @@ public class EditTask extends HttpServlet {
 					+ "</div>";
 		}
 						
-		out.println(HTMLHeader.getInstance().getHeader("Edit " + name, "../", "Edit " + name)
+		out.println(HTMLHeader.getInstance().getHeader("Edit " + name, "../", "Edit " + name, "")
 				  // HTML section with form
 				  + "<section>"
 				  + "<div class=\"row\">"
