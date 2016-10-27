@@ -11,16 +11,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.init.walj.projectmanagement.util.Booking;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
-import ch.zhaw.init.walj.projectmanagement.util.Effort;
-import ch.zhaw.init.walj.projectmanagement.util.Employee;
-import ch.zhaw.init.walj.projectmanagement.util.Expense;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
-import ch.zhaw.init.walj.projectmanagement.util.Project;
-import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
-import ch.zhaw.init.walj.projectmanagement.util.Workpackage;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Booking;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Effort;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Expense;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Workpackage;
 
 /**
  * Servlet implementation class Edit

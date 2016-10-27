@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.Mail;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 
 /**
  * Projectmanagement tool, Page to assign employees (choose task)
@@ -146,7 +146,7 @@ public class NewEmployee extends HttpServlet {
 		final PrintWriter out = response.getWriter();
 		
 		// print HTML
-		out.println(HTMLHeader.getInstance().getHeader("New Employee", "../", "New Employee")
+		out.println(HTMLHeader.getInstance().getHeader("New Employee", "../", "New Employee", "")
 				
 				  // HTML section with message and form
 				  + "<section>"

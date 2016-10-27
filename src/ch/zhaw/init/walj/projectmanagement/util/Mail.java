@@ -9,6 +9,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
+
 public class Mail {
 	
 	String mailFrom = "noreply@projectmanagementsaas.ch";
@@ -40,7 +42,7 @@ public class Mail {
 			
 			// TODO better content
 			String content = "<p>Hello " + user.getFirstName() + "</p>\n"
-						   + "<p>Someone created a new account with de following information:</p>"
+						   + "<p>Someone created a new account with the following information:</p>"
 						   + "<p>Name: " + user.getName() + "</p>"			
 						   + "<p>Kuerzel: " + user.getKuerzel() + "</p>"			
 						   + "<p>Mail: " + user.getMail() + "</p>"
@@ -48,7 +50,7 @@ public class Mail {
 						   + "<br>"
 						   + "<p>Click <a href=\"" + path + "\">here</a> to sign in </p>"
 						   + "<p></p>"
-						   + "<p>This e-mail was generated automatically, please do not respond to it.</p>";			
+						   + "<p style=\"font-style:italic\">This e-mail was generated automatically, please do not respond to it.</p>";			
 			
 			message.setContent(content, "text/html");
 			
@@ -68,7 +70,7 @@ public class Mail {
 					   + "<p>Here is your new Password:</p>"
 					   + "<p>Password: " + user.getPassword() + "</p>"
 					   + "<br>"
-					   + "<p>This e-mail was generated automatically, please do not respond to it.</p>";			
+					   + "<p style=\"font-style:italic\">This e-mail was generated automatically, please do not respond to it.</p>";			
 		
 		message.setContent(content, "text/html");
 		

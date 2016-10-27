@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.chart.PieChart;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
-import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
-import ch.zhaw.init.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 
 /**
  * Servlet implementation class Overview
@@ -55,7 +55,7 @@ public class Overview extends HttpServlet {
 				  // HTML section with list of all projects
 				  + "<section>" 
 				  + "<div class=\"row\">"
-				  + "<h2>Welcome " + name + "</h2>"
+				  + "<h2 class=\"blue\">Welcome " + name + "</h2>"
 				  + "</div>" 
 				  + "<div class=\"row\">"
 				  + "<h3>Your Projects</h3>"

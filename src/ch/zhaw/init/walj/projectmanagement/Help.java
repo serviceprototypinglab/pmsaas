@@ -29,7 +29,7 @@ public class Help extends HttpServlet {
 				  + "<section>"
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-12 columns text-center\">"
-				  + "<h2>This page is not avaible yet.</h2>"
+				  + "<h2>When the last light of the Durins Day shines, this page will be avaible</h2>"
 				  + "<a href=\"/Projektverwaltung/Projects/Overview\">Click here to go back to the overview</a>"
 				  + "</div>"
 				  + "</div>");

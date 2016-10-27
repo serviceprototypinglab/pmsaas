@@ -1,4 +1,4 @@
-package ch.zhaw.init.walj.projectmanagement.util;
+package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
 
 /**
  * class to create expenses 

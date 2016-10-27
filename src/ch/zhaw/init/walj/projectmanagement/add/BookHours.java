@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
-import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
-import ch.zhaw.init.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 
 /**
  * Projectmanagement tool, Page to book hours
@@ -174,7 +174,7 @@ public class BookHours extends HttpServlet {
 			// get all employees
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			try {
-				employees = con.getAllEmployees(1);
+				employees = con.getAllEmployees(id);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

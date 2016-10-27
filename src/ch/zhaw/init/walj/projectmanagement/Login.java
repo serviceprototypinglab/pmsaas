@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.PasswordService;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 
 @SuppressWarnings("serial")
 @WebServlet("/login")
@@ -116,6 +116,7 @@ public class Login extends HttpServlet {
         	int id = e.getID();
             request.getSession().setAttribute("user", e.getFirstName());
             request.getSession().setAttribute("ID", id);
+            request.getSession().setMaxInactiveInterval(60*60);
             response.sendRedirect(request.getContextPath() + "/Projects/Overview");
         } catch (NullPointerException ex){
             request.setAttribute("error", "Unknown login, try again");

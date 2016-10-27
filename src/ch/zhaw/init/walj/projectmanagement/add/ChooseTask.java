@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
-import ch.zhaw.init.walj.projectmanagement.util.Project;
-import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
 
 /**
  * Projectmanagement tool, Page to assign employees (choose task)

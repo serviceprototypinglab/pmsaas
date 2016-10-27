@@ -17,9 +17,9 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
 import ch.zhaw.init.walj.projectmanagement.util.DataBaseAccess;
-import ch.zhaw.init.walj.projectmanagement.util.Employee;
-import ch.zhaw.init.walj.projectmanagement.util.Project;
-import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
 
 public class PieChart {
 	

@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
-import ch.zhaw.init.walj.projectmanagement.util.Project;
-import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
 
 /**
  * Projectmanagement tool, Page to book hours (choose task)
@@ -107,7 +107,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 					  
 					  // error message (if something's wrong with the form)
 					  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
-					  + "<p><i class=\"fa fa-exclamation-triangle\"></i> There are some errors in your form.</p></div>"
+					  + "<p><i class=\"fa fa-exclamation-triangle\"></i> Choose at least 1 task.</p></div>"
 	
 					  // project and employee ID
 					  + "<input type=\"hidden\" name=\"projectID\" value=\"" + projectID + "\">"
@@ -252,7 +252,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 				out.println("<input type=\"hidden\" name=\"assignmentID\" value=\"" + assignmentID + "\">");
 				
 				// task name, field for the hours and dropdownlist to select the month
-				out.println("<p class=\"small-2 columns bold\">" + taskNames.get(i) + "</p>"
+				out.println("<p class=\"small-2 columns\">" + taskNames.get(i) + "</p>"
 							+ "<p class=\"small-1 columns\">Hours</p>"
 							+ "<div class=\"small-4 columns\">"
 							+ "<input type=\"number\" name=\"hours\" required>"

@@ -7,9 +7,12 @@ public final class HTMLHeader {
 		  
 	  }
 	  
-	  
 	  public String getHeader(String tabTitle, String path){
-		  return getHeader(tabTitle, path, "", "");
+		  return getHeader(tabTitle, path, "");
+	  }
+	  	  
+	  public String getHeader(String tabTitle, String path, String title, String script){
+		  return getHeader(tabTitle, path, title, script, "");
 	  }
 	  
 	  public String getHeader(String tabTitle, String path, String script){
@@ -26,13 +29,7 @@ public final class HTMLHeader {
 				  + "</head>";
 	    return header;
 	  }
-	  
-	  
-	  public String getHeader(String tabTitle, String path, String title, String script){
-		  return getHeader(tabTitle, path, title, script, "");
-	  }
-	  
-	  
+	  	  
 	  public String getHeader(String tabTitle, String path, String title, String script, String link){
 		    String header = getHeader(tabTitle, path, script);
 		    header += "<body>"

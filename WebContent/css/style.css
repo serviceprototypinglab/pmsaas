@@ -170,6 +170,10 @@ p span {
 	font-weight: bold;
 }
 
+.italic {
+	font-style: italic;
+}
+
 img {
 	text-align: center;
 }

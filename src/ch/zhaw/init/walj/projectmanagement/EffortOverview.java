@@ -15,15 +15,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.init.walj.projectmanagement.util.Booking;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
-import ch.zhaw.init.walj.projectmanagement.util.Effort;
-import ch.zhaw.init.walj.projectmanagement.util.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
-import ch.zhaw.init.walj.projectmanagement.util.Project;
-import ch.zhaw.init.walj.projectmanagement.util.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Booking;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Effort;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
 
 /**
  * Servlet implementation class Overview
@@ -220,16 +220,15 @@ public class EffortOverview extends HttpServlet {
 						out.println("<tr>"
 								  + "<td>" + month + "</td>"
 								  + "<td>" + task + "</div>"
-								  + "<td>" + b.getHours() + "</td>"
-								  + "<td>" + expense + "</td>"
-								  + "<td>" + selectedEmployee.getWage()+ "</td>"
+								  + "<td>" + NumberFormatter.getInstance().formatHours(b.getHours()) + "</td>"
+								  + "<td>" + NumberFormatter.getInstance().formatDouble(expense) + "</td>"
+								  + "<td>" + NumberFormatter.getInstance().formatDouble(selectedEmployee.getWage())+ "</td>"
 								  + "</tr>");
 				}
 
 				out.println("<tr class=\"bold\">"
 						  + "<td>Total</td>"
 						  + "<td></td>"
-						  + "<td></div>"
 						  + "<td>" + NumberFormatter.getInstance().formatHours(totalHours) + "</td>"
 						  + "<td>" + NumberFormatter.getInstance().formatDouble(totalEffort) + "</td>"
 						  + "<td></td>"

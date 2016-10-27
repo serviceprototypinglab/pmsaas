@@ -17,12 +17,12 @@ import ch.zhaw.init.walj.projectmanagement.chart.LineChart;
 import ch.zhaw.init.walj.projectmanagement.chart.PieChart;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
-import ch.zhaw.init.walj.projectmanagement.util.Effort;
-import ch.zhaw.init.walj.projectmanagement.util.Employee;
-import ch.zhaw.init.walj.projectmanagement.util.Expense;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
-import ch.zhaw.init.walj.projectmanagement.util.Project;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Effort;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Expense;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 
 /**
  * Servlet implementation class Overview

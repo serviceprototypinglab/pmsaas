@@ -1,7 +1,9 @@
-package ch.zhaw.init.walj.projectmanagement.util;
+package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
 
 import java.util.ArrayList;
 import java.util.Date;
+
+import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 
 public class ProjectTask {
 

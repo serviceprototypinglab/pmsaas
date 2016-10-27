@@ -69,7 +69,7 @@ public class DateFormatter {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return monthsBetween;
+		return monthsBetween + 1;
 	}
 	
 	

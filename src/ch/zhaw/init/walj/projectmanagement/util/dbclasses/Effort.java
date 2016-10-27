@@ -1,4 +1,4 @@
-package ch.zhaw.init.walj.projectmanagement.util;
+package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -69,7 +69,7 @@ public class Effort {
     			taskID = task.getID();
     			employeeID = res.getInt("EmployeeIDFS"); 
     			// get bookings to the assignment
-    			res2 = st2.executeQuery("select * from Bookings where AssignmentIDFS = " + assignmentID);
+    			res2 = st2.executeQuery("select * from Bookings where AssignmentIDFS = " + assignmentID + " order by Month");
     			while (res2.next()){
     				bookingID = res2.getInt("BookingID");
     				month = res2.getInt("Month");
