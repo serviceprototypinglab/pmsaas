@@ -19,7 +19,7 @@ import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 // TODO /** kommentare
 @SuppressWarnings("serial")
 @WebServlet("/Projects/newProject")
-public class NewProject extends HttpServlet {
+public class AddProject extends HttpServlet {
 	
 	// create a new DB connection
 	private DBConnection con = new DBConnection();

@@ -278,11 +278,13 @@ public class ProjectOverview extends HttpServlet {
 					  // delete project button
 					  + "<div class=\"panel small-12 columns\">"
 					  + "<div class=\"row round\">"
-					  + "<a class=\"large expanded button\" id=\"editProject\" href=\"../Edit?projectID=" + project.getID() + "\"><i class=\"fa fa-pencil-square-o\"></i> Edit Project</a>"
-					  + "<a class=\"large expanded warning button\" id=\"deleteProject\" data-open=\"delete\"><i class=\"fa fa-archive\"></i> Archive Project</a>"
+					  + "<div class=\"expanded large button-group\">"
+					  + "<a class=\"large button\" id=\"shareProject\" href=\"../Share?projectID=" + project.getID() + "\"><i class=\"fa fa-share\"></i> Share Project</a>"
+					  + "<a class=\"large button\" id=\"editProject\" href=\"../Edit?projectID=" + project.getID() + "\"><i class=\"fa fa-pencil-square-o\"></i> Edit Project</a>"
+					  + "<a class=\"large button\" id=\"deleteProject\" data-open=\"delete\"><i class=\"fa fa-archive\"></i> Archive Project</a>"
 					  + "</div>"
 					  + "</div>"
-					  
+					  + "</div>"					  
 					  + "<div class=\"reveal\" id=\"delete\" data-reveal>"
 					  + "<h1 class=\"align-left\">Are you sure?</h1>"
 					  + "<p class=\"lead\"></p>"

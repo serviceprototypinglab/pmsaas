@@ -18,9 +18,17 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 @WebServlet("/login")
 public class Login extends HttpServlet {
 	
+	// connection to database
+	DBConnection con = new DBConnection();
+	
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	response.setContentType("text/html;charset=UTF8");
+    	
+    	if (con.noUsers()){
+            String loginURI = request.getContextPath() + "/setup";
+    		response.sendRedirect(loginURI);
+    	}
     	
     	String message = "";
     	
@@ -103,9 +111,6 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	response.setContentType("text/html;charset=UTF8");
 
-    	// connection to database
-    	DBConnection con = new DBConnection();
-    	
     	String user = request.getParameter("mail");
         String password = request.getParameter("password");
         
@@ -116,6 +121,7 @@ public class Login extends HttpServlet {
         	int id = e.getID();
             request.getSession().setAttribute("user", e.getFirstName());
             request.getSession().setAttribute("ID", id);
+            request.getSession().setAttribute("kuerzel", e.getKuerzel());
             request.getSession().setMaxInactiveInterval(60*60);
             response.sendRedirect(request.getContextPath() + "/Projects/Overview");
         } catch (NullPointerException ex){

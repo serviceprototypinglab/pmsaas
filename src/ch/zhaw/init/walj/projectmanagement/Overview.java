@@ -40,12 +40,6 @@ public class Overview extends HttpServlet {
 				
 		DBConnection con = new DBConnection();
 		
-		ArrayList<Employee> employeeList = null;
-		try {
-			employeeList = con.getAllEmployees(id);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
 				
 		PrintWriter out = response.getWriter();
 		
@@ -161,106 +155,97 @@ public class Overview extends HttpServlet {
 		
 			out.println("</div>");
 			
-			if (employeeList.size() > 1) {
-							
-				projects = new ArrayList<Project>();
-				for (Employee e : employeeList){
-					if (e.getID() != id){
-						// get all projects where the current user is supervisor
-						if (con.getProjects(e.getID(), false) != null){
-							projects.addAll(con.getProjects(e.getID(), false));
+			
+			ArrayList<Project> sharedProjects = con.getSharedProjects(id);
+			
+			if (sharedProjects != null){
+				out.println("<div class=\"row\">"
+			     	  + "<h3>Other Projects</h3>"
+				      + "</div>"
+			     	  + "<div class=\"row\">"
+				      + "<ul class=\"accordion\" data-accordion data-multi-expand=\"true\" data-allow-all-closed=\"true\">");
+				for (Project project : sharedProjects){
+					// get all employees
+					ArrayList <Employee> employee = project.getEmployees();
+					
+					Employee supervisor = con.getEmployee(project.getLeader());
+					
+					String employees = "";
+					
+					// string of all employee names
+					if (!employee.isEmpty()){
+						employees = employee.get(0).getName();
+						for (int i = 1; i < employee.size(); i++){
+							employees += ", " + employee.get(i).getName();
 						}
+					} else {
+						employees = "no employees assigned";
 					}
-				}
-				if (projects != null){
-
-					out.println("<div class=\"row\">"
-				     	  + "<h3>Other Projects</h3>"
-					      + "</div>"
-				     	  + "<div class=\"row\">"
-					      + "<ul class=\"accordion\" data-accordion data-multi-expand=\"true\" data-allow-all-closed=\"true\">");
-					for (Project project : projects){
-						// get all employees
-						ArrayList <Employee> employee = project.getEmployees();
-						
-						Employee supervisor = con.getEmployee(project.getLeader());
-						
-						String employees = "";
-						
-						// string of all employee names
-						if (!employee.isEmpty()){
-							employees = employee.get(0).getName();
-							for (int i = 1; i < employee.size(); i++){
-								employees += ", " + employee.get(i).getName();
-							}
-						} else {
-							employees = "no employees assigned";
-						}
-						
-						// get number of days left to end of project
-						Date date = new Date();
-						String daysUntilEnd = "";
-						int days = DateFormatter.getInstance().getDaysBetween(date, project.getEnd());
-						if (days == 0){
-							daysUntilEnd = "Project finished";
-						} else {
-							daysUntilEnd = "Project ends in " + days + " days";
-						}
-				
-						piechart = new PieChart(project);
-						
-						
-						// print list item
-						out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
-								  + "<span class=\"bigtext small-3 columns down\">" + project.getShortname() + "</span>"
-								  + "<span class=\"middletext small-6 columns end down\">" + project.getName() + "</span>"
-								 // TODO + "<span class=\"success badge errorbadge\">0</span>"
-								  + "</a>"
-								  + "<div class=\"accordion-content\" data-tab-content>"
-								  // Write ProjectLeader
-								  + "<p><span class=\"small-3 columns\">Project Leader</span>"
-								  + "<span class=\"small-9 end columns\">" + supervisor.getName() + "</span>"
-								  + "</p>"
-								  // Write Duration
-								  + "<p>"
-								  + "<span class=\"small-3 columns\">Projectduration</span>"
-								  + "<span class=\"small-4 columns\">" 
-								  + DateFormatter.getInstance().formatDate(project.getStart()) + " - " + DateFormatter.getInstance().formatDate(project.getEnd()) + "</span>"
-						  		  + "<span class=\"small-4 end columns align-right\">" + daysUntilEnd + "</span>"
-				  		  		  + "</p>"
-				  		  		  // Write Budget
-				  		  		  + "<p>"
-				  		  		  + "<span class=\"small-3 columns\">Budget</span>"
-				  		  		  + "<span class=\"small-4 columns\">" + project.getCurrency() 
-								  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
-				  		  		  + "<span class=\"small-4 end columns align-right\">" + project.getCurrency()
-				  		  		  + " " + NumberFormatter.getInstance().formatDouble(piechart.getRemainingBudget()) + " left</span>"
-				  		  		  + "</p>"
-								  // Write Workpackages
-								  + "<p>"
-								  + "<span class=\"small-3 columns\">Workpackages</span>"
-								  + "<span class=\"small-9 columns\">" + project.nbrOfWorkpackages() + "</span>"
-								  + "</p>"
-								  // Write Tasks
-								  + "<p>"
-								  + "<span class=\"small-3 columns\">Tasks</span>"
-								  + "<span class=\"small-9 columns\">" + project.nbrOfTasks() + "</span>"
-								  + "</p>"
-								  // Write Employees
-								  + "<p>"
-								  + "<span class=\"small-3 columns\">Employees</span>"
-								  + "<span class=\"small-4 columns\">" + project.nbrOfEmployees() 
-								  + "</span><span class=\"small-4 end columns align-right\">" + employees
-								  + "</span></p>"
-								  // Write Partners
-								  + "<p><span class=\"small-3 columns\">Partner</span>"
-								  + "<span class=\"small-9 end columns\">" + project.getPartners() + "</span>"
-								  + "</p>"
-								  + "</div>"
-								  + "</li>");
-					}					
-				}				
-			}	
+					
+					// get number of days left to end of project
+					Date date = new Date();
+					String daysUntilEnd = "";
+					int days = DateFormatter.getInstance().getDaysBetween(date, project.getEnd());
+					if (days == 0){
+						daysUntilEnd = "Project finished";
+					} else {
+						daysUntilEnd = "Project ends in " + days + " days";
+					}
+			
+					piechart = new PieChart(project);
+					
+					
+					// print list item
+					out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
+							  + "<span class=\"bigtext small-3 columns down\">" + project.getShortname() + "</span>"
+							  + "<span class=\"middletext small-6 columns end down\">" + project.getName() + "</span>"
+							 // TODO + "<span class=\"success badge errorbadge\">0</span>"
+							  + "</a>"
+							  + "<div class=\"accordion-content\" data-tab-content>"
+							  // Write ProjectLeader
+							  + "<p><span class=\"small-3 columns\">Project Leader</span>"
+							  + "<span class=\"small-9 end columns\">" + supervisor.getName() + "</span>"
+							  + "</p>"
+							  // Write Duration
+							  + "<p>"
+							  + "<span class=\"small-3 columns\">Projectduration</span>"
+							  + "<span class=\"small-4 columns\">" 
+							  + DateFormatter.getInstance().formatDate(project.getStart()) + " - " + DateFormatter.getInstance().formatDate(project.getEnd()) + "</span>"
+					  		  + "<span class=\"small-4 end columns align-right\">" + daysUntilEnd + "</span>"
+			  		  		  + "</p>"
+			  		  		  // Write Budget
+			  		  		  + "<p>"
+			  		  		  + "<span class=\"small-3 columns\">Budget</span>"
+			  		  		  + "<span class=\"small-4 columns\">" + project.getCurrency() 
+							  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
+			  		  		  + "<span class=\"small-4 end columns align-right\">" + project.getCurrency()
+			  		  		  + " " + NumberFormatter.getInstance().formatDouble(piechart.getRemainingBudget()) + " left</span>"
+			  		  		  + "</p>"
+							  // Write Workpackages
+							  + "<p>"
+							  + "<span class=\"small-3 columns\">Workpackages</span>"
+							  + "<span class=\"small-9 columns\">" + project.nbrOfWorkpackages() + "</span>"
+							  + "</p>"
+							  // Write Tasks
+							  + "<p>"
+							  + "<span class=\"small-3 columns\">Tasks</span>"
+							  + "<span class=\"small-9 columns\">" + project.nbrOfTasks() + "</span>"
+							  + "</p>"
+							  // Write Employees
+							  + "<p>"
+							  + "<span class=\"small-3 columns\">Employees</span>"
+							  + "<span class=\"small-4 columns\">" + project.nbrOfEmployees() 
+							  + "</span><span class=\"small-4 end columns align-right\">" + employees
+							  + "</span></p>"
+							  // Write Partners
+							  + "<p><span class=\"small-3 columns\">Partner</span>"
+							  + "<span class=\"small-9 end columns\">" + project.getPartners() + "</span>"
+							  + "</p>"
+							  + "</div>"
+							  + "</li>");
+				}					
+			}				
+		
 
 			out.println("</div>");
 			

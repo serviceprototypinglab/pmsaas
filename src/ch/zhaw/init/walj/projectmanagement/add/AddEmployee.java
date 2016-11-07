@@ -23,24 +23,23 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
  */
 @SuppressWarnings("serial")
 @WebServlet("/Projects/newEmployee")
-public class NewEmployee extends HttpServlet {
+public class AddEmployee extends HttpServlet {
 	
 	// variable declaration
 	private String firstname;
 	private String lastname;
 	private String kuerzel;
 	private String mail;
-	private String wage;
+	private int wage;
 	
 	// connection to database
 	private DBConnection con = new DBConnection();
 	
-	
-	@Override
 	/*
 	 * Form to create a new employee
 	 * handles get requests on /newEmployee
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
 		
@@ -111,7 +110,7 @@ public class NewEmployee extends HttpServlet {
 		lastname = request.getParameter("lastname");
 		kuerzel = request.getParameter("kuerzel");
 		mail = request.getParameter("mail");
-		wage = request.getParameter("wage");
+		wage = Integer.parseInt(request.getParameter("wage"));
 		
 		// error message
 		String message = "<div class=\"row\">"

@@ -18,10 +18,7 @@ body {
 }
 
 .round {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	margin: 5px !important;
+	margin: 2px !important;
 }
 
 p {
@@ -64,7 +61,7 @@ h5 {
 	font-weight: bold;
 }
 
-.add {
+.add, .back-button {
 	margin-left: 15px;
 }
 
@@ -72,9 +69,6 @@ h5 {
 	margin-right: 15px;
 }
 
-.back-button {
-	margin-left: 15px;
-}
 
 .is-active > .accordion-title::before {
     content: "";
@@ -159,9 +153,6 @@ p span {
 
 .panel {
 	background-color: #eee;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
 	border: solid white 5px;
 	padding: 5px;
 }
@@ -224,7 +215,7 @@ img {
 }
 
 .button-group {
-	margin-left: 5px;
+	margin: 0px;
 }
 
 #deleteProject {
@@ -251,4 +242,48 @@ img {
 .small-img {
 	height: 65px;
 	margin-right: 20px;
+}
+
+.horizontal-scroll {
+	overflow: hidden;
+  	overflow-x: auto;
+  	clear: both;
+  	width: 100%;
+}
+
+.table {
+	min-width: rem-calc(1000);
+}
+
+
+.th-150{
+	min-width: 150px;
+}
+
+.th-200{
+	min-width: 200px;
+}
+
+.th-250{
+	min-width: 250px;
+}
+
+.th-300{
+	min-width: 300px;
+}
+
+.th-350{
+	min-width: 350px;
+}
+
+.th-400{
+	min-width: 400px;
+}
+
+.border-left {
+	border-left: 5px solid #ddd;
+}
+
+.border-right {
+	border-right: 5px solid #ddd;
 }

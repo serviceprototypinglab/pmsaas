@@ -18,8 +18,9 @@ public class ProjectTask {
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
 	private int startMonth;
 	private int endMonth;
+	private ArrayList<Weight> weights = new ArrayList<Weight>();
 	
-	public ProjectTask(int id, int workpackageID, String name, String start, String projectStart, String end, int pms, double budget){
+	public ProjectTask(int id, int workpackageID, String name, String start, String projectStart, String end, int pms, double budget, ArrayList<Weight> weights){
 		this.id = id;
 		this.workpackageID = workpackageID;
 		this.name = name;
@@ -28,6 +29,7 @@ public class ProjectTask {
 		this.end = end;
 		this.pms = pms;
 		this.budget = budget;
+		this.weights = weights;
 	}
 	
 	public void addEmployee(Employee employee){
@@ -115,5 +117,9 @@ public class ProjectTask {
 	public double getPMsPerMonth(){
 		double pmsPerMonth = (double)pms / (double)this.getNumberOfMonths();
 		return pmsPerMonth;
+	}
+
+	public ArrayList<Weight> getWeight() {
+		return weights;
 	}
 }

@@ -24,11 +24,11 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
 public class PieChart {
 	
 	// database access information
-	private String driver = DataBaseAccess.getInstance().getDriver();
-	private String url = DataBaseAccess.getInstance().getURL();
-	private String dbName = DataBaseAccess.getInstance().getDBName();
-	private String userName	= DataBaseAccess.getInstance().getUsername();
-	private String password	= DataBaseAccess.getInstance().getPassword();
+	private String driver = DataBaseAccess.DRIVER;
+	private String url = DataBaseAccess.URL;
+	private String dbName = DataBaseAccess.DBNAME;
+	private String userName	= DataBaseAccess.USERNAME;
+	private String password	= DataBaseAccess.PASSWORD;
 	private Connection conn;
 	private Statement st;
 	private ResultSet res;

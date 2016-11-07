@@ -50,7 +50,7 @@ public class AssignEmployee extends HttpServlet {
 		if (project.getLeader() == id){
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			try {
-				employees = con.getAllEmployees(id);
+				employees = con.getAllEmployees();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -175,7 +175,7 @@ public class AssignEmployee extends HttpServlet {
 			// get all employees
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			try {
-				employees = con.getAllEmployees(id);
+				employees = con.getAllEmployees();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

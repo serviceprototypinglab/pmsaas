@@ -77,5 +77,20 @@ public class Mail {
 		Transport.send(message);
 		System.out.println("Sent password reset message to " + user.getMail());
 	}
+	
+	public void sendInitialSetupMail() throws MessagingException{
+		message.setSubject("Password reset");
+		
+		// TODO better content
+		String content = "<p>Hello " + user.getFirstName() + "</p>\n"
+					   + "<p>Thanks for initialising the Project Management SaaS.</p>"
+					   + "<br>"
+					   + "<p style=\"font-style:italic\">This e-mail was generated automatically, please do not respond to it.</p>";			
+		
+		message.setContent(content, "text/html");
+		
+		Transport.send(message);
+		System.out.println("Sent password reset message to " + user.getMail());	
+	}
 
 }

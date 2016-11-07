@@ -21,14 +21,14 @@ public class AccessDenied extends HttpServlet {
     	   	
 		PrintWriter out = response.getWriter();
     	
-    	out.println(HTMLHeader.getInstance().getHeader("Edit Workpackage", "../")  
+    	out.println(HTMLHeader.getInstance().getHeader("Access denied - Project Management SaaS", "", "Access denied", "")  
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
 				  + "<section>" 
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-6 small-offset-3 end columns\">"
 				  + "<h1 class=\"align-center\"><i class=\"fa fa-exclamation-triangle fa-4x\"></i></h1>"
-				  + "<h1 class=\"align-center\">Access Denied</h1>"
+				  + "<h1 class=\"align-center\">Access denied</h1>"
 				  + "</div>"
 				  + "</div>"
 				  + "<div class=\"row\">" 

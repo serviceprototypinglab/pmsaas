@@ -1,4 +1,4 @@
-package ch.zhaw.init.walj.projectmanagement.util;
+package ch.zhaw.init.walj.projectmanagement.admin;
 
 import java.io.IOException;
 
@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebFilter("/Projects/*")
-public class LoginFilter implements Filter {
+@WebFilter("/admin/*")
+public class AdminFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws ServletException, IOException {    
@@ -22,7 +22,6 @@ public class LoginFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpSession session = request.getSession(false);
         String loginURI = request.getContextPath() + "/login";
-        String adminURI = request.getContextPath() + "/admin/properties";
 
         boolean loggedIn = session != null && session.getAttribute("user") != null;
         boolean loggedInAsAdmin = session != null && session.getAttribute("kuerzel").equals("admin");
@@ -30,9 +29,10 @@ public class LoginFilter implements Filter {
 
         if (loggedIn || loginRequest) {
         	if (loggedInAsAdmin){
-        		response.sendRedirect(adminURI);
-        	} else {
         		chain.doFilter(request, response);
+        	} else {
+        		String url = request.getContextPath() + "/AccessDenied";
+                response.sendRedirect(url);
         	}
         } else {
             response.sendRedirect(loginURI);

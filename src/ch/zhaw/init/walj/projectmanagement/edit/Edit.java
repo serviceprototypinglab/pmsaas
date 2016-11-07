@@ -136,36 +136,40 @@ public class Edit extends HttpServlet {
 			out.println("<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">" 
 					  + "<h3 class=\"no-margin edit\" id=\"workpackages\">Workpackages</h3>"
-					  + "</div>");
+					  + "</div>"
+					  + "<table>"
+					  + "<thead>"
+					  + "<tr>"
+					  + "<th class=\"th-300\">Name</th>"
+					  + "<th class=\"th-200\">Start</th>"
+					  + "<th class=\"th-200\">End</th>"
+					  + "<th class=\"th-150\"></th>"
+					  + "<th class=\"th-150\"></th>"
+					  + "</tr>"
+					  + "</thead>"
+					  + "<tbody>");
 			
 			for (Workpackage w : workpackages){
 				out.println("<form method=\"post\" action=\"EditWorkpackage\" data-abide novalidate>"
+						  + "<tr>"
+						  + "<td>"
 						  + "<input type=\"hidden\" name=\"projectID\" value=\"" + project.getID() + "\">"
 						  + "<input type=\"hidden\" name=\"id\" value=\"" + w.getID() + "\">"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Workpackage Name</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
 						  + "<input type=\"text\" name=\"name\" value=\"" + w.getName() + "\">"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Workpackage Start</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<input type=\"text\" name=\"start\" value=\"" + w.getStart() + "\">"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Workpackage End</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<input type=\"text\" name=\"end\" value=\"" + w.getEnd() + "\">"
-						  + "</div>"
-						  + "<div class=\"small-2 small-offset-8 columns\">" 			  
+						  + "</td>"
+						  + "<td>"
 						  + "<a class=\"expanded alert button\" data-open=\"deleteWorkpackage" + w.getID() + "\">Delete</a>"
-						  + "</div>"
-						  + "<div class=\"small-2 columns end\">" 			  
+						  + "</td>"
+						  + "<td>"
 						  + "<input type=\"submit\" class=\"expanded button\" value=\"Apply\">"
-						  + "</div>"
+						  + "</td>"
+						  + "<tr>"
 						  + "</form>"
 						  + "<div class=\"reveal\" id=\"deleteWorkpackage" + w.getID() + "\" data-reveal>"
 						  + "<h1 class=\"align-left\">Are you sure?</h1>"
@@ -174,58 +178,59 @@ public class Edit extends HttpServlet {
 						  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
 						  + "<span aria-hidden=\"true\">&times;</span>"
 						  + "</button>"
-						  + "</div>"
-						  + "<hr>");
+						  + "</div>");
 			}
 			
 			// print edit tasks item
-			out.println("</div>"
+			out.println("</tbody>"
+					  + "</table>"
+					  + "<hr>"
+					  + "</div>"
 					  + "<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">" 
 					  + "<h3 class=\"no-margin edit\" id=\"tasks\">Tasks</h3>"
-					  + "</div>");
+					  + "</div>"
+					  + "<div class=\"horizontal-scroll\">"
+					  + "<table class=\"table\">"
+					  + "<thead>"
+					  + "<tr>"
+					  + "<th class=\"th-300 first-table\">Name</th>"
+					  + "<th class=\"th-150\">Start</th>"
+					  + "<th class=\"th-150\">End</th>"
+					  + "<th class=\"th-150\">PMs</th>"
+					  + "<th class=\"th-200\">Budget</th>"
+					  + "<th class=\"th-300\">Workpackage</th>"
+					  + "<th class=\"th-150\"></th>"
+					  + "<th class=\"th-150\"></th>"
+					  + "</tr>"
+					  + "</thead>"
+					  + "<tbody>");
 			
 			for (ProjectTask t : tasks){
 				out.println("<form method=\"post\" action=\"EditTask\" data-abide novalidate>"
+						  + "<tr>"
+						  + "<td>"
 						  + "<input type=\"hidden\" name=\"id\" value=\"" + t.getID() + "\">"
 						  + "<input type=\"hidden\" name=\"projectID\" value=\"" + project.getID() + "\">"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Task Name</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
 						  + "<input type=\"text\" name=\"name\" value=\"" + t.getName() + "\">"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Task Start</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<input type=\"text\" name=\"start\" value=\"" + t.getStart() + "\">"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Task End</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<input type=\"text\" name=\"end\" value=\"" + t.getEnd() + "\">"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>PMs</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<input type=\"number\" name=\"pm\" value=\"" + t.getPMs() + "\">"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Budget</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<div class=\"input-group\">"
 						  + "<span class=\"input-group-label\">" + project.getCurrency() + "</span>"
 						  + "<input class=\"input-group-field\" type=\"number\" name=\"budget\" value=\"" + t.getBudget() + "\" required>"
 						  + "</div>" 
 						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Workpackage</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<select name=\"workpackage\" required>");
 				for (Workpackage w : workpackages){
 					if (w.getID() == t.getWorkpackageID()){
@@ -235,13 +240,14 @@ public class Edit extends HttpServlet {
 					}
 				}
 			    out.println("</select>"
-						  + "</div>"
-						  + "<div class=\"small-2 small-offset-8 columns\">" 			  
+						  + "</td>"
+						  + "<td>"			  
 						  + "<a class=\"expanded alert button\" data-open=\"deleteTask" + t.getID() + "\">Delete</a>"
-						  + "</div>"
-						  + "<div class=\"small-2 columns end\">" 			  
+						  + "</td>"
+						  + "<td>"
 						  + "<input type=\"submit\" class=\"expanded button\" value=\"Apply\">"
-						  + "</div>"
+						  + "</td>"
+						  + "</tr>"		
 						  + "</form>"
 						  + "<div class=\"reveal\" id=\"deleteTask" + t.getID() + "\" data-reveal>"
 						  + "<h1 class=\"align-left\">Are you sure?</h1>"
@@ -250,25 +256,40 @@ public class Edit extends HttpServlet {
 						  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
 						  + "<span aria-hidden=\"true\">&times;</span>"
 						  + "</button>"
-						  + "</div>"
-						  + "<hr>");
+						  + "</div>");
 			}
 			
 			// print edit expenses item
-			out.println("</div>"
+			out.println("</tbody>"
+					  + "</table>"
+					  + "</div>"
+					  + "<hr>"
+					  + "</div>"
 					  + "<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">" 
 					  + "<h3 class=\"no-margin edit\" id=\"expenses\">Expenses</h3>"
-					  + "</div>");
+					  + "</div>"
+					  + "<div class=\"horizontal-scroll\">"
+					  + "<table class=\"table\">"
+					  + "<thead>"
+					  + "<tr>"
+					  + "<th class=\"th-300 first-table\">Employee</th>"
+					  + "<th class=\"th-200\">Type</th>"
+					  + "<th class=\"th-300\">Description</th>"
+					  + "<th class=\"th-150\">Date</th>"
+					  + "<th class=\"th-200\">Costs</th>"
+					  + "<th class=\"th-150\"></th>"
+					  + "<th class=\"th-150\"></th>"
+					  + "</tr>"
+					  + "</thead>"
+					  + "<tbody>");
 			
 			for (Expense ex : expenses){
 				out.println("<form method=\"post\" action=\"EditExpense\" data-abide novalidate>"
+						  + "<tr>"
+						  + "<td>"
 						  + "<input type=\"hidden\" name=\"id\" value=\"" + ex.getID() + "\">"
 						  + "<input type=\"hidden\" name=\"projectID\" value=\"" + project.getID() + "\">"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Employee</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
 						  + "<select name=\"employee\" required>");
 				for (Employee e : employees){
 					if (e.getID() == ex.getEmployeeID()){
@@ -278,11 +299,8 @@ public class Edit extends HttpServlet {
 					}
 				}
 			    out.println("</select>"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Type</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<select name=\"type\" required>");
 				for (String s : expenseTypes){
 					if (s.equals(ex.getType())){
@@ -292,34 +310,26 @@ public class Edit extends HttpServlet {
 					}
 				}
 			    out.println("</select>"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Description</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<input type=\"text\" name=\"description\" value=\"" + ex.getDescription() + "\">"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Date</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<input type=\"text\" name=\"date\" value=\"" + ex.getDate() + "\">"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">" 
-						  + "<p>Costs</p>"
-						  + "</div>"
-						  + "<div class=\"small-8 end columns\">" 
+						  + "</td>"
+						  + "<td>"
 						  + "<div class=\"input-group\">"
 						  + "<span class=\"input-group-label\">" + project.getCurrency() + "</span>"
 						  + "<input class=\"input-group-field\" type=\"number\" name=\"costs\" value=\"" + ex.getCosts() + "\" required>"
 						  + "</div>" 
-						  + "</div>" 
-						  + "<div class=\"small-2 small-offset-8 columns\">" 			  
+						  + "</td>"
+						  + "<td>"	  
 						  + "<a class=\"expanded alert button\" data-open=\"deleteExpense" + ex.getID() + "\">Delete</a>"
-						  + "</div>"
-						  + "<div class=\"small-2 columns end\">" 			  
+						  + "</td>"
+						  + "<td>"	
 						  + "<input type=\"submit\" class=\"expanded button\" value=\"Apply\">"
-						  + "</div>"
+						  + "</td>"
+						  + "</tr>"						  
 						  + "</form>"
 						  + "<div class=\"reveal\" id=\"deleteExpense" + ex.getID() + "\" data-reveal>"
 						  + "<h1 class=\"align-left\">Are you sure?</h1>"
@@ -328,12 +338,15 @@ public class Edit extends HttpServlet {
 						  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
 						  + "<span aria-hidden=\"true\">&times;</span>"
 						  + "</button>"
-						  + "</div>"
-						  + "<hr>");
+						  + "</div>");
 			}
 		
 			// print edit effort item
-			out.println("</div>"
+			out.println("</tbody>"
+					  + "</table>"
+					  + "</div>"
+					  + "<hr>"
+					  + "</div>"
 					  + "<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">" 
 					  + "<h3 class=\"no-margin edit\" id=\"effort\">Effort</h3>"
@@ -352,7 +365,18 @@ public class Edit extends HttpServlet {
 						  + "<div class=\"small-12 columns\">" 
 						  + "<h4 class=\"no-margin blue\" id=\"" + e.getKuerzel() + "\">" + e.getName() + "</h4>"
 						  + "</div>"
-						  + "</div>");
+						  + "<div class=\"horizontal-scroll\">"
+						  + "<table class=\"table\">"
+						  + "<thead>"
+						  + "<tr>"
+						  + "<th class=\"th-300\">Task</th>"
+						  + "<th class=\"th-200\">Month</th>"
+						  + "<th class=\"th-200\">Hours</th>"
+						  + "<th class=\"th-150\"></th>"
+						  + "<th class=\"th-150\"></th>"
+						  + "</tr>"
+						  + "</thead>"
+						  + "<tbody>");
 				
 				ArrayList<Booking> bookings = null;
 				try {
@@ -364,10 +388,11 @@ public class Edit extends HttpServlet {
 				for (Booking b : bookings){
 					ProjectTask t = project.getTask(b.getTaskID());
 					
-					out.println("<div class=\"row\">"
-							  + "<div class=\"small-12 columns\">" 
-							  + "<h5 class=\"no-margin\">" + t.getName() + "</h5>"
-							  + "</div>");
+					out.println("<tr>"
+							  + "<td>"
+							  + "<input type=\"text\" value=\"" + t.getName() + "\" disabled>"
+							  + "</td>"
+							  + "<td>");
 					
 					// get possible months where the hours can be booked
 					String dates [][] = DateFormatter.getInstance().getMonths(t.getStartAsDate(), t.getNumberOfMonths());
@@ -379,10 +404,6 @@ public class Edit extends HttpServlet {
 							  + "<input type=\"hidden\" name=\"id\" value=\"" + b.getID() + "\">"
 							  + "<input type=\"hidden\" name=\"projectID\" value=\"" + project.getID() + "\">"
 							  + "<input type=\"hidden\" name=\"taskID\" value=\"" + t.getID() + "\">"
-							  + "<div class=\"small-4 columns\">" 
-							  + "<p>Month</p>"
-							  + "</div>"
-							  + "<div class=\"small-8 end columns\">" 
 							  + "<select name=\"month\" required>");
 					
 					for (int z = 0; z < t.getNumberOfMonths(); z++){
@@ -399,21 +420,18 @@ public class Edit extends HttpServlet {
 						}
 					}
 				    out.println("</select>"
-							  + "</div>"
-							  + "<div class=\"small-4 columns\">" 
-							  + "<p>Hours</p>"
-							  + "</div>"
-							  + "<div class=\"small-8 end columns\">" 
+							  + "</td>"
+							  + "<td>"	 
 							  + "<input type=\"text\" name=\"hours\" value=\"" + b.getHours() + "\">"
-							  + "</div>"
-							  + "<div class=\"small-2 small-offset-8 columns\">" 			  
+							  + "</td>"
+							  + "<td>"	 
 							  + "<a class=\"expanded alert button\" data-open=\"deleteEffort" + b.getID() + "\">Delete</a>"
-							  + "</div>"
-							  + "<div class=\"small-2 columns end\">" 			  
+							  + "</td>"
+							  + "<td>"	 
 							  + "<input type=\"submit\" class=\"expanded button\" value=\"Apply\">"
-							  + "</div>"
+							  + "</td>"
+							  + "</tr>"	 
 							  + "</form>"
-							  + "<hr>"
 							  + "</div>"
 							  + "<div class=\"reveal\" id=\"deleteEffort" + b.getID() + "\" data-reveal>"
 							  + "<h1 class=\"align-left\">Are you sure?</h1>"
@@ -424,6 +442,12 @@ public class Edit extends HttpServlet {
 							  + "</button>"
 							  + "</div>");
 				}
+				
+				out.println("</tbody>"
+						  + "</table>"
+						  + "</div>"
+						  + "<hr>"
+						  + "</div>");
 			}
 			
 			

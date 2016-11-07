@@ -52,7 +52,7 @@ public class BookHours extends HttpServlet {
 		
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			try {
-				employees = con.getAllEmployees(id);
+				employees = con.getAllEmployees();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -174,7 +174,7 @@ public class BookHours extends HttpServlet {
 			// get all employees
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			try {
-				employees = con.getAllEmployees(id);
+				employees = con.getAllEmployees();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

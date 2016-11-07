@@ -44,8 +44,10 @@ public class LineChart {
     		plannedEffort += effort.getPlannedEffort(i);
     		planned.add(i, plannedEffort);
     		
-    		bookedEffort += effort.getBookedEffort(i);
-    		booked.add(i, bookedEffort);
+    		if (effort.getBookedEffort(i) != 0) {
+	    		bookedEffort += effort.getBookedEffort(i);
+	    		booked.add(i, bookedEffort);
+    		}
     			
     	}
     	XYSeriesCollection dataset = new XYSeriesCollection();
@@ -62,9 +64,11 @@ public class LineChart {
     	XYSeries booked = new XYSeries("Booked");
     	int projectMonths = project.getNumberOfMonths();
     	for (double i = 1; i <= projectMonths; i++){
-    		
-    		bookedEffort = effort.getBookedEffort(i, employee);
-    		booked.add(i, bookedEffort);
+    	
+    		if (effort.getBookedEffort(i, employee) != 0){
+	    		bookedEffort = effort.getBookedEffort(i, employee);
+	    		booked.add(i, bookedEffort);
+    		}
     			
     	}
     	XYSeriesCollection dataset = new XYSeriesCollection();

@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -50,7 +49,6 @@ public class Profile extends HttpServlet {
 					  + "<ul class=\"menu\">"
 					  + "<li><a href=\"#user\">My Profile</a></li>"
 					  + "<li><a href=\"#changePassword\">Change Password</a></li>"
-					  + "<li><a href=\"#employees\">Other Employees</a></li>"
 					  + "</ul>"
 					  + "<hr>"
 					  + "<br>"
@@ -109,66 +107,8 @@ public class Profile extends HttpServlet {
 					  + "</div>"
 					  + "</form>"
 					  + "</div>"
-					  + "</div>");
-					  
-			// other users
-			ArrayList<Employee> employees;
-			try {
-				employees = con.getAllEmployees(id);
-				
-				if(employees.size() > 1){
-					out.println("<div class=\"row\" id=\"employees\">"
-							  + "<div class=\"small-2 columns\">"
-							  + "<i class=\"fa fa-users blue big-icon\"></i>"
-							  + "</div>");
-					
-					int i = 0;
-					for (Employee e : employees){
-						if (e.getID() != id){
-							
-							String offset = "";
-							String hr = "";
-							if (i != 0){
-								offset = "small-offset-2 ";
-								hr = "<div class=\"small-10 end columns\">"
-								   + "<hr>"
-								   + "<br>"
-								   + "</div>";
-							}
-							i++;
-							out.println("<div class=\"small-10 " + offset + "columns\">"
-									  + hr
-									  + "<form method=\"post\" action=\"employee\" data-abide novalidate>"
-									  + "<input type=\"hidden\" name=\"id\" value=\"" + e.getID() + "\">"
-									  + "<label class=\"small-10 end columns\">First Name "
-									  + "<input type=\"text\" value=\"" + e.getFirstName() + "\" name=\"firstname\" required>"
-									  + "</label>"
-									  + "<label class=\"small-10 end columns\">Last Name "
-									  + "<input type=\"text\" value=\"" + e.getLastName() + "\" name=\"lastname\" required>"
-									  + "</label>"
-									  + "<label class=\"small-10 end columns\">Kuerzel "
-									  + "<input type=\"text\" value=\"" + e.getKuerzel() + "\" name=\"kuerzel\" required>"
-									  + "</label>"
-									  + "<label class=\"small-10 end columns\">E-Mail "
-									  + "<input type=\"text\" value=\"" + e.getMail() + "\" name=\"mail\" required>"
-									  + "</label>"
-									  + "<label class=\"small-10 end columns\">Wage "
-									  + "<input type=\"number\" value=\"" + e.getWage() + "\" name=\"wage\" required>"
-									  + "</label>"
-									  + "<input type=\"hidden\" name=\"oldwage\" value=\"" + e.getWage() + "\">"
-									  + "<div class=\"small-3 small-offset-7 columns end\">" 			  
-									  + "<input type=\"submit\" class=\"expanded button\" value=\"Apply\">"
-									  + "</div>"
-									  + "</form>"
-									  + "</div>");
-						}
-					}					 
-				} 
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		   		
-			out.println("</section>"
+					  + "</div>"
+					  + "</section>"
 					  + "</div>"
 					  + "<script src=\"../js/vendor/jquery.js\"></script>"
 					  + "<script src=\"../js/vendor/foundation.min.js\"></script>"

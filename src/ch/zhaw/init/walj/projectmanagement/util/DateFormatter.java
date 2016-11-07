@@ -136,6 +136,17 @@ public class DateFormatter {
 	}
 	
 	
+	public String[] getMonthStrings(Date start, int nbrOfMonths) {
+		String months[][] = getMonths(start, nbrOfMonths);
+		String month[] = new String[nbrOfMonths];
+		
+		for (int i = 0; i < nbrOfMonths; i++){
+			month[i] = months[1][i];
+		}
+		
+		return month;
+	}
+
 	/**
 	 * formats a string 
 	 * @param dateString
