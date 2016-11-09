@@ -49,7 +49,12 @@ public class ShareProject extends HttpServlet{
 		
 		if (project.getLeader() == id){			
 
-			ArrayList<Employee> employees = project.getEmployees();
+			ArrayList<Employee> employees = new ArrayList<Employee>();
+			try {
+				employees = con.getAllEmployees();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			ArrayList<Employee> assignedEmployees = con.getSharedEmployees(project.getID());
 			
 			PrintWriter out = response.getWriter();

@@ -255,35 +255,32 @@ img {
 	min-width: rem-calc(1000);
 }
 
-
-.th-150{
+.th-150 {
 	min-width: 150px;
 }
 
-.th-200{
+.th-200 {
 	min-width: 200px;
 }
 
-.th-250{
+.th-250 {
 	min-width: 250px;
 }
 
-.th-300{
+.th-300 {
 	min-width: 300px;
 }
 
-.th-350{
+.th-350 {
 	min-width: 350px;
 }
 
-.th-400{
+.th-400 {
 	min-width: 400px;
 }
 
-.border-left {
-	border-left: 5px solid #ddd;
-}
-
-.border-right {
-	border-right: 5px solid #ddd;
+.space { 
+	max-width: 1px;
+	min-width: 1px;
+	background-color: #ddd;
 }

@@ -115,11 +115,32 @@ public class ProjectTask {
 	}
 		
 	public double getPMsPerMonth(){
-		double pmsPerMonth = (double)pms / (double)this.getNumberOfMonths();
+		
+		double weight = 0;
+		double pmsPerMonth = 0;
+		
+		for (Weight w : weights){
+			weight += w.getWeight();
+		}
+		
+		if (weight == 0) {
+			pmsPerMonth = (double)pms / (double)this.getNumberOfMonths();
+		} else {		
+			pmsPerMonth = pms / weight;
+		}				
 		return pmsPerMonth;
 	}
 
 	public ArrayList<Weight> getWeight() {
 		return weights;
+	}
+
+	public Weight getWeight(double month) {
+		for (Weight w : weights){
+			if (w.getMonth() == month){
+				return w;
+			}
+		}
+		return null;
 	}
 }

@@ -25,17 +25,14 @@ public class EditWeight extends HttpServlet {
 	
 	// create a new DB connection
 	private DBConnection con = new DBConnection();
-	
-	// Variables for POST parameters
-	private int pID;
-	
+		
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
 		
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
-		pID = Integer.parseInt(request.getParameter("projectID"));
+		int pID = Integer.parseInt(request.getParameter("projectID"));
 			
 		Project project = null;
 		
@@ -52,11 +49,14 @@ public class EditWeight extends HttpServlet {
 					
 			out.println(HTMLHeader.getInstance().getHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  // HTML section with form
-					  + "<section>");
+					  + "<section>"
+					  + "<form method=\"post\" action=\"editWeight\" data-abide novalidate>"
+					  + "<div class=\"row\">"
+					  + "<input type=\"hidden\" name=\"projectID\" value=\"" + project.getID() + "\">");
 					  
 			for (ProjectTask task : tasks){
 				
-				boolean firstInitialization = false;
+				boolean firstInitialisation = false;
 				
 				int nbrOfMonths = task.getNumberOfMonths();
 				int startMonth = task.getStartMonth();
@@ -64,31 +64,43 @@ public class EditWeight extends HttpServlet {
 				
 				ArrayList<Weight> weight = task.getWeight();
 				if (weight.size() != nbrOfMonths){
-					firstInitialization = true;
+					firstInitialisation = true;
 				}
 				
-				out.println("<div class=\"row\">"
-				          + "<h2 class=\"blue\">" + task.getName() + "</h2>"
-						  + "<form method=\"post\" action=\"editWeight\" data-abide novalidate>"
+				if (firstInitialisation){
+					out.println("<input type=\"hidden\" name=\"firstInitialisation\" value=\"true\">");
+				} else {
+					out.println("<input type=\"hidden\" name=\"firstInitialisation\" value=\"false\">");
+				}
+				
+				out.println("<h2 class=\"blue\">" + task.getName() + "</h2>"
 						  // task ID
 						  + "<input type=\"hidden\" name=\"taskID\" value=\"" + task.getID() + "\">"
 						  // error message (if something's wrong with the form)
 						  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
 						  + "<p><i class=\"fa fa-exclamation-triangle\"></i> There are some errors in your form.</p>"
-						  + "</div>"
-						  + "<table class=\"small-12 medium-6 columns border-right\">"
+						  + "</div>");
+				out.println("<table>"
 						  + "<tr>"
 						  + "<th class=\"th-200\">Month</th>"
-						  + "<th class=\"th-300\">Weight</th>"						 
-						  + "</tr>");
-				int i = 0;
-				for (; i < (months.length / 2); i++){
-					out.println("<tr>"
-							  + "<input type=\"hidden\" name=\"month\" value=\"" + startMonth + "\">"
+						  + "<th class=\"th-300\">Weight</th>");
+				if (months.length > 1) {
+					out.println("<th class=\"space\"></th>"	
+							  + "<th class=\"th-200\">Month</th>"
+							  + "<th class=\"th-300\">Weight</th>");	
+				}
+				out.println("</tr>");
+				for (int i = 0; i < months.length; i++){
+					if (i % 2 != 1) {
+						out.println("<tr>");
+					} else {
+						out.println("<td class=\"space\"></td>");
+					}
+					out.println("<input type=\"hidden\" name=\"month" + task.getID() + "\" value=\"" + startMonth + "\">"
 							  + "<td>" + months[i] + "</td>"
 							  + "<td>"
-							  + "<input type=\"text\" name=\"weight\" value=\"");
-					if (firstInitialization){
+							  + "<input type=\"text\" name=\"weight" + task.getID() + "\" value=\"");
+					if (firstInitialisation){
 						out.println("1");
 					} else {
 						for (Weight w : weight){
@@ -98,56 +110,30 @@ public class EditWeight extends HttpServlet {
 						}
 					}
 					out.println("\" required>"
-							  + "</td>"
-							  + "</tr>");
+							  + "</td>");
+					if ((i % 2 == 1) || (i + 1 == months.length)) {
+						out.println("</tr>");						
+					}
 					startMonth++;
 				}
-				
-				out.println("</table>"
-						  + "<table class=\"small-12 medium-6 columns border-left\">"
-						  + "<tr>"
-						  + "<th class=\"th-200\">Month</th>"
-						  + "<th class=\"th-300\">Weight</th>"						 
-						  + "</tr>");
-				
-				for (; i < months.length; i++){
-					out.println("<tr>"
-							  + "<input type=\"hidden\" name=\"month\" value=\"" + startMonth + "\">"
-							  + "<td>" + months[i] + "</td>"
-							  + "<td>"
-							  + "<input type=\"text\" name=\"weight\" value=\"");
-					if (firstInitialization){
-						out.println("1");
-					} else {
-						for (Weight w : weight){
-							if (w.getMonth() == startMonth){
-								out.println(w.getWeight());
-							}
-						}
-					}
-					out.println("\" required>"
-							  + "</td>"
-							  + "</tr>");
-					startMonth++;
-				}				
-				out.println("</table>"
-						  + "</div>");
-				
-									
+				out.println("</table>");	
 			}
-			out.println("</section>"
+			out.println("<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Edit Weight\">"
+					  + "</div>"
+					  + "</form>"
+					  + "</section>"
 					  // required JavaScript
 					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
 					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
 					  + "<script>$(document).foundation();</script>"
-					  + "</body></html>");
+					  + "</body>"
+					  + "</html>");
 		} else {
 			String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);
 		}
 	}
-	
-	
+		
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -158,24 +144,85 @@ public class EditWeight extends HttpServlet {
 
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
-		// get the parameters
-		pID = Integer.parseInt(request.getParameter("projectID"));
-	/*	
-		taskName = request.getParameter("taskName");
-		taskStart = request.getParameter("taskStart");
-		taskEnd = request.getParameter("taskEnd");
-		taskPM = request.getParameter("taskPM");
-		taskBudget = request.getParameter("taskBudget");
-		taskWP = Integer.parseInt(request.getParameter("taskWP"));
-				
+		int projectID = Integer.parseInt(request.getParameter("projectID"));
+		
 		Project project = null;
 		
 		try {
-			project = con.getProject(pID);
+			project = con.getProject(projectID);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 
+		if (project.getLeader() == id){
+		
+			// get the parameters
+			String taskIDs[] = request.getParameterValues("taskID");
+			String firstInitialisation[] = request.getParameterValues("firstInitialisation");
+	
+			String successMessage = "";
+			String errorMessage = "";
+			
+			for (String tID : taskIDs) {
+				String month[] = request.getParameterValues("month" + tID);
+				String weight[] = request.getParameterValues("weight" + tID);
+				
+				ProjectTask task = project.getTask(Integer.parseInt(tID));
+				
+					try {
+					for (int i = 0; i < month.length; i++){
+						if (firstInitialisation[0].equals("true")){
+							con.newWeight(Integer.parseInt(tID), Integer.parseInt(month[i]), Double.parseDouble(weight[i]));
+						} else {
+							con.updateWeight(Integer.parseInt(tID), Integer.parseInt(month[i]), Double.parseDouble(weight[i]));
+						}
+					}
+					successMessage += "<p>" + task.getName() + "</p>";
+				} catch (SQLException e){
+					errorMessage += "<p>" + task.getName() + "</p>";					
+				}
+			}
+		
+			if (!successMessage.equals("")){
+				successMessage = "<div class=\"callout success small-12 columns\">"
+						       + "<h5>Weight of the following tasks changed:</h5>"
+						       + successMessage
+							   + "<a href=\"Project?id=" + projectID + "\">go back to project overview</a>"
+							   + "</div>";
+			}
+			
+			if (!errorMessage.equals("")){
+				errorMessage = "<div class=\"callout alert small-12 columns\">"
+						       + "<h5>Weight of the following tasks could not be changed:</h5>"
+						       + errorMessage
+							   + "<a href=\"editWeight?projectID=" + projectID + "\">try again</a>"
+							   + "</div>";
+			}
+			
+			final PrintWriter out = response.getWriter();
+			
+			out.println(HTMLHeader.getInstance().getHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+					  // HTML section with form
+					  + "<section>"
+					  + "<div class=\"row\">"
+					  + successMessage
+					  + errorMessage
+					  + "</div>"
+					  + "</section>"
+					  // required JavaScript
+					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
+					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
+					  + "<script>$(document).foundation();</script>"
+					  + "</body>"
+					  + "</html>");
+			
+			
+			
+			
+		}
+		
+	/*	
 		if (project.getLeader() == id){
 			ArrayList<Workpackage> workpackages = project.getWorkpackages();		
 			

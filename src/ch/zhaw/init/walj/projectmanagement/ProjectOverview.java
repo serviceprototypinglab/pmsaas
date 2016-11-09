@@ -235,14 +235,10 @@ public class ProjectOverview extends HttpServlet {
 					e.printStackTrace();
 				}
 			}
-			if (totalEffort == 0) {
-				disabled ="disabled ";	
-				link = "";
-			} else {
-				disabled = "";
-				link = "Effort?projectID=" + project.getID();
-			}
 			
+			disabled = "";
+			link = "Effort?projectID=" + project.getID();
+						
 			out.println("<div class=\"small-6 columns\">"
 					  + "<span class=\"bold\">Total</span>"
 					  + "</div>"
@@ -262,6 +258,9 @@ public class ProjectOverview extends HttpServlet {
 					  + "<h2>Workpackages & Tasks</h2>"
 					  + "</div>"
 					  + "<div class=\"small-5 columns align-right padding-top-10\">"
+					  // button to edit weight
+					  + "<a class=\"button\" href=\"editWeight?projectID=" + project.getID() + "\">"
+					  + "<i class=\"fa fa-pencil-square-o\"></i> Edit Weight</a> "
 					  // button to add workpackages
 					  + "<a class=\"button\" href=\"addWorkpackage?projectID=" + project.getID() + "\">"
 					  + "<i class=\"fa fa-plus\"></i> Add Workpackage</a> "

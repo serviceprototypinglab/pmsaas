@@ -117,18 +117,12 @@ public class Overview extends HttpServlet {
 							  // Write Workpackages
 							  + "<p>"
 							  + "<span class=\"small-3 columns\">Workpackages</span>"
-							  + "<span class=\"small-4 columns\">" + project.nbrOfWorkpackages() + "</span>"
-							  + "<span class=\"small-4 end columns align-right\">"
-							  + "-"
-							  + "</span>"
+							  + "<span class=\"small-9 columns\">" + project.nbrOfWorkpackages() + "</span>"
 							  + "</p>"
 							  // Write Tasks
 							  + "<p>"
 							  + "<span class=\"small-3 columns\">Tasks</span>"
-							  + "<span class=\"small-4 columns\">" + project.nbrOfTasks() + "</span>"
-							  + "<span class=\"small-4 end columns align-right\">" 
-							  + "-"
-							  + "</span>"
+							  + "<span class=\"small-9 columns\">" + project.nbrOfTasks() + "</span>"
 							  + "</p>"
 							  // Write Employees
 							  + "<p>"
@@ -158,7 +152,7 @@ public class Overview extends HttpServlet {
 			
 			ArrayList<Project> sharedProjects = con.getSharedProjects(id);
 			
-			if (sharedProjects != null){
+			if (!sharedProjects.isEmpty()){
 				out.println("<div class=\"row\">"
 			     	  + "<h3>Other Projects</h3>"
 				      + "</div>"

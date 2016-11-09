@@ -134,15 +134,24 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 		double effort = 0;
 		int y = 0;
 		for (ProjectTask task : tasks){
+			Weight w = task.getWeight(month);
+			double weight;
+			
+			if (w == null) {
+				weight = 1;
+			} else {
+				weight = w.getWeight();
+			}
+			
 			// compare the given month to the start and end month from the task
 			if ((task.getStartMonth() == month) || (task.getEndMonth() == month)){
-				effort += task.getPMsPerMonth();
+				effort += (task.getPMsPerMonth() * weight);
 			} else {
 				// compare the given months to the other months
 				for (int i = 2; i < task.getNumberOfMonths(); i++){
 					y = task.getStartMonth() + (task.getNumberOfMonths() - i);
 					if (y == month){
-						effort += task.getPMsPerMonth();
+						effort += task.getPMsPerMonth() * weight;
 					}
 				}
 			}

@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.Mail;
-import ch.zhaw.init.walj.projectmanagement.util.PasswordService;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 
 @SuppressWarnings("serial")
@@ -116,10 +115,9 @@ public class Setup extends HttpServlet {
     	String mailAddress = request.getParameter("mail");
         String password = request.getParameter("password");
         
-        String encryptPassword = PasswordService.getInstance().encrypt(password);
         
         try {
-        	Employee e = con.newEmployee(0, "Admin", " ", "admin", mailAddress, encryptPassword, 0);
+        	Employee e = con.newEmployee(0, "Admin", " ", "admin", mailAddress, password, 0);
         	int id = e.getID();
             request.getSession().setAttribute("user", e.getFirstName());
             request.getSession().setAttribute("ID", id);

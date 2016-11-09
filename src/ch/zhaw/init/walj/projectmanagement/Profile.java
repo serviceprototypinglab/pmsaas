@@ -37,24 +37,12 @@ public class Profile extends HttpServlet {
 						
 		Employee employee = null;
 		employee = con.getEmployee(id);
-		
-		
+				
 		PrintWriter out = response.getWriter();
 				
 			out.println(HTMLHeader.getInstance().getHeader(employee.getName(), "../", "Profile " + employee.getName(), "")
 					  // HTML section with list of all projects
-					  + "<section>"
-					  + "<div class=\"row\">"
-					  + "<div class=\"small-12 columns\">"
-					  + "<ul class=\"menu\">"
-					  + "<li><a href=\"#user\">My Profile</a></li>"
-					  + "<li><a href=\"#changePassword\">Change Password</a></li>"
-					  + "</ul>"
-					  + "<hr>"
-					  + "<br>"
-					  + "</div>"
-					  + "</div>"
-					  
+					  + "<section>"					  
 					  // edit own account
 					  + "<div class=\"row\" id=\"user\">"
 					  + "<div class=\"small-2 columns\">"

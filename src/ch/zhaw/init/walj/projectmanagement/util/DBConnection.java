@@ -453,8 +453,7 @@ public class DBConnection {
 	}
 
 	/**
-	 * Get all the employees with the given supervisor and the supervisor
-	 * itself.
+	 * Get all the employees
 	 * 
 	 * @param supervisor
 	 *            ID of the supervisor
@@ -467,7 +466,7 @@ public class DBConnection {
 		ArrayList<Employee> employees = new ArrayList<Employee>();
 		Employee employee;
 	
-		st = conn.prepareStatement("SELECT * from Employees");
+		st = conn.prepareStatement("SELECT * from Employees ORDER BY Lastname asc");
 		
 		try {
 	
@@ -485,16 +484,19 @@ public class DBConnection {
 				String ePassword = res.getString("Password");
 				int eSupervisor = res.getInt("Supervisor");
 	
-				// get the wage of the employee
-				PreparedStatement stWage = conn.prepareStatement("SELECT WagePerHour FROM  Wage where EmployeeIDFS=? order by ValidFrom desc");
-				stWage.setInt(1, eID);
-				ResultSet resWage = stWage.executeQuery();
-				resWage.next();
-				int eWage = resWage.getInt("WagePerHour");
-	
-				employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, ePassword, eWage, eSupervisor);
+				if (!eKuerzel.equals("admin")){
 				
-				employees.add(employee);
+					// get the wage of the employee
+					PreparedStatement stWage = conn.prepareStatement("SELECT WagePerHour FROM  Wage where EmployeeIDFS=? order by ValidFrom desc");
+					stWage.setInt(1, eID);
+					ResultSet resWage = stWage.executeQuery();
+					resWage.next();
+					int eWage = resWage.getInt("WagePerHour");
+		
+					employee = new Employee(eID, eFirstname, eLastname, eKuerzel, eMail, ePassword, eWage, eSupervisor);
+					
+					employees.add(employee);
+				}
 			}
 	
 		} catch (SQLException e) {
@@ -782,9 +784,7 @@ public class DBConnection {
 
 		String password = PasswordGenerator.getInstance().getNewPassword();
 		
-		String passwordEncrypted = PasswordService.getInstance().encrypt(password);
-
-		Employee user = newEmployee(employeeID, firstname, lastname, kuerzel, mail, passwordEncrypted, wage);
+		Employee user = newEmployee(employeeID, firstname, lastname, kuerzel, mail, password, wage);
 		
 		return user;
 	}
@@ -814,13 +814,17 @@ public class DBConnection {
 	 */
 	public Employee newEmployee(int employeeID, String firstname, String lastname, String kuerzel, String mail, String password, int wage) 
 			throws SQLException {
+		
+
+		String passwordEncrypted = PasswordService.getInstance().encrypt(password);
+		
 		st = conn.prepareStatement("INSERT INTO Employees (Firstname, Lastname, Kuerzel, Password, Mail, Supervisor) VALUES (?, ?, ?, ?, ?, ?)");
 		
 		// create new employee
 				st.setString(1, firstname);
 				st.setString(2, lastname);
 				st.setString(3, kuerzel);
-				st.setString(4, password);
+				st.setString(4, passwordEncrypted);
 				st.setString(5, mail);
 				if (employeeID == 0){
 					st.setString(6, null);					
@@ -954,6 +958,16 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	public void newWeight(int taskID, int month, double weight) throws SQLException {
+		st = conn.prepareStatement("INSERT INTO Weight (TaskIDFS, Month, Weight) VALUES (?, ?, ?)");
+		
+		st.setInt(1, taskID);
+		st.setInt(2, month);
+		st.setDouble(3, weight);
+		
+		st.executeUpdate();
+	}
+
 	public void newShare(int projectID, int employeeID) throws SQLException {
 		st = conn.prepareStatement("INSERT INTO Share (ProjectID, EmployeeIDFS) VALUES (?, ?)");
 
@@ -1042,6 +1056,16 @@ public class DBConnection {
 		
 		st.setString(1, password);
 		st.setInt(2, userID);
+		
+		st.executeUpdate();
+	}
+
+	public void updateWeight(int taskID, int month, double weight) throws SQLException {
+		st = conn.prepareStatement("UPDATE Weight SET Weight=? WHERE (TaskIDFS=?) AND (Month=?)");
+
+		st.setDouble(1, weight);
+		st.setInt(2, taskID);
+		st.setInt(3, month);
 		
 		st.executeUpdate();
 	}

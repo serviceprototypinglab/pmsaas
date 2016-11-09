@@ -44,51 +44,51 @@ public class AddProject extends HttpServlet {
 	private String taskWP[];
 	
 	
+	String script = // JavaScript functions to add fields for new Workpackages or new Tasks
+			  "<script type=\"text/javascript\">"
+			  // add fields for Workpackages
+			  + "function addWP(divName) {"
+			  + "var newdiv = document.createElement('div'); "
+			  + "newdiv.innerHTML = '<div class=\"small-4 columns\">"
+			  					  + "<input type=\"text\" name=\"wpName\">"
+			  					  + "</div>"
+			  					  + "<div class=\"small-4 columns\">"
+			  					  + "<input type=\"text\" name=\"wpStart\">"
+			  					  + "</div>	"
+			  					  + "<div class=\"small-4 columns\">"
+			  					  + "<input type=\"text\" name=\"wpEnd\">"
+			  					  + "</div>'; "
+			  + "document.getElementById(divName).appendChild(newdiv);}"
+			  // add fields for Tasks
+			  + "function addTask(divName) {"
+			  + "var newdiv = document.createElement('div'); "
+			  + "newdiv.innerHTML = '<div class=\"small-2 columns\">"
+			  					  + "<input type=\"text\" name=\"taskName\">"
+			  					  + "</div>"
+			  					  + "<div class=\"small-2 columns\">"
+			  					  + "<input type=\"text\" name=\"taskStart\">"
+			  					  + "</div>"
+			  					  + "<div class=\"small-2 columns\">"
+			  					  + "<input type=\"text\" name=\"taskEnd\">"
+			  					  + "</div>"
+			  					  + "<div class=\"small-2 columns\">"
+			  					  + "<input type=\"number\" name=\"taskPM\">"
+			  					  + "</div>"
+			  					  + "<div class=\"small-2 columns\">"
+			  					  + "<input type=\"text\" name=\"taskBudget\">"
+			  					  + "</div>"
+			  					  + "<div class=\"small-2 columns\">"
+			  					  + "<input type=\"text\" name=\"taskWP\">"
+			  					  + "</div>';"
+			  + "document.getElementById(divName).appendChild(newdiv);}"
+			  + "</script>";
+	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF8");
 		
 		PrintWriter out = response.getWriter();
-				
-		String script = // JavaScript functions to add fields for new Workpackages or new Tasks
-					  "<script type=\"text/javascript\">"
-					  // add fields for Workpackages
-					  + "function addWP(divName) {"
-					  + "var newdiv = document.createElement('div'); "
-					  + "newdiv.innerHTML = '<div class=\"small-4 columns\">"
-					  					  + "<input type=\"text\" name=\"wpName\">"
-					  					  + "</div>"
-					  					  + "<div class=\"small-4 columns\">"
-					  					  + "<input type=\"text\" name=\"wpStart\">"
-					  					  + "</div>	"
-					  					  + "<div class=\"small-4 columns\">"
-					  					  + "<input type=\"text\" name=\"wpEnd\">"
-					  					  + "</div>'; "
-					  + "document.getElementById(divName).appendChild(newdiv);}"
-					  // add fields for Tasks
-					  + "function addTask(divName) {"
-					  + "var newdiv = document.createElement('div'); "
-					  + "newdiv.innerHTML = '<div class=\"small-2 columns\">"
-					  					  + "<input type=\"text\" name=\"taskName\">"
-					  					  + "</div>"
-					  					  + "<div class=\"small-2 columns\">"
-					  					  + "<input type=\"text\" name=\"taskStart\">"
-					  					  + "</div>"
-					  					  + "<div class=\"small-2 columns\">"
-					  					  + "<input type=\"text\" name=\"taskEnd\">"
-					  					  + "</div>"
-					  					  + "<div class=\"small-2 columns\">"
-					  					  + "<input type=\"number\" name=\"taskPM\">"
-					  					  + "</div>"
-					  					  + "<div class=\"small-2 columns\">"
-					  					  + "<input type=\"text\" name=\"taskBudget\">"
-					  					  + "</div>"
-					  					  + "<div class=\"small-2 columns\">"
-					  					  + "<input type=\"text\" name=\"taskWP\">"
-					  					  + "</div>';"
-					  + "document.getElementById(divName).appendChild(newdiv);}"
-					  + "</script>";
-		
+						
 		out.println(HTMLHeader.getInstance().getHeader("New Project", "../", "New Project", script, "")
 				  // HTML section with form
 				  + "<section>"
@@ -311,74 +311,7 @@ public class AddProject extends HttpServlet {
 					  + "</div>";
 		}
 				
-		out.println("<!DOCTYPE html>"
-				  + "<html>"
-				  // HTML head
-				  + "<head>"
-				  + "<meta charset=\"UTF-8\">"
-				  + "<title>New Project</title>"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/font-awesome/css/font-awesome.min.css\">"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/foundation.css\" />"
-				  + "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style.css\" />"
-				  // JavaScript functions to add fields for new Workpackages or new Tasks
-				  + "<script type=\"text/javascript\">"
-				  // add fields for Workpackages
-				  + "function addWP(divName) {"
-				  + "var newdiv = document.createElement('div'); "
-				  + "newdiv.innerHTML = '<div class=\"small-4 columns\">"
-				  					  + "<input type=\"text\" name=\"wpName\">"
-				  					  + "</div>"
-				  					  + "<div class=\"small-4 columns\">"
-				  					  + "<input type=\"text\" name=\"wpStart\">"
-				  					  + "</div>	"
-				  					  + "<div class=\"small-4 columns\">"
-				  					  + "<input type=\"text\" name=\"wpEnd\">"
-				  					  + "</div>'; "
-				  + "document.getElementById(divName).appendChild(newdiv);}"
-				  // add fields for Tasks
-				  + "function addTask(divName) {"
-				  + "var newdiv = document.createElement('div'); "
-				  + "newdiv.innerHTML = '<div class=\"small-2 columns\">"
-				  					  + "<input type=\"text\" name=\"taskName\">"
-				  					  + "</div>"
-				  					  + "<div class=\"small-2 columns\">"
-				  					  + "<input type=\"text\" name=\"taskStart\">"
-				  					  + "</div>"
-				  					  + "<div class=\"small-2 columns\">"
-				  					  + "<input type=\"text\" name=\"taskEnd\">"
-				  					  + "</div>"
-				  					  + "<div class=\"small-2 columns\">"
-				  					  + "<input type=\"number\" name=\"taskPM\">"
-				  					  + "</div>"
-				  					  + "<div class=\"small-2 columns\">"
-				  					  + "<input type=\"text\" name=\"taskBudget\">"
-				  					  + "</div>"
-				  					  + "<div class=\"small-2 columns\">"
-				  					  + "<input type=\"text\" name=\"taskWP\">"
-				  					  + "</div>';"
-				  + "document.getElementById(divName).appendChild(newdiv);}"
-				  + "</script>"
-				  + "</head>"
-				  + "<body>"
-				  + "<div id=\"wrapper\"><header>"
-				  + "<div class=\"row\">"
-				  + "<div class=\"small-8 medium-8 columns\">"
-				  + "<img src=\"../img/logo_small.png\" class=\"small-img left\">"
-				  // title
-				  + "<h1>New Project</h1>"
-				  + "</div>"
-				  // menu
-				  + "<div class=\"small-12 medium-4 columns\">"
-				  + "<div class=\"float-right menu\">"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\" class=\"button\" title=\"All Projects\"><i class=\"fa fa-list fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newProject\" class=\"button\" title=\"New Project\"><i class=\"fa fa-file fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/newEmployee\" class=\"button\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/employee\" class=\"button\" title=\"My Profile\"><i class=\"fa fa-user fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/help\" class=\"button\" title=\"Help\"><i class=\"fa fa-book fa-fw\"></i></a> "
-				  + "<a href=\"/Projektverwaltung/Projects/logout\" class=\"button\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw\"></i></a> "
-				  + "</div>"
-				  + "</div>"
-				  + "</header>"
+		out.println(HTMLHeader.getInstance().getHeader("New Project", "../", "New Project", script, "")
 				  // HTML section with form
 				  + "<section>"
 				  + "<div class=\"row\">"
