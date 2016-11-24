@@ -42,8 +42,10 @@ public class EditExpense extends HttpServlet {
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
-		} catch (SQLException e2) {
-			e2.printStackTrace();
+		} catch (SQLException e) {
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 
 		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");

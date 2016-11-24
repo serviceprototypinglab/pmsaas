@@ -35,7 +35,7 @@ public class Mail {
 	}
 
 	
-	public void sendWelcomeMail(String path){
+	public void sendWelcomeMail(){
 		
 		try {
 			message.setSubject("Welcome to Project Management SaaS");
@@ -48,7 +48,7 @@ public class Mail {
 						   + "<p>Mail: " + user.getMail() + "</p>"
 						   + "<p>Password: " + user.getPassword() + "</p>"
 						   + "<br>"
-						   + "<p>Click <a href=\"" + path + "\">here</a> to sign in </p>"
+						   + "<p>Click <a href=\"" + "" + "\">here</a> to sign in </p>" // TODO correct path to tool
 						   + "<p></p>"
 						   + "<p style=\"font-style:italic\">This e-mail was generated automatically, please do not respond to it.</p>";			
 			

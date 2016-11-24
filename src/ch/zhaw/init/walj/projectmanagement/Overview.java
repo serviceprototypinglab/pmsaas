@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.init.walj.projectmanagement.chart.PieChart;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
@@ -21,30 +20,39 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 
 /**
- * Servlet implementation class Overview
+ * project management tool, overview page
+ * 
+ * @author Janine Walther, ZHAW
  */
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview")
 public class Overview extends HttpServlet {
-	
-	private PieChart piechart;
-	
+		
+	/*
+	 * method to handle get requests
+	 * gets all own, shared and archived projects from the database 
+	 * and prints a list of them
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// set response content type
 		response.setContentType("text/html;charset=UTF8");
-		
-		ArrayList<Project> projects = new ArrayList<Project>();
-		
+				
+		// get user id and name from session
 		int id = (int) request.getSession(false).getAttribute("ID");
 		String name = (String) request.getSession(false).getAttribute("user");
 				
+		// connection to the database
 		DBConnection con = new DBConnection();
 		
-				
+		// get print writer
 		PrintWriter out = response.getWriter();
 		
+		// prepare script for header
 		String script = "<script>function Redirect(ID) {var url = \"Overview/Project?id=\" + ID; window.location=url;}</script>";
 		
+		// print html
 		out.println(HTMLHeader.getInstance().getHeader("Projects", "../", "Projects", script, "")
 				  // HTML section with list of all projects
 				  + "<section>" 
@@ -58,7 +66,7 @@ public class Overview extends HttpServlet {
 		
 		try {
 			// get all projects where the current user is supervisor
-			projects = con.getProjects(id, false);
+			ArrayList<Project> projects = con.getProjects(id, false);
 			if (projects != null){
 				out.println("<ul class=\"accordion\" data-accordion data-multi-expand=\"true\" data-allow-all-closed=\"true\">");
 				// write project information
@@ -67,9 +75,8 @@ public class Overview extends HttpServlet {
 					// get all employees
 					ArrayList <Employee> employee = project.getEmployees();
 					
+					// make a string with all employee names
 					String employees = "";
-					
-					// string of all employee names
 					if (!employee.isEmpty()){
 						employees = employee.get(0).getName();
 						for (int i = 1; i < employee.size(); i++){
@@ -79,7 +86,7 @@ public class Overview extends HttpServlet {
 						employees = "no employees assigned";
 					}
 					
-					// get number of days left to end of project
+					// get number of days left until the end of the project
 					Date date = new Date();
 					String daysUntilEnd = "";
 					int days = DateFormatter.getInstance().getDaysBetween(date, project.getEnd());
@@ -88,22 +95,18 @@ public class Overview extends HttpServlet {
 					} else {
 						daysUntilEnd = "Project ends in " + days + " days";
 					}
-					piechart = new PieChart(project);
-
 					
 					// print list item
 					out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
 							  + "<span class=\"bigtext small-3 columns down\">" + project.getShortname() + "</span>"
 							  + "<span class=\"middletext small-6 columns down\">" + project.getName() + "</span>"
 							  + "<button class=\"button small-2 columns end down smalltext\" onclick=\"Redirect(" + project.getID() + ");\">Select</button>"
-							// TODO  + "<span class=\"success badge errorbadge\">0</span>"
 							  + "</a>"
 							  + "<div class=\"accordion-content\" data-tab-content>"
 							  // Write Duration
 							  +"<p>"
 							  + "<span class=\"small-3 columns\">Projectduration</span>"
-							  + "<span class=\"small-4 columns\">" 
-							  + DateFormatter.getInstance().formatDate(project.getStart()) + " - " + DateFormatter.getInstance().formatDate(project.getEnd()) + "</span>"
+							  + "<span class=\"small-4 columns\">" + project.getDuration() + "</span>"
 					  		  + "<span class=\"small-4 end columns align-right\">" + daysUntilEnd + "</span>"
 			  		  		  + "</p>"
 			  		  		  // Write Budget
@@ -112,7 +115,7 @@ public class Overview extends HttpServlet {
 			  		  		  + "<span class=\"small-4 columns\">" + project.getCurrency() 
 							  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
 			  		  		  + "<span class=\"small-4 end columns align-right\">" + project.getCurrency()
-			  		  		  + " " + NumberFormatter.getInstance().formatDouble(piechart.getRemainingBudget()) + " left</span>"
+			  		  		  + " " + NumberFormatter.getInstance().formatDouble(project.getRemainingBudget()) + " left</span>"
 			  		  		  + "</p>"
 							  // Write Workpackages
 							  + "<p>"
@@ -141,7 +144,8 @@ public class Overview extends HttpServlet {
 				}
 				out.println("</ul>");
 			} else {
-				out.println("<div class=\"callout warning\">"
+				// print callout if there are no own projects yet
+				out.println("<div class=\"callout secondary\">"
 						  + "<h4>No projects found</h4>"
 						  + "<a href=\"/Projektverwaltung/Projects/newProject\">Click here to create a new project</a>"
 						  + "</div>");				
@@ -149,10 +153,11 @@ public class Overview extends HttpServlet {
 		
 			out.println("</div>");
 			
-			
+			// get all projects that are shared with the user
 			ArrayList<Project> sharedProjects = con.getSharedProjects(id);
 			
 			if (!sharedProjects.isEmpty()){
+				// print title
 				out.println("<div class=\"row\">"
 			     	  + "<h3>Other Projects</h3>"
 				      + "</div>"
@@ -185,15 +190,11 @@ public class Overview extends HttpServlet {
 					} else {
 						daysUntilEnd = "Project ends in " + days + " days";
 					}
-			
-					piechart = new PieChart(project);
-					
-					
+								
 					// print list item
 					out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
 							  + "<span class=\"bigtext small-3 columns down\">" + project.getShortname() + "</span>"
 							  + "<span class=\"middletext small-6 columns end down\">" + project.getName() + "</span>"
-							 // TODO + "<span class=\"success badge errorbadge\">0</span>"
 							  + "</a>"
 							  + "<div class=\"accordion-content\" data-tab-content>"
 							  // Write ProjectLeader
@@ -203,8 +204,7 @@ public class Overview extends HttpServlet {
 							  // Write Duration
 							  + "<p>"
 							  + "<span class=\"small-3 columns\">Projectduration</span>"
-							  + "<span class=\"small-4 columns\">" 
-							  + DateFormatter.getInstance().formatDate(project.getStart()) + " - " + DateFormatter.getInstance().formatDate(project.getEnd()) + "</span>"
+							  + "<span class=\"small-4 columns\">" + project.getDuration() + "</span>"
 					  		  + "<span class=\"small-4 end columns align-right\">" + daysUntilEnd + "</span>"
 			  		  		  + "</p>"
 			  		  		  // Write Budget
@@ -213,7 +213,7 @@ public class Overview extends HttpServlet {
 			  		  		  + "<span class=\"small-4 columns\">" + project.getCurrency() 
 							  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
 			  		  		  + "<span class=\"small-4 end columns align-right\">" + project.getCurrency()
-			  		  		  + " " + NumberFormatter.getInstance().formatDouble(piechart.getRemainingBudget()) + " left</span>"
+			  		  		  + " " + NumberFormatter.getInstance().formatDouble(project.getRemainingBudget()) + " left</span>"
 			  		  		  + "</p>"
 							  // Write Workpackages
 							  + "<p>"
@@ -243,9 +243,10 @@ public class Overview extends HttpServlet {
 
 			out.println("</div>");
 			
-			
+			// get archived projects
 			projects = con.getProjects(id, true);
 			if (projects != null){
+				// print title
 				out.println("<div class=\"row\">"
 				     	  + "<h3>Archived Projects</h3>"
 					      + "</div>"
@@ -279,8 +280,7 @@ public class Overview extends HttpServlet {
 							  // Write Duration
 							  +"<p>"
 							  + "<span class=\"small-3 columns\">Projectduration</span>"
-							  + "<span class=\"small-9 end columns\">" 
-							  + DateFormatter.getInstance().formatDate(project.getStart()) + " - " + DateFormatter.getInstance().formatDate(project.getEnd()) + "</span>"
+							  + "<span class=\"small-9 end columns\">" + project.getDuration() + "</span>"
 			  		  		  + "</p>"
 			  		  		  // Write Budget
 			  		  		  + "<p>"

@@ -39,7 +39,9 @@ public class EditWeight extends HttpServlet {
 		try {
 			project = con.getProject(pID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 
 		if (project.getLeader() == id){
@@ -151,7 +153,9 @@ public class EditWeight extends HttpServlet {
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
 

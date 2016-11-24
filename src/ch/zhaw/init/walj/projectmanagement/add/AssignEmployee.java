@@ -31,38 +31,49 @@ public class AssignEmployee extends HttpServlet {
 
 	@Override
 	// method to handle get-requests
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
 
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
 		// get projectID given from parameter
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = "/Projektverwaltung/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
+		// check if user is project leader
 		if (project.getLeader() == id){
+			
+			// prepare success/error message
+			String message = "";
+			if (request.getAttribute("msg") != null){
+				message = (String) request.getAttribute("msg");
+			}
+			
+			// get all employees
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			try {
-				employees = con.getAllEmployees();
+				employees.addAll(con.getAllEmployees());
 			} catch (SQLException e) {
-				e.printStackTrace();
 			}
-	
-			PrintWriter out = response.getWriter();
 	
 			// print HTML
 			out.println(HTMLHeader.getInstance().getHeader("Assign Employees", "../../", "Assign Employees", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
 			
 			// print HTML section with form
 			out.println("<section>"
-					+ "<div class=\"row\">"
+					  + message
+					  + "<div class=\"row\">"
 					  + "<form method=\"get\" action=\"assignEmployee/chooseTask\" data-abide novalidate>"
 	
 					  // error message (if something's wrong with the form)
@@ -89,26 +100,24 @@ public class AssignEmployee extends HttpServlet {
 						+ "</div>" 
 						+ "<div class=\"row\">"
 						+ "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Choose Task  <i class=\"fa fa-chevron-right\"></i></button>"
-						+ "</div>");
-	
-			out.println("</section>"
-					  + "</div>"
-					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
-					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
-					  + "<script>$(document).foundation();</script>"
-					  + "</body>"
-					  + "</html>");
+						+ "</div>"
+						+ "</section>"
+						+ "</div>"
+						+ "<script src=\"../../js/vendor/jquery.js\"></script>"
+						+ "<script src=\"../../js/vendor/foundation.min.js\"></script>"
+						+ "<script>$(document).foundation();</script>"
+						+ "</body>"
+						+ "</html>");
 		} else {
 	        String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);			
 		}
-
 	}
 
 	@Override
 	// method to handle post-requests
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		response.setContentType("text/html;charset=UTF8");
 		
 		int id = (int) request.getSession(false).getAttribute("ID");
@@ -120,7 +129,9 @@ public class AssignEmployee extends HttpServlet {
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = "/Projektverwaltung/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
 		if (project.getLeader() == id){
@@ -140,7 +151,6 @@ public class AssignEmployee extends HttpServlet {
 			}
 	
 			Employee employee = null;
-	
 			try {
 				// create new assignment
 				for (int i : taskIDs) {
@@ -163,64 +173,23 @@ public class AssignEmployee extends HttpServlet {
 				}
 				message += "</div>"
 						 + "</div>";
-	
+				
+				// call get method with success message
+				request.setAttribute("msg", message);
+	            doGet(request, response); 	
+	            
 			} catch (SQLException e) {
 				// error message
 				message = "<div class=\"row\">" 
 					    + "<div class=\"callout alert\">" 
 					    + "<h5>Something went wrong</h5>"
 					    + "<p>The employee could not be assigned</p>" + "</div></div>";
+				
+				// call get method with error message
+				request.setAttribute("msg", message);
+	            doGet(request, response); 
 			}
 	
-			// get all employees
-			ArrayList<Employee> employees = new ArrayList<Employee>();
-			try {
-				employees = con.getAllEmployees();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-	
-			PrintWriter out = response.getWriter();
-	
-			// print HTML
-			out.println(HTMLHeader.getInstance().getHeader("Assign Employees", "../../", "Assign Employees", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
-					  + "<section>" 
-					  + message);
-			
-			// print HTML section with form
-			out.println("<div class=\"row\">"
-					  + "<form method=\"get\" action=\"assignEmployee/chooseTask\" data-abide novalidate>"
-					  
-	   				  // error message (if something's wrong with the form)
-					  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
-					  + "<p><i class=\"fa fa-exclamation-triangle\"></i> Please choose an employee.</p></div>"
-	
-					  // project ID
-					  + "<h3>Choose an employee you want to assign to a task.</h3></br>"
-					  + "<input type=\"hidden\" name=\"projectID\" value=\"" + projectID + "\">"
-	
-					  // select employee
-					  + "<h5 class=\"small-12 medium-2 columns\">Employee</h5>"
-					  + "<div class=\"small-12 medium-6 end columns\">" + "<select name=\"employee\" required>"
-					  + "<option></option>");
-	
-			// print option for every employee
-			for (Employee e : employees) {
-				out.println("<option value =\"" + e.getID() + "\">" + e.getName() + "</option>");
-			}
-	
-			// submit button
-			out.println("</select></div>" 
-					  + "</div>" + "<div class=\"row\">"
-					  + "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Choose Task  <i class=\"fa fa-chevron-right\"></i></button>"
-					  + "</div>"
-					  + "</section>"
-					  + "</div>"
-					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
-					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
-					  + "<script>$(document).foundation();</script>"
-					  + "</body>"
-					  + "</html>");
 		} else {
 	        String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);			

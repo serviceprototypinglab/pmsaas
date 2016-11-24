@@ -38,7 +38,9 @@ public class EditEffort extends HttpServlet {
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
 		ProjectTask t = project.getTask(taskID);

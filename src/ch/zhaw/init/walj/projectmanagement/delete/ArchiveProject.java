@@ -44,6 +44,9 @@ public class ArchiveProject extends HttpServlet {
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 
 		// delete project from database

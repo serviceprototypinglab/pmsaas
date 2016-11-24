@@ -25,7 +25,9 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Expense;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 
 /**
- * Servlet implementation class Overview
+ * project management tool, project overview page
+ * 
+ * @author Janine Walther, ZHAW
  */
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview/Project")
@@ -33,132 +35,140 @@ public class ProjectOverview extends HttpServlet {
 
 	// variable declaration
 	private Project project;
-	private ArrayList<Expense> expenses = new ArrayList<Expense>();
-	private ArrayList<Employee> employees = new ArrayList<Employee>();
-	private Effort effort;
-	private PieChart pieChart;
-	private LineChart lineChart;
-	private GanttChart ganttChart;
-		
+	/*
+	 * method to handle get requests
+	 * prints panels for overview, budget, effort and workpackages & tasks
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
 				
+		// get user id from session
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
+		// get project id
 		int projectID = Integer.parseInt(request.getParameter("id"));
 		
+		// Database connection
 		DBConnection con = new DBConnection();
 		
+		// get project
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// send redirect to project not found page
+			String url = "/Projektverwaltung/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
-		PrintWriter out = response.getWriter();
-				
+		// check if user is project leader
 		if (project.getLeader() == id) {
 	
-			expenses = project.getExpenses();
-			employees = project.getEmployees();
-			effort = new Effort(project.getTasks());
+			// get expenses, employees, effort, charts
+			ArrayList<Expense> expenses = project.getExpenses();
+			ArrayList<Employee> employees = project.getEmployees();
+			Effort effort = new Effort(project.getTasks());
 			
-			pieChart = new PieChart(project);
-			lineChart = new LineChart(project);
-			ganttChart = new GanttChart(project);
+			PieChart pieChart = new PieChart(project);
+			LineChart lineChart = new LineChart(project);
+			GanttChart ganttChart = new GanttChart(project);
+			
+			// create charts and save them in Charts folder
 			try {
 				pieChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/");
 				lineChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/");
 				ganttChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/");
-			} catch (NumberFormatException | SQLException e) {
-				e.printStackTrace();
-			} catch (ParseException e) {
+			} catch (NumberFormatException | SQLException | ParseException e) {
 				e.printStackTrace();
 			}
 			
+			// create chart for every employee and save them in Charts folder
 			for (Employee e : employees){
 				lineChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/", e.getID());
 			}
 			
 			
-			try {
-				out.println(HTMLHeader.getInstance().getHeader(project.getShortname(), "../../", project.getShortname(), "")
-						  // HTML section with panels
-						  + "<section>"
-						  + "<div class=\"row\">"
-						  // panel for project overview
-						  + "<div class=\"panel small-12 columns\">"
-						  // project duration
-						  + "<div class=\"row round\">"
-						  + "<div class=\"small-4 medium-2 columns bold\">Projectduration</div>" 
-						  + "<div class=\"small-8 medium-4 columns\">" + project.getDuration() + "</div>"
-						  // total budget
-						  + "<div class=\"small-4 medium-2 columns bold\">Budget</div>"
-						  + "<div class=\"small-8 medium-4 columns\">" + project.getCurrency() 
-						  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</div>"
-						  // number of workpackages
-						  + "<div class=\"small-4 medium-2 columns bold\">Workpackages</div>" 
-						  + "<div class=\"small-8 medium-4 columns\">" + project.nbrOfWorkpackages() + "</div>"
-						  // number of tasks
-					  	  + "<div class=\"small-4 medium-2 columns bold\">Tasks</div>"
-						  + "<div class=\"small-8 medium-4 columns\">" + project.nbrOfTasks() + "</div>"
-						  // number of employees
-						  + "<div class=\"small-4 medium-2 columns bold\">Employees</div>" 
-						  + "<div class=\"small-8 medium-4 columns\">" + project.nbrOfEmployees() + "</div>"
-						  // number of partners
-						  + "<div class=\"small-4 medium-2 columns bold\">Partner</div>"
-						  + "<div class=\"small-8 medium-4 columns\">" + project.getPartners() + "</div>"
-						  + "</div>"
-						  + "</div>"
-						  // budget panel
-						  + "<div class=\"panel small-12 medium-6 columns\">"
-						  + "<div class=\"row round\">"
-						  + "<div class=\"small-12 columns\">"
-						  + "<h2>Budget</h2>"
-						  + "</div>"
-						  + "<div class=\"small-12 medium-8 columns\">"
-						  // load pie chart
-						  + "<img src=\"../../Charts/BudgetProject" + project.getID() + ".jpg\">"
-						  + "</div>"
-						  // pie chart legend
-						  + "<div class=\"small-12 medium-4 columns\">"
-						  + "</br>"
-						  + "<span class=\"legend-1  smallbadge\"></span> "
-						  // remaining budget
-						  + "Remaining: </br>" + project.getCurrency() + " " + NumberFormatter.getInstance().formatDouble(pieChart.getRemainingBudget())
-						  + "</br>"
-						  + "<span class=\"legend-2 smallbadge\"></span> "
-						  // used budget
-						  + "Spent: </br>" + project.getCurrency() + " " + NumberFormatter.getInstance().formatDouble(pieChart.getUsedBudget()) 
-						  + "</div>"
-						  + "<div class=\"small-8 columns\">"
-						  // Expenses
-						  + "<h3>Expenses</h3>"
-						  + "</div>"
-						  + "<div class=\"small-4 columns\">"
-						  // add expense button
-						  + "<a class=\"button\" href=\"addExpense?projectID=" + project.getID() + "\">"
-						  + "<i class=\"fa fa-plus\"></i> Add Expenses</a>"
-						  + "</div>"
-						  + "<table class=\"scroll\">"
-						  + "<thead>"
-						  + "<tr>"
-						  + "<th>Employee</th>"
-						  + "<th>Type</th>"
-						  + "<th>Date</th>"
-						  + "<th>Costs</th>"
-						  + "<th></th>"
-						  + "</tr>"
-						  + "</thead>"
-						  + "<tbody>");
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
+			out.println(HTMLHeader.getInstance().getHeader(project.getShortname(), "../../", project.getShortname(), "")
+					  // HTML section with panels
+					  + "<section>"
+					  + "<div class=\"row\">"
+					  // panel for project overview
+					  + "<div class=\"panel small-12 columns\">"
+					  // project duration
+					  + "<div class=\"row round\">"
+					  + "<div class=\"small-4 medium-2 columns bold\">Projectduration</div>" 
+					  + "<div class=\"small-8 medium-4 columns\">" + project.getDuration() + "</div>"
+					  // total budget
+					  + "<div class=\"small-4 medium-2 columns bold\">Budget</div>"
+					  + "<div class=\"small-8 medium-4 columns\">" + project.getCurrency() 
+					  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</div>"
+					  // number of workpackages
+					  + "<div class=\"small-4 medium-2 columns bold\">Workpackages</div>" 
+					  + "<div class=\"small-8 medium-4 columns\">" + project.nbrOfWorkpackages() + "</div>"
+					  // number of tasks
+				  	  + "<div class=\"small-4 medium-2 columns bold\">Tasks</div>"
+					  + "<div class=\"small-8 medium-4 columns\">" + project.nbrOfTasks() + "</div>"
+					  // number of employees
+					  + "<div class=\"small-4 medium-2 columns bold\">Employees</div>" 
+					  + "<div class=\"small-8 medium-4 columns\">" + project.nbrOfEmployees() + "</div>"
+					  // number of partners
+					  + "<div class=\"small-4 medium-2 columns bold\">Partner</div>"
+					  + "<div class=\"small-8 medium-4 columns\">" + project.getPartners() + "</div>"
+					  + "</div>"
+					  + "</div>"
+					  // budget panel
+					  + "<div class=\"panel small-12 medium-6 columns\">"
+					  + "<div class=\"row round\">"
+					  + "<div class=\"small-12 columns\">"
+					  + "<h2>Budget</h2>"
+					  + "</div>"
+					  + "<div class=\"small-12 medium-8 columns\">"
+					  // load pie chart
+					  + "<img src=\"../../Charts/BudgetProject" + project.getID() + ".jpg\">"
+					  + "</div>"
+					  // pie chart legend
+					  + "<div class=\"small-12 medium-4 columns\">"
+					  + "</br>"
+					  + "<span class=\"legend-1  smallbadge\"></span> "
+					  // remaining budget
+					  + "Remaining: </br>" + project.getCurrency() + " " + NumberFormatter.getInstance().formatDouble(project.getRemainingBudget())
+					  + "</br>"
+					  + "<span class=\"legend-2 smallbadge\"></span> "
+					  // used budget
+					  + "Spent: </br>" + project.getCurrency() + " " + NumberFormatter.getInstance().formatDouble(project.getUsedBudget()) 
+					  + "</div>"
+					  + "<div class=\"small-8 columns\">"
+					  // Expenses
+					  + "<h3>Expenses</h3>"
+					  + "</div>"
+					  + "<div class=\"small-4 columns\">"
+					  // add expense button
+					  + "<a class=\"button\" href=\"addExpense?projectID=" + project.getID() + "\">"
+					  + "<i class=\"fa fa-plus\"></i> Add Expenses</a>"
+					  + "</div>"
+					  // expenses table
+					  + "<table class=\"scroll\">"
+					  + "<thead>"
+					  + "<tr>"
+					  + "<th>Employee</th>"
+					  + "<th>Type</th>"
+					  + "<th>Date</th>"
+					  + "<th>Costs</th>"
+					  + "<th></th>"
+					  + "</tr>"
+					  + "</thead>"
+					  + "<tbody>");
+			
 			
 			// print expenses
 			for(Expense ex : expenses){
+				// get employee
 				Employee employee = project.getSpecificEmployee(ex.getEmployeeID());
+				
+				// print table row
 				out.println("<tr>"
 						  + "<td>" + employee.getName() + "</td>"
 						  + "<td title=\"" + ex.getDescription() + "\">" + ex.getType() + "</td>"
@@ -168,6 +178,7 @@ public class ProjectOverview extends HttpServlet {
 						  + "</tr>");
 			}
 			
+			// total expenses and end of panel
 			out.println("</tbody>"
 					  + "</tfoot>"
 					  + "<tr>"
@@ -180,10 +191,10 @@ public class ProjectOverview extends HttpServlet {
 					  + "</tfoot>"
 					  + "</table>"
 					  + "</div>"
-					  + "</div>"
+					  + "</div>");
 					  
-					  // effort panel
-					  + "<div class=\"panel small-12 medium-6 columns\">"
+			// effort panel
+			out.println("<div class=\"panel small-12 medium-6 columns\">"
 					  + "<div class=\"row round\">"
 					  + "<div class=\"small-4 columns\">"
 					  + "<h2>Effort</h2>"
@@ -196,7 +207,7 @@ public class ProjectOverview extends HttpServlet {
 					  + "<a class=\"button\" href=\"bookHours?projectID=" + project.getID() + "\">"
 					  + "<i class=\"fa fa-clock-o\"></i> Book Hours</a>"
 					  + "</div>"
-					  // line chart
+					  // line chart planned and booked PMs
 					  + "<div class=\"small-12 no-padding columns\">"
 					  + "<img src=\"../../Charts/EffortProject" + project.getID() + ".jpg\">"
 					  + "</div>"
@@ -212,33 +223,40 @@ public class ProjectOverview extends HttpServlet {
 			double totalEffort = 0;		
 			String disabled = "";
 			String link = "";
+			// effort for every employee
 			for(Employee employee : employees){
-				try {
-					double effortEmployee = effort.getEffortPerEmployee(employee.getID());
-					totalEffort += effortEmployee;
-					if (effortEmployee == 0){
-						disabled ="disabled ";	
-						link = "";
-					} else {
-						disabled = "";
-						link = "Effort?projectID=" + project.getID() + "&employeeID=" + employee.getID();
-					}
-					
-					out.println("<div class=\"small-6 columns\">" + employee.getName() + "</div>"
-							   +"<div class=\"small-3 columns\">" + NumberFormatter.getInstance().formatHours(effortEmployee) + " h</div>"
-							   + "<div class=\"small-3 columns\">"
-							   + "<a class=\"" + disabled + "button float-right\" href=\"" + link + "\">"
-							   + "<i class=\"fa fa-info\"></i> Details</a>"
-							   + "</div>");
-					
-				} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-					e.printStackTrace();
+				// get effort of employee and add it to total effort
+				double effortEmployee = effort.getEffortPerEmployee(employee.getID());
+				totalEffort += effortEmployee;
+				
+				// disable button if there are no bookings for this employee
+				if (effortEmployee == 0){
+					disabled ="disabled ";	
+					link = "";
+				} else {
+					disabled = "";
+					link = "Effort?projectID=" + project.getID() + "&employeeID=" + employee.getID();
 				}
+				
+				// print effort
+				out.println("<div class=\"small-6 columns\">" + employee.getName() + "</div>"
+						   +"<div class=\"small-3 columns\">" + NumberFormatter.getInstance().formatHours(effortEmployee) + " h</div>"
+						   + "<div class=\"small-3 columns\">"
+						   + "<a class=\"" + disabled + "button float-right\" href=\"" + link + "\">"
+						   + "<i class=\"fa fa-info\"></i> Details</a>"
+						   + "</div>");
 			}
 			
-			disabled = "";
-			link = "Effort?projectID=" + project.getID();
-						
+			// disable button if there are no bookings
+			if (totalEffort == 0){
+				disabled ="disabled ";	
+				link = "";
+			} else {
+				disabled = "";
+				link = "Effort?projectID=" + project.getID();
+			}
+				
+			// print effort total and end of panel 
 			out.println("<div class=\"small-6 columns\">"
 					  + "<span class=\"bold\">Total</span>"
 					  + "</div>"
@@ -250,9 +268,10 @@ public class ProjectOverview extends HttpServlet {
 					  + "<i class=\"fa fa-info\"></i> Details</a>"
 					  + "</div>"
 					  + "</div>"
-					  + "</div>"
-					  // Panel for workpackages and tasks (Gantt chart)
-					  + "<div class=\"panel small-12 columns\">"
+					  + "</div>");
+			
+			// Panel for workpackages and tasks (Gantt chart)
+			out.println("<div class=\"panel small-12 columns\">"
 					  + "<div class=\"row round\">"
 					  + "<div class=\"small-7 columns\">"
 					  + "<h2>Workpackages & Tasks</h2>"
@@ -269,12 +288,12 @@ public class ProjectOverview extends HttpServlet {
 					  + "<i class=\"fa fa-plus\"></i> Add Task</a>"
 					  + "</div>"
 					  + "<div class=\"small-12 no-padding columns\">"
-					  // load gantt chart
+					  // print gantt chart
 					  + "<img src=\"../../Charts/GanttProject" + project.getID() + ".jpg\">"
 					  + "</div>"
 					  + "</div>"
 					  + "</div>"
-					  // delete project button
+					  // share/edit/archive project buttons
 					  + "<div class=\"panel small-12 columns\">"
 					  + "<div class=\"row round\">"
 					  + "<div class=\"expanded large button-group\">"
@@ -283,7 +302,8 @@ public class ProjectOverview extends HttpServlet {
 					  + "<a class=\"large button\" id=\"deleteProject\" data-open=\"delete\"><i class=\"fa fa-archive\"></i> Archive Project</a>"
 					  + "</div>"
 					  + "</div>"
-					  + "</div>"					  
+					  + "</div>"	
+					  // archive project window
 					  + "<div class=\"reveal\" id=\"delete\" data-reveal>"
 					  + "<h1 class=\"align-left\">Are you sure?</h1>"
 					  + "<p class=\"lead\"></p>"
@@ -291,8 +311,7 @@ public class ProjectOverview extends HttpServlet {
 					  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
 					  + "<span aria-hidden=\"true\">&times;</span>"
 					  + "</button>"
-					  + "</div>"
-					  
+					  + "</div>"					  
 					  + "</section>"
 					  + "</div>"
 					  // required JavaScript

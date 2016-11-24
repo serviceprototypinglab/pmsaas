@@ -44,7 +44,9 @@ public class ChooseTask extends HttpServlet{
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
 		if (project.getLeader() == id){
@@ -55,7 +57,7 @@ public class ChooseTask extends HttpServlet{
 			ArrayList<Integer> assignedTasks = null;
 			// get assignments
 			try {
-				assignedTasks = con.getAssignments(employeeID);
+				assignedTasks = con.getAssignedTasks(employeeID);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

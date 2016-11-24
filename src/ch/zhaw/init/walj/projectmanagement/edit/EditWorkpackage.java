@@ -36,10 +36,6 @@ public class EditWorkpackage extends HttpServlet {
 		String start = request.getParameter("start");
 		String end = request.getParameter("end");
 		
-		
-		System.out.println(start);
-		System.out.println(end);
-
 		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
 		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
 		try {

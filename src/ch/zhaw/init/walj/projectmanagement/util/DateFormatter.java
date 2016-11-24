@@ -25,13 +25,44 @@ public class DateFormatter {
 	 * 				date 'DD.MM.YYYY' as a string
 	 */
 	public String formatDate(String unformattedDate){
-		String[] helper = unformattedDate.split("-");
-		if (helper.length == 3) {
-			String formattedDate = helper[2] + "." + helper[1] + "." + helper[0];
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat format2 = new SimpleDateFormat("dd.MM.yyyy");
+		
+		try {
+			Date date = format.parse(unformattedDate);			
+			String formattedDate = format2.format(date);
 			return formattedDate;
+		} catch (ParseException e) {
+			return unformattedDate;
 		}
-		return unformattedDate;
 	}
+	
+	/**
+	 * 
+	 * @param unformattedDate
+	 * 				date 'DD.MM.YYYY' as a string
+	 * @return
+	 * 				date 'YYYY-MM-DD' as a string
+	 */
+	public String formatDateForDB(String unformattedDate){
+		
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			Date date = format.parse(unformattedDate);			
+			String formattedDate = format2.format(date);
+			
+			System.out.println(formattedDate);
+			
+			return formattedDate;
+		} catch (ParseException e) {
+			
+			return unformattedDate;
+		}
+	}
+	
 	
 	/**
 	 * 

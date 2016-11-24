@@ -39,21 +39,29 @@ public class ChooseTaskToBookHours extends HttpServlet{
 	 * handles get requests on /Overview/bookHours/chooseTask
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
 
+		// get user ID
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
 		// variable declaration, get parameters
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
+		// check if user is project leader
 		if (project.getLeader() == id){
+			// get 
 			int employeeID = Integer.parseInt(request.getParameter("employee"));
 					
 			// get all the tasks, the employee is already assigned to
@@ -63,7 +71,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			tasks.addAll(project.getTasks());
 			ArrayList<Integer> assignedTasks = null;
 			try {
-				assignedTasks = con.getAssignments(employeeID);
+				assignedTasks = con.getAssignedTasks(employeeID);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -160,7 +168,9 @@ public class ChooseTaskToBookHours extends HttpServlet{
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
 		if (project.getLeader() == id){
@@ -244,7 +254,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 				
 				// get assignment with the given employee and task ID
 				try {
-					assignmentID = con.getAssignment(employeeID, taskIDs.get(i));
+					assignmentID = con.getAssignment(employeeID, taskIDs.get(i)).getID();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

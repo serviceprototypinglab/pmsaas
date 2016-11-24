@@ -12,19 +12,33 @@ import javax.servlet.http.HttpSession;
 
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 
+/**
+ * project management tool, logout page
+ * 
+ * @author Janine Walther, ZHAW
+ */
 @SuppressWarnings("serial")
 @WebServlet("/Projects/logout")
 public class Logout extends HttpServlet {
 
+	/*
+	 * method to handle get requests
+	 * invalidates session (logout)
+	 */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
+    	// set response content type
     	response.setContentType("text/html;charset=UTF8");
     	
+    	// get session and invalidate it
     	HttpSession session = request.getSession();
 		session.invalidate();
     	
+		// get print writer
 		PrintWriter out = response.getWriter();
     	
+		// print html
     	out.println(HTMLHeader.getInstance().getHeader("Logout", "../") 
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 

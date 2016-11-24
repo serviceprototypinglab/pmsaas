@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 
 /**
- * Servlet implementation class Overview
+ * project management tool, help page
+ * 
+ * @author Janine Walther, ZHAW
  */
 @SuppressWarnings("serial")
 @WebServlet("/Projects/help")
@@ -25,7 +27,6 @@ public class Help extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		out.println(HTMLHeader.getInstance().getHeader("Help", "../", "Help", "")
-				  // HTML section with list of all projects
 				  + "<section>"
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-12 columns text-center\">"

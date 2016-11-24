@@ -44,7 +44,9 @@ public class ShareProject extends HttpServlet{
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
 		if (project.getLeader() == id){			
@@ -126,24 +128,26 @@ public class ShareProject extends HttpServlet{
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
 		if (project.getLeader() == id){
 		
+			String message = "";
 			String[] employeeIDs = request.getParameterValues("employees");
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			
 			for (int i = 0; i < employeeIDs.length; i++){
-				employees.add(con.getEmployee(Integer.parseInt(employeeIDs[i])));
+				try {
+					employees.add(con.getEmployee(Integer.parseInt(employeeIDs[i])));
+				} catch (SQLException e) {
+				}
 			}
-			
-			String message = "";
 	
 			try {
-				
-				
-				
+
 				// create new assignment
 				for (Employee e : employees) {
 					con.newShare(project.getID(), e.getID());

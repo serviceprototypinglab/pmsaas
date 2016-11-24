@@ -58,15 +58,15 @@ public class LineChart {
     	return dataset;
     }
     
-	private XYSeriesCollection createDataset(int employee) throws SQLException {
+	private XYSeriesCollection createDataset(int employee){
 		Effort effort = new Effort(tasks);
     	double bookedEffort = 0;
     	XYSeries booked = new XYSeries("Booked");
     	int projectMonths = project.getNumberOfMonths();
     	for (double i = 1; i <= projectMonths; i++){
     	
-    		if (effort.getBookedEffort(i, employee) != 0){
-	    		bookedEffort = effort.getBookedEffort(i, employee);
+    		if (effort.getBookedEffortPerMonth(i, employee) != 0){
+	    		bookedEffort = effort.getBookedEffortPerMonth(i, employee);
 	    		booked.add(i, bookedEffort);
     		}
     			
@@ -124,11 +124,8 @@ public class LineChart {
     
     public void createChart(String path, int employee) {
     	XYSeriesCollection dataset = null;
-		try {
-			dataset = createDataset(employee);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
+    	dataset = createDataset(employee);
     	
     	JFreeChart xylineChart = ChartFactory.createXYLineChart(
     	         "",

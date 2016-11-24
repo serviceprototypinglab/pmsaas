@@ -14,6 +14,11 @@ import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.PasswordService;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 
+/**
+ * project management tool, login page
+ * 
+ * @author Janine Walther, ZHAW
+ */
 @SuppressWarnings("serial")
 @WebServlet("/login")
 public class Login extends HttpServlet {
@@ -21,17 +26,23 @@ public class Login extends HttpServlet {
 	// connection to database
 	DBConnection con = new DBConnection();
 	
+	/*
+	 * method to handle get requests
+	 * shows login form and error message in case of wrong user/password
+	 */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	response.setContentType("text/html;charset=UTF8");
     	
+    	// send redirect to setup if there are no users yet (first initialization) 
     	if (con.noUsers()){
             String loginURI = request.getContextPath() + "/setup";
     		response.sendRedirect(loginURI);
+    		return;
     	}
     	
-    	String message = "";
-    	
+    	// set error message (in case of wrong user/password)
+    	String message = "";    	
     	if (request.getAttribute("error") != null){
     		message = "<div class=\"row\">" 
   					+ "<div class=\"small-6 small-offset-3 end columns\">"
@@ -42,8 +53,10 @@ public class Login extends HttpServlet {
 				    + "</div></div>";
     	}
     	
+    	// get print writer
 		PrintWriter out = response.getWriter();
     	
+		// print html
     	out.println(HTMLHeader.getInstance().getHeader("Sign in - Project Management Saas", "") 
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
@@ -107,16 +120,28 @@ public class Login extends HttpServlet {
 				  + "</html>");  	
     }
 
+    /*
+	 * method to handle post requests
+	 * adjusts login data with database
+	 * sends redirect to overview page if login was correct
+	 * calls get method with error attribute if login was wrong
+	 */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	response.setContentType("text/html;charset=UTF8");
 
+    	// get parameters
     	String user = request.getParameter("mail");
         String password = request.getParameter("password");
         
+        // encrypt password
         password = PasswordService.getInstance().encrypt(password);
+        
+        // try to find user in database
         Employee e = con.findUser(user, password);
         
+        // new session with attribute user (first name), id and kuerzel, 
+        // set max inactive time to 60 minutes
         try {
         	int id = e.getID();
             request.getSession().setAttribute("user", e.getFirstName());

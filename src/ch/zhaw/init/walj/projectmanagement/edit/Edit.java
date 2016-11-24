@@ -48,7 +48,9 @@ public class Edit extends HttpServlet {
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
 		PrintWriter out = response.getWriter();

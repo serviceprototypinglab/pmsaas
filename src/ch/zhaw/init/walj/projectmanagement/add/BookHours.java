@@ -45,7 +45,9 @@ public class BookHours extends HttpServlet {
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
 		if (project.getLeader() == id){
@@ -106,8 +108,8 @@ public class BookHours extends HttpServlet {
 
 	@Override
 	// method to handle post-requests
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		response.setContentType("text/html;charset=UTF8");
 
 		int id = (int) request.getSession(false).getAttribute("ID");
@@ -119,10 +121,14 @@ public class BookHours extends HttpServlet {
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
 		
+		// check if user is project leader
 		if (project.getLeader() == id){
+			// get parameters
 			String[] assignment = request.getParameterValues("assignmentID");
 			String[] hour = request.getParameterValues("hours");
 			String[] month = request.getParameterValues("months");
@@ -130,14 +136,6 @@ public class BookHours extends HttpServlet {
 			ArrayList<Double> hours = new ArrayList<Double>();
 			ArrayList<Integer> assignments = new ArrayList<Integer>();
 	
-			// error message
-			String message = "<div class=\"row\">" 
-						   + "<div class=\"callout alert\">" 
-						   + "<h5>Something went wrong</h5>"
-						   + "<p>The hours could not be booked.</p>" 
-						   + "</div></div>";
-	
-				
 			// parse the hour strings to double, add them to arraylist
 			for (String s : hour) {
 				hours.add(Double.parseDouble(s));
@@ -154,74 +152,40 @@ public class BookHours extends HttpServlet {
 				assignments.add(Integer.parseInt(s));
 			}
 	
-			// create new bookings in DB
-			for (int i = 0; i < hour.length; i++) {
-				try {
-					con.newBooking(assignments.get(i), months.get(i), hours.get(i));
-					// success message
-					message = "<div class=\"row\">" 
-							+ "<div class=\"callout success\">"
-							+ "<h5>Hours successfully booked</h5>" 
-							+ "<p>The hours were successfully booked to the project "
-							+ project.getName() 
-							+ ".</p>" 
-							+ "</div></div>";
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-	
-			// get all employees
-			ArrayList<Employee> employees = new ArrayList<Employee>();
+			String message = "";
 			try {
-				employees = con.getAllEmployees();
+				// create new bookings in DB
+				for (int i = 0; i < hour.length; i++) {
+						con.newBooking(assignments.get(i), months.get(i), hours.get(i));
+						// success message
+						message = "<div class=\"row\">" 
+								+ "<div class=\"callout success\">"
+								+ "<h5>Hours successfully booked</h5>" 
+								+ "<p>The hours were successfully booked to the project "
+								+ project.getName() 
+								+ ".</p>" 
+								+ "</div></div>";
+				}
+				
+				// call get method with error message
+				request.setAttribute("msg", message);
+	            doGet(request, response); 
+	            
 			} catch (SQLException e) {
-				e.printStackTrace();
+				// error message
+				message = "<div class=\"row\">" 
+				        + "<div class=\"callout alert\">" 
+				        + "<h5>Something went wrong</h5>"
+				        + "<p>The hours could not be booked.</p>" 
+				        + "</div>"
+				        + "</div>";
+				
+				
+				// call get method with error message
+				request.setAttribute("msg", message);
+	            doGet(request, response); 
 			}
 	
-			PrintWriter out = response.getWriter();
-	
-			// print HTML
-			out.println(HTMLHeader.getInstance().getHeader("Book Hours", "../../", "Book Hours", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
-	
-			// print HTML section with form
-			out.println("<section>" 
-					  + message
-					  + "<div class=\"row\">" 
-					  + "<h3>Choose Employee</h3>"
-	
-					  // error message (if something's wrong with the form)
-					  + "<form method=\"get\" action=\"bookHours/chooseTask\" data-abide novalidate>"
-					  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
-					  + "<p><i class=\"fa fa-exclamation-triangle\"></i> Please choose an employee.</p></div>"
-
-					  // project ID
-					  + "<input type=\"hidden\" name=\"projectID\" value=\"" + projectID + "\">"
-	
-					  // select employee
-					  + "<h5 class=\"small-12 medium-2 columns\">Employee</h5>"
-					  + "<div class=\"small-12 medium-6 end columns\">" 
-					  + "<select name=\"employee\" required>"
-					  + "<option></option>");
-	
-			// option for every employee
-			for (Employee employee : employees) {
-				out.println("<option value =\"" + employee.getID() + "\">" + employee.getName() + "</option>");
-			}
-	
-			// submit button
-			out.println("</select></div></div>" 
-					  + "<div class=\"row\">"
-					  + "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Choose Task  <i class=\"fa fa-chevron-right\"></i></button>"
-					  + "</div>");
-	
-			out.println("</section>"
-					  + "</div>"
-					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
-					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
-					  + "<script>$(document).foundation();</script>"
-					  + "</body>"
-					  + "</html>");
 		} else {
 			String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);

@@ -1,11 +1,9 @@
 package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+
+import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 
 /**
  * Class to calculate the effort per month and employee
@@ -17,19 +15,7 @@ public class Effort {
 	
 	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
 	
-
-	private String driver = "com.mysql.jdbc.Driver";
-	private String url = "jdbc:mysql://localhost:3306/";
-	private String dbName = "projectmanagement";
-	private String userName	= "Janine";
-	private String password	= "test123";
-	private Connection conn;
-	private Statement st;
-	private ResultSet res;
-	private Statement st2;
-	private ResultSet res2;
-	
-	
+	DBConnection con;
 	
 	/**
 	 * constructor of the Effort class
@@ -37,90 +23,33 @@ public class Effort {
 	 */
 	public Effort (ArrayList<ProjectTask> tasks){
 		this.tasks = tasks;
+		con = new DBConnection();
 	}
 	
 	
 	public ArrayList<Booking> getBookings () throws SQLException {
-		
-		int bookingID;
-		int assignmentID;
-		int month;
-		double hours;
-		int taskID;
-		int employeeID;
-		
+			
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		
-		try {
-			Class.forName(driver).newInstance();
-			conn = DriverManager.getConnection(url + dbName, userName, password);
-			st = conn.createStatement();
-			st2 = conn.createStatement();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		
 		for (ProjectTask task : tasks){
-			// get assignments to the task
-    		res = st.executeQuery("select * from Assignments where TaskIDFS = " + task.getID());
-    		while (res.next()){
-    			assignmentID = res.getInt("AssignmentID");
-    			taskID = task.getID();
-    			employeeID = res.getInt("EmployeeIDFS"); 
-    			// get bookings to the assignment
-    			res2 = st2.executeQuery("select * from Bookings where AssignmentIDFS = " + assignmentID + " order by Month");
-    			while (res2.next()){
-    				bookingID = res2.getInt("BookingID");
-    				month = res2.getInt("Month");
-    				hours = res2.getDouble("Hours");
-    				Booking booking = new Booking(bookingID, assignmentID, month, hours, taskID, employeeID);
-    				bookings.add(booking);
-    			}
-    		}
+			
     	}	
 		
 		return bookings;
 	}
 	
 public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
-		
-		int bookingID;
-		int assignmentID;
-		int month;
-		double hours;
-		int taskID;
-		
+				
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		
-		try {
-			Class.forName(driver).newInstance();
-			conn = DriverManager.getConnection(url + dbName, userName, password);
-			st = conn.createStatement();
-			st2 = conn.createStatement();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		
 		for (ProjectTask task : tasks){
-			// get assignments to the task
-    		res = st.executeQuery("select * from Assignments where TaskIDFS = " + task.getID() + " and EmployeeIDFS = " + employeeID);
-    		while (res.next()){
-    			assignmentID = res.getInt("AssignmentID");
-    			taskID = task.getID();
-    			// get bookings to the assignment
-    			res2 = st2.executeQuery("select * from Bookings where AssignmentIDFS = " + assignmentID);
-    			while (res2.next()){
-    				bookingID = res2.getInt("BookingID");
-    				month = res2.getInt("Month");
-    				hours = res2.getDouble("Hours");
-    				Booking booking = new Booking(bookingID, assignmentID, month, hours, taskID, employeeID);
-    				bookings.add(booking);
-    			}
-    		}
-    	}	
-		
+			ArrayList<Assignment> assignments = con.getAssignments(task.getID());
+			for (Assignment a : assignments){
+				bookings.addAll(con.getBookings(a));
+			}
+    	}			
 		return bookings;
 	}
 	
@@ -167,38 +96,24 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 	 */
 	public double getBookedEffort (double month) throws SQLException{
 		double effort = 0.0;
-		int projectMonth = 0;
 		
-		try {
-			Class.forName(driver).newInstance();
-			conn = DriverManager.getConnection(url + dbName, userName, password);
-			st = conn.createStatement();
-			st2 = conn.createStatement();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		
 		for (ProjectTask task : tasks){
-			// get assignments to the task
-    		res = st.executeQuery("select * from Assignments where TaskIDFS = " + task.getID());
-    		while (res.next()){
-    			// get bookings to the assignment
-    			res2 = st2.executeQuery("select * from Bookings where AssignmentIDFS = " + res.getInt("AssignmentID"));
-    			while (res2.next()){
-    				projectMonth = res2.getInt("Month");
-    				// compare month of the booking to the given month
-    				if (month == projectMonth){
-    					effort += res2.getDouble("Hours");
-    				} 		
-    			}
-    		}
-    	}		
+			ArrayList<Assignment> assignments = con.getAssignments(task.getID());
+			for (Assignment a : assignments){
+				bookings = con.getBookings(a);
+				for (Booking b : bookings){
+					if (month == b.getMonth()){
+						effort += b.getHours();
+					}
+				}
+			}
+    	}			
 		
 		// calculate PMs
 		effort = effort / 168;
 		
-		conn.close();
 		return effort;
 	}
 	
@@ -215,63 +130,50 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 	 * @throws ClassNotFoundException
 	 */
 	
-	public float getEffortPerEmployee(int employeeID) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+	public float getEffortPerEmployee(int employee){
 		float effort = 0;
-		
-		Class.forName(driver).newInstance();
-		conn = DriverManager.getConnection(url + dbName, userName, password);
-		st = conn.createStatement();
-		st2 = conn.createStatement();	
-		
+		ArrayList<Booking> bookings = new ArrayList<Booking>();
+				
 		for (ProjectTask task : tasks){
-			// get the assignmentID for the assignment with the given task and employee
-			res = st.executeQuery("select AssignmentID from Assignments where TaskIDFS = " + task.getID() + " and EmployeeIDFS = " + employeeID);
-			while (res.next()){
-				// get the hours from the bookings table
-				res2 = st2.executeQuery("select Hours from Bookings where AssignmentIDFS = " + res.getInt("AssignmentID"));
-    			while (res2.next()){
-    				effort += res2.getFloat("Hours");
-    			}
+			// get assignments to the task
+			Assignment a;
+			try {
+				a = con.getAssignment(employee, task.getID());
+				// get bookings to the assignment
+				bookings = con.getBookings(a);
+				for (Booking b : bookings){
+						effort += b.getHours(); 		
+	    		}
+			} catch (SQLException e) {
+			
 			}
-		}
+			
+    	}	
 		
-		conn.close();
 		return effort;
 	}
 
 
-	public double getBookedEffort(double month, int employee) throws SQLException {
+	public double getBookedEffortPerMonth(double month, int employee){
 		double effort = 0.0;
-		int projectMonth = 0;
 		
-		try {
-			Class.forName(driver).newInstance();
-			conn = DriverManager.getConnection(url + dbName, userName, password);
-			st = conn.createStatement();
-			st2 = conn.createStatement();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		
 		for (ProjectTask task : tasks){
-			// get assignments to the task
-    		res = st.executeQuery("select * from Assignments where TaskIDFS = " + task.getID() + " and EmployeeIDFS = " + employee);
-    		while (res.next()){
-    			// get bookings to the assignment
-    			res2 = st2.executeQuery("select * from Bookings where AssignmentIDFS = " + res.getInt("AssignmentID"));
-    			while (res2.next()){
-    				projectMonth = res2.getInt("Month");
-    				// compare month of the booking to the given month
-    				if (projectMonth == month){
-    					effort += res2.getDouble("Hours");
-    				} 		
-    			}
-    		}
+			try {
+				// get assignments to the task
+				Assignment a = con.getAssignment(employee, task.getID());
+				// get bookings to the assignment
+				bookings = con.getBookings(a);
+				for (Booking b : bookings){
+					if (b.getMonth() == month){
+						effort += b.getHours();
+					} 		
+	    		}
+			} catch (SQLException e) {
+			}
     	}		
 		
-		
-		conn.close();
 		return effort;
 	}
 	
