@@ -32,15 +32,19 @@ public class BookHours extends HttpServlet {
 
 	@Override
 	// method to handle get-requests
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
 
+		// get user ID
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
 		// get projectID given from parameter
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
@@ -50,21 +54,20 @@ public class BookHours extends HttpServlet {
             return;
 		}
 		
+		// check if user is project leader
 		if (project.getLeader() == id){
 		
+			// get all employees
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			try {
 				employees = con.getAllEmployees();
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
-	
-			PrintWriter out = response.getWriter();
+			}	
 	
 			// print HTML
-			out.println(HTMLHeader.getInstance().getHeader("Book Hours", "../../", "Book Hours", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
-			
-			out.println("<section>"
+			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../", "Book Hours", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+					  + "<section>"
 					  + "<div class=\"row\">" 
 					  + "<h3>Choose Employee</h3>"
 					  + "<form method=\"get\" action=\"bookHours/chooseTask\" data-abide novalidate>"
@@ -87,12 +90,14 @@ public class BookHours extends HttpServlet {
 				out.println("<option value =\"" + employee.getID() + "\">" + employee.getName() + "</option>");
 			}
 	
+			// print submit button
 			out.println("</select></div>" 
 					  + "</div>" 
 					  + "<div class=\"row\">"
 					  + "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Choose Task  <i class=\"fa fa-chevron-right\"></i></button>"
 					  + "</div>");
 	
+			// print required JavaScript
 			out.println("</section>"
 					  + "</div>"
 					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
@@ -110,6 +115,7 @@ public class BookHours extends HttpServlet {
 	// method to handle post-requests
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		// prepare 
 		response.setContentType("text/html;charset=UTF8");
 
 		int id = (int) request.getSession(false).getAttribute("ID");
@@ -117,6 +123,7 @@ public class BookHours extends HttpServlet {
 		// variable declaration, get parameters
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(projectID);

@@ -86,7 +86,7 @@ public class EffortOverview extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			
 			// print header
-			out.println(HTMLHeader.getInstance().getHeader(project.getShortname(), "../../", "Effort", "", link)
+			out.println(HTMLHeader.getInstance().printHeader(project.getShortname(), "../../", "Effort", "", link)
 					  + "<section>"
 					  + "<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">"

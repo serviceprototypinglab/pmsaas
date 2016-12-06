@@ -21,7 +21,7 @@ public class AccessDenied extends HttpServlet {
     	   	
 		PrintWriter out = response.getWriter();
     	
-    	out.println(HTMLHeader.getInstance().getHeader("Access denied - Project Management SaaS", "", "Access denied", "")  
+    	out.println(HTMLHeader.getInstance().printHeader("Access denied - Project Management SaaS", "", "Access denied", "")  
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
 				  + "<section>" 

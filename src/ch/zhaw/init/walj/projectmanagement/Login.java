@@ -57,7 +57,7 @@ public class Login extends HttpServlet {
 		PrintWriter out = response.getWriter();
     	
 		// print html
-    	out.println(HTMLHeader.getInstance().getHeader("Sign in - Project Management Saas", "") 
+    	out.println(HTMLHeader.getInstance().printHeader("Sign in - Project Management Saas", "") 
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
 				  + "<section>" 

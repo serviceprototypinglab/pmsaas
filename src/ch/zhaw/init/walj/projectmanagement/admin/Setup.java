@@ -43,7 +43,7 @@ public class Setup extends HttpServlet {
 	    	}
 			
 			
-	    	out.println(HTMLHeader.getInstance().getHeader("Setup - Project Management Saas", "") 
+	    	out.println(HTMLHeader.getInstance().printHeader("Setup - Project Management Saas", "") 
 					  + "<body>"
 					  + "<div id=\"wrapper\">" 
 					  + "<section>" 
@@ -130,7 +130,7 @@ public class Setup extends HttpServlet {
             
             PrintWriter out = response.getWriter();	    	
 	    	        
-            out.println(HTMLHeader.getInstance().getHeader("Setup - Project Management Saas", "") 
+            out.println(HTMLHeader.getInstance().printHeader("Setup - Project Management Saas", "") 
 					  + "<body>"
 					  + "<div id=\"wrapper\">" 
 					  + "<section>" 

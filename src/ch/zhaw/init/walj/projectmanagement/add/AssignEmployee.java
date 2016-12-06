@@ -33,6 +33,7 @@ public class AssignEmployee extends HttpServlet {
 	// method to handle get-requests
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
 		PrintWriter out = response.getWriter();
 
@@ -67,8 +68,8 @@ public class AssignEmployee extends HttpServlet {
 			} catch (SQLException e) {
 			}
 	
-			// print HTML
-			out.println(HTMLHeader.getInstance().getHeader("Assign Employees", "../../", "Assign Employees", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
+			// print HTML header
+			out.println(HTMLHeader.getInstance().printHeader("Assign Employees", "../../", "Assign Employees", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
 			
 			// print HTML section with form
 			out.println("<section>"
@@ -118,6 +119,7 @@ public class AssignEmployee extends HttpServlet {
 	// method to handle post-requests
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
 		
 		int id = (int) request.getSession(false).getAttribute("ID");
@@ -125,6 +127,7 @@ public class AssignEmployee extends HttpServlet {
 		// variable declaration and get the parameters
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
@@ -134,8 +137,10 @@ public class AssignEmployee extends HttpServlet {
             return;
 		}
 		
+		// check if user is project leader
 		if (project.getLeader() == id){
 		
+			// get parameters
 			int employeeID = Integer.parseInt(request.getParameter("employeeID"));
 			String[] task = request.getParameterValues("tasks");
 			ArrayList<Integer> taskIDs = new ArrayList<Integer>();
@@ -174,9 +179,8 @@ public class AssignEmployee extends HttpServlet {
 				message += "</div>"
 						 + "</div>";
 				
-				// call get method with success message
+				// set success message
 				request.setAttribute("msg", message);
-	            doGet(request, response); 	
 	            
 			} catch (SQLException e) {
 				// error message
@@ -185,10 +189,11 @@ public class AssignEmployee extends HttpServlet {
 					    + "<h5>Something went wrong</h5>"
 					    + "<p>The employee could not be assigned</p>" + "</div></div>";
 				
-				// call get method with error message
+				// set error message
 				request.setAttribute("msg", message);
-	            doGet(request, response); 
 			}
+			// call get method with message
+            doGet(request, response); 
 	
 		} else {
 	        String url = request.getContextPath() + "/AccessDenied";

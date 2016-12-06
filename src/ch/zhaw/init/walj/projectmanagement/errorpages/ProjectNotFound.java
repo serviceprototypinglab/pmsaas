@@ -21,7 +21,7 @@ public class ProjectNotFound extends HttpServlet {
     	   	
 		PrintWriter out = response.getWriter();
     	
-    	out.println(HTMLHeader.getInstance().getHeader("Project not found - Project Management SaaS", "", "Project not found", "")  
+    	out.println(HTMLHeader.getInstance().printHeader("Project not found - Project Management SaaS", "", "Project not found", "")  
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
 				  + "<section>" 

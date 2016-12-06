@@ -73,7 +73,7 @@ public class AddProject extends HttpServlet {
 					  + "document.getElementById(divName).appendChild(newdiv);}"
 					  + "</script>";		
 		
-		out.println(HTMLHeader.getInstance().getHeader("New Project", "../", "New Project", script, "")
+		out.println(HTMLHeader.getInstance().printHeader("New Project", "../", "New Project", script, "")
 				  // HTML section with form
 				  + "<section>"
 				  + message

@@ -38,7 +38,7 @@ public class ResetPassword extends HttpServlet {
 		response.setContentType("text/html;charset=UTF8");
     	    	
     	// print HTML
-    	out.println(HTMLHeader.getInstance().getHeader("Reset password - Project Management Saas", "") 
+    	out.println(HTMLHeader.getInstance().printHeader("Reset password - Project Management Saas", "") 
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
 				  + "<section>" 

@@ -78,7 +78,7 @@ public class EditWorkpackage extends HttpServlet {
 					+ "</div>";
 		}
 						
-		out.println(HTMLHeader.getInstance().getHeader("Edit Workpackage", "../", name, "") 
+		out.println(HTMLHeader.getInstance().printHeader("Edit Workpackage", "../", name, "") 
 				  // HTML section with form
 				  + "<section>"
 				  + "<div class=\"row\">"

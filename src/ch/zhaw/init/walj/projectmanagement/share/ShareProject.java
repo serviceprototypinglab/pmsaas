@@ -62,7 +62,7 @@ public class ShareProject extends HttpServlet{
 			PrintWriter out = response.getWriter();
 			
 			// print HTML
-			out.println(HTMLHeader.getInstance().getHeader("Share project", "../", "Share project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
+			out.println(HTMLHeader.getInstance().printHeader("Share project", "../", "Share project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
 			// print HTML section with form
 			out.println("<section>"
 					  + "<div class=\"row\">"
@@ -177,7 +177,7 @@ public class ShareProject extends HttpServlet{
 			PrintWriter out = response.getWriter();
 	
 			// print HTML
-			out.println(HTMLHeader.getInstance().getHeader("Share Project", "../", "Share Project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Share Project", "../", "Share Project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  + "<section>" 
 					  + message
 					  + "</section>"

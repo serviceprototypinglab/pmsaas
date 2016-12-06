@@ -52,7 +52,7 @@ public class Profile extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		// print html
-		out.println(HTMLHeader.getInstance().getHeader(employee.getName(), "../", "Profile " + employee.getName(), "")
+		out.println(HTMLHeader.getInstance().printHeader(employee.getName(), "../", "Profile " + employee.getName(), "")
 				  + "<section>"					  
 				  // form to edit user information
 				  + "<div class=\"row\" id=\"user\">"
@@ -193,7 +193,7 @@ public class Profile extends HttpServlet {
 		}		
 		
 		// print HTML 
-		out.println(HTMLHeader.getInstance().getHeader(title, "../", title, "")
+		out.println(HTMLHeader.getInstance().printHeader(title, "../", title, "")
 				  + "<section>"
 				  + "<div class=\"row\">"
 				  + message

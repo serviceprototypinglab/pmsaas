@@ -28,11 +28,18 @@ public class AddExpense extends HttpServlet {
 	// connection to database
 	private DBConnection con = new DBConnection();
 
-	// method to handle get-requests
+	/*
+	 * method to handle get requests
+	 * Form to add new expenses
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF8");
 		
+		// prepare response
+		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
+		
+		// get user ID
 		int id = (int) request.getSession(false).getAttribute("ID");
 
 		// get project given from get-parameter projectID
@@ -59,10 +66,8 @@ public class AddExpense extends HttpServlet {
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			employees = project.getEmployees();
 	
-			PrintWriter out = response.getWriter();
-	
 			// Print HTML head and header
-			out.println(HTMLHeader.getInstance().getHeader("Add Expenses", "../../", "Add Expenses", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
+			out.println(HTMLHeader.getInstance().printHeader("Add Expenses", "../../", "Add Expenses", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
 	
 			// print HTML section with form
 			out.println("<section>"
@@ -132,26 +137,34 @@ public class AddExpense extends HttpServlet {
 	        String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);			
 		}
-
 	}
 
-	// method to handle post-requests
+	/*
+	 * method to handle post requests
+	 * creates new expense in database
+	 * calls get method with 
+	 * success/error message
+	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
 
+		// get user ID
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
 		// variable declaration, get parameters
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 	
+		// get parameters
 		int employeeID = Integer.parseInt(request.getParameter("employee"));
 		double costs = Double.parseDouble(request.getParameter("costs"));
 		String type = request.getParameter("type");
 		String description = request.getParameter("description");
 		String date = request.getParameter("date");
 	
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
@@ -161,9 +174,11 @@ public class AddExpense extends HttpServlet {
             return;
 		}
 
+		// check if user is project leader
 		if (project.getLeader() == id){
-			ArrayList<Employee> employees = new ArrayList<Employee>();
-			employees = project.getEmployees();
+			
+			// get employees
+			ArrayList<Employee> employees = project.getEmployees();
 	
 			// create new expense in the database with the given parameters
 			try {
@@ -186,10 +201,8 @@ public class AddExpense extends HttpServlet {
 						 + "<p>Description: " + description + "</p>" 
 						 + "<p>Date: " + date + "</p>" + "</div></div>";
 				
-
-				// send success message and call get method
+				// set success message as request attribute
 	            request.setAttribute("msg", message);
-	            doGet(request, response);    
 	
 			} catch (SQLException e) {
 				// create error message
@@ -198,10 +211,13 @@ public class AddExpense extends HttpServlet {
 						   + "<h5>Something went wrong</h5>"
 						   + "<p>The expense could not be added</p>" 
 						   + "</div></div>";
-				// send error message and call get method
+				// set error message as request attribute
 	            request.setAttribute("msg", message);
-	            doGet(request, response);    
 			}
+			
+			// call get method with message
+            doGet(request, response);
+            
 		} else {
 	        String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);			

@@ -49,7 +49,7 @@ public class EditWeight extends HttpServlet {
 			
 			PrintWriter out = response.getWriter();
 					
-			out.println(HTMLHeader.getInstance().getHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  // HTML section with form
 					  + "<section>"
 					  + "<form method=\"post\" action=\"editWeight\" data-abide novalidate>"
@@ -206,7 +206,7 @@ public class EditWeight extends HttpServlet {
 			
 			final PrintWriter out = response.getWriter();
 			
-			out.println(HTMLHeader.getInstance().getHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  // HTML section with form
 					  + "<section>"
 					  + "<div class=\"row\">"

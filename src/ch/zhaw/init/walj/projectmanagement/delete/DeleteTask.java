@@ -66,7 +66,7 @@ public class DeleteTask extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		// Print HTML head and header
-		out.println(HTMLHeader.getInstance().getHeader("Delete Task", "../", "Delete Task", "")
+		out.println(HTMLHeader.getInstance().printHeader("Delete Task", "../", "Delete Task", "")
 				  + "<section>"
 				  + message
 				  + "</section>"

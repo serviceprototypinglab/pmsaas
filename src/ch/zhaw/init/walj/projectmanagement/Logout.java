@@ -39,7 +39,7 @@ public class Logout extends HttpServlet {
 		PrintWriter out = response.getWriter();
     	
 		// print html
-    	out.println(HTMLHeader.getInstance().getHeader("Logout", "../") 
+    	out.println(HTMLHeader.getInstance().printHeader("Logout", "../") 
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
 				  + "<section>" 

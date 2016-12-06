@@ -28,18 +28,21 @@ public class ChooseTask extends HttpServlet{
 	
 	// connection to database
 	private DBConnection con = new DBConnection();
-		
 	
 	@Override
 	// method to handle post-requests
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
 
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
 		// variable declaration, get parameters
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
@@ -49,24 +52,23 @@ public class ChooseTask extends HttpServlet{
             return;
 		}
 		
+		// check if user is project leader
 		if (project.getLeader() == id){
 			
+			// get parameters
 			int employeeID = Integer.parseInt(request.getParameter("employee"));
-								
 			ArrayList<ProjectTask> tasks = project.getTasks();
 			ArrayList<Integer> assignedTasks = null;
+
 			// get assignments
 			try {
 				assignedTasks = con.getAssignedTasks(employeeID);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-					
 			
-			PrintWriter out = response.getWriter();
-			
-			// print HTML
-			out.println(HTMLHeader.getInstance().getHeader("Assign Employees", "../../../", "Assign Employees", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
+			// print HTML header
+			out.println(HTMLHeader.getInstance().printHeader("Assign Employees", "../../../", "Assign Employees", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
 			// print HTML section with form
 			out.println("<section>"
 					  + "<div class=\"row\">"
@@ -85,7 +87,7 @@ public class ChooseTask extends HttpServlet{
 					  + "<label class=\"small-12 medium-6 end columns\">Task "
 					  + "<span class=\"grey\">multiple options possible</span> <select name=\"tasks\" size=\"5\" multiple required>");
 					
-			// only tasks, the employee is not assigned to yet
+			// print all tasks, where the employee is not assigned to
 			for (ProjectTask task : tasks){
 				int i = 0;
 				for (int assignedTask : assignedTasks){
@@ -98,7 +100,9 @@ public class ChooseTask extends HttpServlet{
 				}
 			}
 					
-			out.println("</select></label></div>");
+			out.println("</select>"
+					  + "</label>"
+					  + "</div>");
 		
 			// print return and submit buttons
 			out.println("<div class=\"row\">"
@@ -107,6 +111,7 @@ public class ChooseTask extends HttpServlet{
 					  + "<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Assign\">"
 					  + "</div>");
 			
+			// print required javascript
 			out.println("</section>"
 					  + "</div>"
 					  + "<script src=\"../../../js/vendor/jquery.js\"></script>"

@@ -2,20 +2,16 @@ package ch.zhaw.init.walj.projectmanagement.util;
 
 public final class HTMLHeader {
 	  private static HTMLHeader instance;
-	
-	  private HTMLHeader(){
 		  
-	  }
-	  
-	  public String getHeader(String tabTitle, String path){
-		  return getHeader(tabTitle, path, "");
+	  public String printHeader(String tabTitle, String path){
+		  return printHeader(tabTitle, path, "");
 	  }
 	  	  
-	  public String getHeader(String tabTitle, String path, String title, String script){
-		  return getHeader(tabTitle, path, title, script, "");
+	  public String printHeader(String tabTitle, String path, String title, String script){
+		  return printHeader(tabTitle, path, title, script, "");
 	  }
 	  
-	  public String getHeader(String tabTitle, String path, String script){
+	  public String printHeader(String tabTitle, String path, String script){
 		  String header = "<!DOCTYPE html>"
 				  + "<html>"
 				  // HTML head
@@ -30,8 +26,8 @@ public final class HTMLHeader {
 	    return header;
 	  }
 	  	  
-	  public String getHeader(String tabTitle, String path, String title, String script, String link){
-		    String header = getHeader(tabTitle, path, script);
+	  public String printHeader(String tabTitle, String path, String title, String script, String link){
+		    String header = printHeader(tabTitle, path, script);
 		    header += "<body>"
 				    + "<div id=\"wrapper\">"
 				    + "<header>"

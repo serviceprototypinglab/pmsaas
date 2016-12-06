@@ -76,7 +76,7 @@ public class Employee {
 	 * @return the firstname and lastname of the employee together as a string
 	 */
 	public String getName(){
-		String name = firstname + " " + lastname;
+		String name = lastname + " " + firstname;
 		return name;
 	}
 	

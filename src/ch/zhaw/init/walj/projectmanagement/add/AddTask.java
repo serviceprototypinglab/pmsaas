@@ -28,16 +28,24 @@ public class AddTask extends HttpServlet {
 	// create a new DB connection
 	private DBConnection con = new DBConnection();
 		
+	/*
+	 * method to handle get requests
+	 * Form to create new tasks
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
 		PrintWriter out = response.getWriter();
 		
+		// get user ID
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
+		// get project ID
 		int pID = Integer.parseInt(request.getParameter("projectID"));
 			
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(pID);
@@ -53,11 +61,14 @@ public class AddTask extends HttpServlet {
 			message = (String) request.getAttribute("msg");
 		}
 
+		// check if user is project leader
 		if (project.getLeader() == id){
+			 
+			//get workpackages
 			ArrayList<Workpackage> workpackages = project.getWorkpackages();
 								
-			out.println(HTMLHeader.getInstance().getHeader("Add Tasks", "../../", "Add Tasks", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
-					  // HTML section with form
+			// print HTML
+			out.println(HTMLHeader.getInstance().printHeader("Add Tasks", "../../", "Add Tasks", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  + "<section>"
 					  + message
 					  + "<div class=\"row\">"
@@ -132,13 +143,16 @@ public class AddTask extends HttpServlet {
 		}
 	}
 	
+	/*
+	 * method to handle post requests
+	 * adds new task to database 
+	 * calls get method with 
+	 * success/error message
+	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// set response content type to HTML
-		response.setContentType("text/html;charset=UTF8");
-
+		// get user ID
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
 		// get the parameters
@@ -160,6 +174,7 @@ public class AddTask extends HttpServlet {
             return;
 		}
 
+		// check if user is project leader
 		if (project.getLeader() == id){
 			try {	
 				// create the new workpackages in the DB
@@ -171,9 +186,8 @@ public class AddTask extends HttpServlet {
 						  	   + "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + pID + "\">Click here to go back to the project overview</a>"
 						  	   + "</div>";
 
-				// send success message and call get method
+				// set success message as request attribute
 				request.setAttribute("msg", message);
-		        doGet(request, response);  
 				
 			} catch (SQLException e) {
 				String message = "<div class=\"callout alert small-12 columns\">"
@@ -181,10 +195,13 @@ public class AddTask extends HttpServlet {
 						       + "<p>An error occured and the task could not be created.</p>"
 						       + "</div>";
 
-				// send success message and call get method
+				// set error message as request attribute
 				request.setAttribute("msg", message);
-		        doGet(request, response);  
 			}
+
+			// call get method with message
+	        doGet(request, response);  
+	        
 		} else {
 			String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);

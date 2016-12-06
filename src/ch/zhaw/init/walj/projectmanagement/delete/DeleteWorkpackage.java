@@ -66,7 +66,7 @@ public class DeleteWorkpackage extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		// Print HTML head and header
-		out.println(HTMLHeader.getInstance().getHeader("Delete Workpackage", "../", "Delete Workpackage", "")
+		out.println(HTMLHeader.getInstance().printHeader("Delete Workpackage", "../", "Delete Workpackage", "")
 				  + "<section>"
 				  + message
 				  + "</section>"

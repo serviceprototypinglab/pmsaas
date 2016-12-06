@@ -64,7 +64,7 @@ public class AddEmployee extends HttpServlet {
 		}
 		
 		// Print HTML
-		out.println(HTMLHeader.getInstance().getHeader("New Employee", "../", "New Employee", "")
+		out.println(HTMLHeader.getInstance().printHeader("New Employee", "../", "New Employee", "")
 				  // HTML section with form
 				  + "<section>"
 				  + message

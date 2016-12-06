@@ -26,7 +26,7 @@ public class Help extends HttpServlet {
 		
 		PrintWriter out = response.getWriter();
 		
-		out.println(HTMLHeader.getInstance().getHeader("Help", "../", "Help", "")
+		out.println(HTMLHeader.getInstance().printHeader("Help", "../", "Help", "")
 				  + "<section>"
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-12 columns text-center\">"

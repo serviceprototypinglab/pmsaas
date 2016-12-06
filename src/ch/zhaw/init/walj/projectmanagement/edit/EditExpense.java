@@ -89,7 +89,7 @@ public class EditExpense extends HttpServlet {
 					+ "</div>";
 		}
 						
-		out.println(HTMLHeader.getInstance().getHeader("Edit Expense", "../", project.getName(), "")
+		out.println(HTMLHeader.getInstance().printHeader("Edit Expense", "../", project.getName(), "")
 				  // HTML section with form
 				  + "<section>"
 				  + "<div class=\"row\">"

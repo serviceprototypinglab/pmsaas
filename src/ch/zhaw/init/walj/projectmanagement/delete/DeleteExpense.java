@@ -65,7 +65,7 @@ public class DeleteExpense extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		// Print HTML head and header
-		out.println(HTMLHeader.getInstance().getHeader("Delete Expense", "../", "Delete Expense", "")
+		out.println(HTMLHeader.getInstance().printHeader("Delete Expense", "../", "Delete Expense", "")
 				  + "<section>"
 				  + message
 				  + "</section>"
