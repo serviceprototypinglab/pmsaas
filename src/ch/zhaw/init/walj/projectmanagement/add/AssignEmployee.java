@@ -29,8 +29,13 @@ public class AssignEmployee extends HttpServlet {
 	// Database connection
 	private DBConnection con = new DBConnection();
 
+	/*
+	 * method to handle get requests
+	 * Form to assign employees to tasks,
+	 * choose an employee
+	 * calls assignEmployee/chooseTask afterwards
+	 */
 	@Override
-	// method to handle get-requests
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// prepare response
@@ -115,16 +120,17 @@ public class AssignEmployee extends HttpServlet {
 		}
 	}
 
+	/*
+	 * method to handle post requests
+	 * adds new assignment to database 
+	 * calls get method with 
+	 * success/error message
+	 */
 	@Override
-	// method to handle post-requests
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		// prepare response
-		response.setContentType("text/html;charset=UTF8");
-		
+				
+		// get user and project ID
 		int id = (int) request.getSession(false).getAttribute("ID");
-
-		// variable declaration and get the parameters
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 
 		// get project
@@ -155,19 +161,19 @@ public class AssignEmployee extends HttpServlet {
 				taskNames.add(helper[1]);
 			}
 	
-			Employee employee = null;
 			try {
 				// create new assignment
 				for (int i : taskIDs) {
 					con.newAssignment(i, employeeID);
 				}
 	
+				// load project again with the new assignment
 				project = con.getProject(projectID);
 				
 				// get the assigned employee
-				employee = project.getSpecificEmployee(employeeID);
+				Employee employee = project.getSpecificEmployee(employeeID);
 	
-				// write success message
+				// set success message
 				message = "<div class=\"row\">" 
 						+ "<div class=\"callout success\">" 
 						+ "<h5>" 
@@ -178,21 +184,17 @@ public class AssignEmployee extends HttpServlet {
 				}
 				message += "</div>"
 						 + "</div>";
-				
-				// set success message
 				request.setAttribute("msg", message);
 	            
 			} catch (SQLException e) {
-				// error message
+				// set error message
 				message = "<div class=\"row\">" 
 					    + "<div class=\"callout alert\">" 
 					    + "<h5>Something went wrong</h5>"
 					    + "<p>The employee could not be assigned</p>" + "</div></div>";
-				
-				// set error message
 				request.setAttribute("msg", message);
 			}
-			// call get method with message
+			// call get method
             doGet(request, response); 
 	
 		} else {

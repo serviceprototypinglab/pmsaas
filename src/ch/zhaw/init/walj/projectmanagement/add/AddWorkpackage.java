@@ -27,6 +27,10 @@ public class AddWorkpackage extends HttpServlet {
 	// create a new DB connection
 	private DBConnection con = new DBConnection();
 	
+	/*
+	 * method to handle get requests
+	 * Form to create new workpackages
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -57,9 +61,8 @@ public class AddWorkpackage extends HttpServlet {
 		// check if user is project leader
 		if (project.getLeader() == id){
 		
-			// write HTML
+			// print HTML
 			out.println(HTMLHeader.getInstance().printHeader("Add Workpackages", "../../", "Add Workpackages", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
-					  // HTML section with form
 					  + "<section>"
 					  + message 
 					  + "<form method=\"post\" action=\"addWorkpackage\" data-abide novalidate>"
@@ -99,23 +102,28 @@ public class AddWorkpackage extends HttpServlet {
 					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
 					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
 					  + "<script>$(document).foundation();</script>"
-					  + "</body></html>");
+					  + "</body>"
+					  + "</html>");
 		} else {
 			String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);
 		}
 	}
-	
+
+	/*
+	 * method to handle post requests
+	 * adds new workpackage to database 
+	 * calls get method with 
+	 * success/error message
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// set response content type to HTML
-		response.setContentType("text/html;charset=UTF8");
-
 		// get user and project ID
 		int id = (int) request.getSession(false).getAttribute("ID");
 		int pID = Integer.parseInt(request.getParameter("projectID"));
 		
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(pID);
@@ -125,40 +133,39 @@ public class AddWorkpackage extends HttpServlet {
             return;
 		}
 		
+		// check if user is project leader
 		if (project.getLeader() == id){
 		
-			// get the parameters
-			String wpName[] = request.getParameterValues("wpName");
-			String wpStart[] = request.getParameterValues("wpStart");
-			String wpEnd[] = request.getParameterValues("wpEnd");
+			// get parameters
+			String wpName = request.getParameter("wpName");
+			String wpStart = request.getParameter("wpStart");
+			String wpEnd = request.getParameter("wpEnd");
 			
 			try {	
-				// create the new workpackages in the DB
-				for (int i = 0; i < wpName.length; ++i) {
-					con.newWorkpackage(pID, wpName[i], wpStart[i], wpEnd[i]);
-				}
-										
+				// create new workpackage in the DB
+				con.newWorkpackage(pID, wpName, wpStart, wpEnd);
+
+				// set success message	
 				String message = "<div class=\"callout success small-12 columns\">"
-						  + "<h5>Workpackage successfully created</h5>"
-						  + "<p>The new workpackage has succsessfully been created.</p>"
-						  + "<a href=\"/Projektverwaltung/Projects/Overview/addTask?projectID=" + pID + "\">Click here to add tasks</a>"
-						  + "</div>";
-				
-				// send error message and call get method
+						       + "<h5>Workpackage successfully created</h5>"
+						       + "<p>The new workpackage has succsessfully been created.</p>"
+						       + "<a href=\"/Projektverwaltung/Projects/Overview/addTask?projectID=" + pID + "\">Click here to add tasks</a>"
+						       + "</div>";
 				request.setAttribute("msg", message);
-		        doGet(request, response); 	
 
 			} catch (SQLException e) {
 
+				// set error message 
 				String message = "<div class=\"callout alert small-12 columns\">"
-						  + "<h5>Workpackage could not be created</h5>"
-						  + "<p>An error occured and the workpackage could not be created.</p>"
-						  + "</div>";
-				
-				// send error message and call get method
+						  	   + "<h5>Workpackage could not be created</h5>"
+						  	   + "<p>An error occured and the workpackage could not be created.</p>"
+						  	   + "</div>";
 				request.setAttribute("msg", message);
-		        doGet(request, response); 
 			}
+			
+			// call get method
+	        doGet(request, response); 
+	        
 		} else {
 			String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);

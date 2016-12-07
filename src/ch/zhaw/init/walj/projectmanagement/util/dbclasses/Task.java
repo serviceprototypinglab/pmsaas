@@ -5,7 +5,7 @@ import java.util.Date;
 
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 
-public class ProjectTask {
+public class Task {
 
 	private int id;
 	private int workpackageID;
@@ -20,7 +20,7 @@ public class ProjectTask {
 	private int endMonth;
 	private ArrayList<Weight> weights = new ArrayList<Weight>();
 	
-	public ProjectTask(int id, int workpackageID, String name, String start, String projectStart, String end, int pms, double budget, ArrayList<Weight> weights){
+	public Task(int id, int workpackageID, String name, String start, String projectStart, String end, int pms, double budget, ArrayList<Weight> weights){
 		this.id = id;
 		this.workpackageID = workpackageID;
 		this.name = name;

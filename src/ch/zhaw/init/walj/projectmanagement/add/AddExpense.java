@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.ExpenseTypes;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
@@ -55,13 +56,15 @@ public class AddExpense extends HttpServlet {
             return;
 		}		
 		
-		// set error message (in case of wrong user/password)
+		// set error/success message
     	String message = "";    	
     	if (request.getAttribute("msg") != null){
     		message = (String) request.getAttribute("msg");
     	}
 		
+    	// check if user is project leader
 		if (project.getLeader() == id){
+			
 			// get the employees assigned to the project and add them to the ArrayList
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			employees = project.getEmployees();
@@ -102,13 +105,11 @@ public class AddExpense extends HttpServlet {
 	
 					  // type
 					  + "<label class=\"small-12 medium-6 columns\">Type <select name=\"type\" required>"
-					  + "<option></option>" 
-					  + "<option>Travel</option>" 
-					  + "<option>Overnight Stay</option>" 
-					  + "<option>Meals</option>" 
-					  + "<option>Office Supplies</option>" 
-					  + "<option>Events</option>" 
-					  + "</select>"
+					  + "<option></option>");
+					  for (ExpenseTypes type : ExpenseTypes.values()){
+							out.println("<option>" + type + "</option>");
+						}
+			out.println("</select>"
 					  + "</label>"
 	
 					  // description
@@ -126,6 +127,7 @@ public class AddExpense extends HttpServlet {
 					  + "<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Add Expense\">"
 					  + "</div>");
 	
+			// required JavaScript
 			out.println("</section>"
 					  + "</div>"
 					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
@@ -147,9 +149,6 @@ public class AddExpense extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		// prepare response
-		response.setContentType("text/html;charset=UTF8");
 
 		// get user ID
 		int id = (int) request.getSession(false).getAttribute("ID");
@@ -177,29 +176,24 @@ public class AddExpense extends HttpServlet {
 		// check if user is project leader
 		if (project.getLeader() == id){
 			
-			// get employees
-			ArrayList<Employee> employees = project.getEmployees();
-	
 			// create new expense in the database with the given parameters
 			try {
 				// create new expense
 				con.newExpense(projectID, employeeID, costs, type, description, date);
 	
+				// get employee
+				Employee employee = project.getSpecificEmployee(employeeID);
+				
 				// create success message
 				String message = "<div class=\"row\">" 
 						+ "<div class=\"callout success\">" 
 						+ "<h5>Expense successfully added</h5>"
-						+ "<p>The new expense was successfully added with the following data:</p>";
-	
-				for (Employee employee : employees) {
-					if (employee.getID() == employeeID) {
-						message += "<p>Employee: " + employee.getName() + "</p>";
-					}
-				}
-				message += "<p>Costs: " + project.getCurrency() + " " + costs + "</p>" 
-						 + "<p>Type: " + type + "</p>"
-						 + "<p>Description: " + description + "</p>" 
-						 + "<p>Date: " + date + "</p>" + "</div></div>";
+						+ "<p>The new expense was successfully added with the following data:</p>"
+						+ "<p>Employee: " + employee.getName() + "</p>"
+						+ "<p>Costs: " + project.getCurrency() + " " + costs + "</p>" 
+						+ "<p>Type: " + type + "</p>"
+						+ "<p>Description: " + description + "</p>" 
+						+ "<p>Date: " + date + "</p>" + "</div></div>";
 				
 				// set success message as request attribute
 	            request.setAttribute("msg", message);

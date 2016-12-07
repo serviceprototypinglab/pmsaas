@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 
 /**
  * Projectmanagement tool, Page to book hours (choose task)
@@ -33,15 +33,16 @@ public class ChooseTaskToBookHours extends HttpServlet{
 	// connection to database
 	private DBConnection con = new DBConnection();
 	
-	@Override
 	/*
-	 * Choose Task where you want to book hours
-	 * handles get requests on /Overview/bookHours/chooseTask
+	 * method to handle get requests
+	 * Form to book hours, choose tasks
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
 
 		// get user ID
 		int id = (int) request.getSession(false).getAttribute("ID");
@@ -61,13 +62,14 @@ public class ChooseTaskToBookHours extends HttpServlet{
 		
 		// check if user is project leader
 		if (project.getLeader() == id){
-			// get 
+			
+			// get employee ID from parameter
 			int employeeID = Integer.parseInt(request.getParameter("employee"));
 					
 			// get all the tasks, the employee is already assigned to
 			// get all tasks from the project
-			ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>(); 
-			ArrayList<ProjectTask> finalAssignedTasks = new ArrayList<ProjectTask>(); 
+			ArrayList<Task> tasks = new ArrayList<Task>(); 
+			ArrayList<Task> finalAssignedTasks = new ArrayList<Task>(); 
 			tasks.addAll(project.getTasks());
 			ArrayList<Integer> assignedTasks = null;
 			try {
@@ -81,7 +83,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			
 			// get the tasks from this project, the employee is assigned to
 			if (!tasks.isEmpty()){
-				for (ProjectTask task : tasks){
+				for (Task task : tasks){
 					for (int assignedTask : assignedTasks){
 						if (task.getID() == assignedTask){
 							finalAssignedTasks.add(task);
@@ -100,8 +102,6 @@ public class ChooseTaskToBookHours extends HttpServlet{
 						+ "</div></div>";
 				disabled = "disabled";
 			}		
-			
-			PrintWriter out = response.getWriter();
 	
 			// Print HTML head and header
 			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../../", "Book Hours", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
@@ -126,11 +126,13 @@ public class ChooseTaskToBookHours extends HttpServlet{
 					  + "<span class=\"grey\">multiple options possible</span> <select name=\"tasks\" size=\"5\" multiple required " + disabled +">");
 			
 			// option for every task
-			for (ProjectTask task : finalAssignedTasks){
+			for (Task task : finalAssignedTasks){
 				out.println("<option value =\"" + task.getID() + ";" + task.getName() + "\">" + task.getName() + "</option>");
 			}				
 			
-			out.println("</select></label></div>");
+			out.println("</select>"
+					  + "</label>"
+					  + "</div>");
 		
 			// submit button
 			out.println("<div class=\"row\">"
@@ -148,22 +150,22 @@ public class ChooseTaskToBookHours extends HttpServlet{
             response.sendRedirect(url);
 		}		
 	}
-
-	@Override
+	
 	/*
-	 * Form with all tasks where the user want to book hours
-	 * handles post requests on /Overview/bookHours/chooseTask
+	 * method to handle post requests
+	 * Form to book hours, 
+	 * list of all tasks where the user
+	 * wants to book hours
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");
 		PrintWriter out = response.getWriter();
 
-		// get user ID
+		// get user and project ID
 		int id = (int) request.getSession(false).getAttribute("ID");
-		
-		// variable declaration, get parameters
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		
 		// get project
@@ -184,8 +186,8 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			String[] task = request.getParameterValues("tasks");
 			ArrayList<Integer> taskIDs = new ArrayList<Integer>();
 			ArrayList<String> taskNames = new ArrayList<String>();
-			ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
-			ArrayList<ProjectTask> usedTasks = new ArrayList<ProjectTask>();
+			ArrayList<Task> tasks = new ArrayList<Task>();
+			ArrayList<Task> usedTasks = new ArrayList<Task>();
 					
 			String message = "";
 			
@@ -202,7 +204,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			
 			// search tasks where the user wants to book hours
 			// and add them to usedTasks list
-			for (ProjectTask t : tasks){
+			for (Task t : tasks){
 				for (int i : taskIDs){
 					if(i == t.getID()){
 						usedTasks.add(t);
@@ -210,11 +212,9 @@ public class ChooseTaskToBookHours extends HttpServlet{
 				}
 			}
 			
-			// Print HTML head and header
-			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../../", "Book Hours", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
-			
-			// print HTML section with form
-			out.println("<section>"
+			// Print HTML
+			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../../", "Book Hours", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+					  + "<section>"
 					  + message
 					  + "<div class=\"row\">"
 					  + "<h3>Book Hours</h3>"
@@ -289,11 +289,12 @@ public class ChooseTaskToBookHours extends HttpServlet{
 					
 			// return and submit button
 			out.println("</div>"
-					+"<div class=\"row\">"
-					+ "<a href=\"chooseTask?projectID=" + projectID +"&employee=" + employeeID + "\" class=\"small-3 columns large button back-button\"><i class=\"fa fa-chevron-left\"></i>  Choose Task</a>"
-					+ "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Book Hours</button>"
-					+ "</div>");
+					  + "<div class=\"row\">"
+					  + "<a href=\"chooseTask?projectID=" + projectID +"&employee=" + employeeID + "\" class=\"small-3 columns large button back-button\"><i class=\"fa fa-chevron-left\"></i>  Choose Task</a>"
+					  + "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Book Hours</button>"
+					  + "</div>");
 			
+			// required JavaScript
 			out.println("</section>"
 					  + "</div>"
 					  + "<script src=\"../../../js/vendor/jquery.js\"></script>"

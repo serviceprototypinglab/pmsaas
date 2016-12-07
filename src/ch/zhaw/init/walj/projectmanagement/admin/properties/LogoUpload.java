@@ -2,8 +2,6 @@ package ch.zhaw.init.walj.projectmanagement.admin.properties;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,13 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
 /**
- * Servlet implementation class Edit
+ * 
  */
+
+// TODO implementation
 @SuppressWarnings("serial")
 @WebServlet("/admin/uploadLogo")
 public class LogoUpload extends HttpServlet {
@@ -31,11 +27,11 @@ public class LogoUpload extends HttpServlet {
     
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		 // Check that we have a file upload request
+		/*
+		  		 
 	      isMultipart = ServletFileUpload.isMultipartContent(request);
 	      response.setContentType("text/html");
-	      java.io.PrintWriter out = response.getWriter( );
+	      PrintWriter out = response.getWriter( );
 	      
 	      String message = "";
 	      
@@ -99,5 +95,6 @@ public class LogoUpload extends HttpServlet {
 	   }catch(Exception ex) {
 	       System.out.println(ex);
 	   }
+	   */
 	}
 }

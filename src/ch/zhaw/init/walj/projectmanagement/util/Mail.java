@@ -62,7 +62,7 @@ public class Mail {
 		}
 	}
 	
-	public void sendResetPasswordMail() throws MessagingException{
+	public void sendNewPasswordMail() throws MessagingException{
 		message.setSubject("Password reset");
 		
 		// TODO better content

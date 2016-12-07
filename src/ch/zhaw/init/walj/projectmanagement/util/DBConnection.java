@@ -14,7 +14,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Booking;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Expense;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Weight;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Workpackage;
 
@@ -211,7 +211,7 @@ public class DBConnection {
 					weights.add(new Weight(resWeight.getInt("WeightID"), resWeight.getInt("TaskIDFS"), resWeight.getInt("Month"), resWeight.getDouble("Weight")));
 				}
 	
-				ProjectTask task = new ProjectTask(tID, tWorkpackageID, tName, tStart, pStart, tEnd, tPMs, tBudget, weights);
+				Task task = new Task(tID, tWorkpackageID, tName, tStart, pStart, tEnd, tPMs, tBudget, weights);
 	
 				// get all employees that are assigned to at least one of the tasks
 				stEmployee.setInt(1, tID);
@@ -566,7 +566,7 @@ public class DBConnection {
 			usedBudget += res.getDouble("Costs");
 		}
 	
-		for (ProjectTask task : project.getTasks()){
+		for (Task task : project.getTasks()){
 			ArrayList<Assignment> assignments = getAssignments(task.getID());
 			for (Assignment a : assignments){
 				ArrayList<Booking> bookings = getBookings(a);

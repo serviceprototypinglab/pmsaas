@@ -1,4 +1,4 @@
-package ch.zhaw.init.walj.projectmanagement.admin;
+package ch.zhaw.init.walj.projectmanagement.admin.properties;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 
 /**
- * Servlet implementation class Edit
+ * 
  */
 @SuppressWarnings("serial")
 @WebServlet("/admin/properties")
@@ -25,6 +25,7 @@ public class Properties extends HttpServlet {
 		
 		DBConnection con = new DBConnection();
 		
-	
+		// TODO implementation of properties page
+		
 	}
 }

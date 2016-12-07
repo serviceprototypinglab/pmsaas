@@ -13,13 +13,11 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.IntervalCategoryDataset;
-import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.time.SimpleTimePeriod;
 
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Workpackage;
 
 /**
@@ -30,40 +28,66 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Workpackage;
  */
 public class GanttChart {
 
+	// variable declaration
 	private Project project;
-	private ArrayList<Workpackage> workpackages = new ArrayList<Workpackage>();
-	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
+	private ArrayList<Workpackage> workpackages;
+	private ArrayList<ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task> tasks;
 	
-	private int nbrOfObjects = 0;
+	private int nbrOfObjects;
 	
+	/**
+	 * Constructor of the GanttChart class
+	 * @param project the project for which the chart should be created
+	 */
 	public GanttChart(Project project) {
 		this.project = project;
 		workpackages = project.getWorkpackages();
-    	tasks = project.getTasks();		
+    	tasks = project.getTasks();	
+    	nbrOfObjects = 0;
 	}
     
+	/**
+	 * create a dataset with all tasks and workpackages
+	 * @return dataset with dates from tasks and workpackages
+	 * @throws SQLException
+	 * @throws ParseException
+	 */
     private IntervalCategoryDataset createDataset() throws SQLException, ParseException{
-    	 TaskSeries s1 = new TaskSeries("Scheduled");
+    	// create new task series
+    	 TaskSeries taskSeries = new TaskSeries("Scheduled");
+    	 
+    	 // add a new task to the task series for every workpackage and every project task
     	 for (Workpackage w : workpackages){
-	         s1.add(new Task(w.getName(), new SimpleTimePeriod(w.getStartAsDate(), w.getEndAsDate())));
+	         taskSeries.add(new org.jfree.data.gantt.Task(w.getName(), new SimpleTimePeriod(w.getStartAsDate(), w.getEndAsDate())));
 	         nbrOfObjects++;
-	         for (ProjectTask t : tasks){
+	         for (ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task t : tasks){
 	        	 if (t.getWorkpackageID() == w.getID()){
-	    	         s1.add(new Task(t.getName(), new SimpleTimePeriod(t.getStartAsDate(), t.getEndAsDate())));	  
+	    	         taskSeries.add(new org.jfree.data.gantt.Task(t.getName(), new SimpleTimePeriod(t.getStartAsDate(), t.getEndAsDate())));	  
 	    	         nbrOfObjects++;  
 	        	 }
 	         }
     	 }
     	 
+    	 // add task series to collection
     	 TaskSeriesCollection collection = new TaskSeriesCollection();
-    	 collection.add(s1);
+    	 collection.add(taskSeries);
     	 return collection;
     }
-        
+     
+    /**
+     * creates a gantt chart with all workpackages and tasks
+     * @param path place where the picture should be saved
+     * @throws NumberFormatException
+     * @throws SQLException
+     * @throws IOException
+     * @throws ParseException
+     */
     public void createChart(String path) throws NumberFormatException, SQLException, IOException, ParseException{
     	
+    	// get data
     	IntervalCategoryDataset dataset = createDataset();
     	
+    	// create chart
     	JFreeChart chart = ChartFactory.createGanttChart(
     	         "", 		// chart title
     	         "",  		// domain axis label
@@ -74,14 +98,19 @@ public class GanttChart {
     	         false		// urls
     	);
     	
+    	// set white background
         chart.setBackgroundPaint(new Color(255, 255, 255));	    
         
+        // set color of bars
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         renderer.setSeriesPaint(0, new Color(0, 62, 102)); 
 	    
-	    int width = 1200; /* Width of the image */
-	    int height = (40 * nbrOfObjects) + 200; /* Height of the image */ 
+        // set size of the chart
+	    int width = 1200;
+	    int height = (40 * nbrOfObjects) + 200;
+	    
+	    // save picture as JPEG
 	    File gantChart = new File(path + "GanttProject" + project.getID() + ".jpg" ); 
 	    ChartUtilities.saveChartAsJPEG( gantChart , chart , width , height );
     }    

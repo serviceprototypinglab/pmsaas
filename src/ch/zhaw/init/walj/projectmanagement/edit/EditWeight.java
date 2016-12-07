@@ -15,7 +15,7 @@ import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Weight;
 
 // TODO /** kommentare
@@ -45,7 +45,7 @@ public class EditWeight extends HttpServlet {
 		}
 
 		if (project.getLeader() == id){
-			ArrayList<ProjectTask> tasks = project.getTasks();
+			ArrayList<Task> tasks = project.getTasks();
 			
 			PrintWriter out = response.getWriter();
 					
@@ -56,7 +56,7 @@ public class EditWeight extends HttpServlet {
 					  + "<div class=\"row\">"
 					  + "<input type=\"hidden\" name=\"projectID\" value=\"" + project.getID() + "\">");
 					  
-			for (ProjectTask task : tasks){
+			for (Task task : tasks){
 				
 				boolean firstInitialisation = false;
 				
@@ -172,7 +172,7 @@ public class EditWeight extends HttpServlet {
 				String month[] = request.getParameterValues("month" + tID);
 				String weight[] = request.getParameterValues("weight" + tID);
 				
-				ProjectTask task = project.getTask(Integer.parseInt(tID));
+				Task task = project.getTask(Integer.parseInt(tID));
 				
 					try {
 					for (int i = 0; i < month.length; i++){

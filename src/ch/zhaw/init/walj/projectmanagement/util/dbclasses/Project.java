@@ -19,7 +19,7 @@ public class Project {
 	private String end;
 	private String currency;
 	private double budget;
-	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
+	private ArrayList<Task> tasks = new ArrayList<Task>();
 	private ArrayList<Workpackage> wps = new ArrayList<Workpackage>();
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
 	private ArrayList<Expense> expenses = new ArrayList<Expense>();
@@ -150,12 +150,12 @@ public class Project {
 		return wps.size();
 	}
 
-	public ArrayList<ProjectTask> getTasks(){
+	public ArrayList<Task> getTasks(){
 		return tasks;		
 	}
 	
-	public ProjectTask getTask(int id){
-		for (ProjectTask t : tasks){
+	public Task getTask(int id){
+		for (Task t : tasks){
 			if (t.getID() == id){
 				return t;
 			}

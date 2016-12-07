@@ -113,7 +113,7 @@ public class ResetPassword extends HttpServlet {
 	        
 	        // send mail with new password
 	        Mail mail = new Mail(e);	               
-			mail.sendResetPasswordMail();
+			mail.sendNewPasswordMail();
 			
 
 		} catch (NullPointerException | MessagingException | SQLException e1) {

@@ -19,7 +19,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Booking;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 
 /**
  * project management tool, effort overview page
@@ -153,7 +153,7 @@ public class EffortOverview extends HttpServlet {
 						
 						// get Task name
 						String taskName = "";
-						for (ProjectTask task : project.getTasks()){
+						for (Task task : project.getTasks()){
 							if (task.getID() == booking.getTaskID()){
 								taskName = task.getName();
 							}

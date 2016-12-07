@@ -30,8 +30,13 @@ public class BookHours extends HttpServlet {
 	// Database connection
 	private DBConnection con = new DBConnection();
 
+	/*
+	 * method to handle get requests
+	 * Form to book hours,
+	 * choose employee
+	 * calls bookHours/chooseTask afterwards
+	 */
 	@Override
-	// method to handle get-requests
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// prepare response
@@ -111,16 +116,17 @@ public class BookHours extends HttpServlet {
 		}
 	}
 
+	/*
+	 * method to handle post requests
+	 * adds new bookings to database 
+	 * calls get method with 
+	 * success/error message
+	 */
 	@Override
-	// method to handle post-requests
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// prepare 
-		response.setContentType("text/html;charset=UTF8");
-
+		// get user and project ID
 		int id = (int) request.getSession(false).getAttribute("ID");
-		
-		// variable declaration, get parameters
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		
 		// get project
@@ -159,39 +165,35 @@ public class BookHours extends HttpServlet {
 				assignments.add(Integer.parseInt(s));
 			}
 	
+			// TODO better error handling
 			String message = "";
 			try {
 				// create new bookings in DB
 				for (int i = 0; i < hour.length; i++) {
 						con.newBooking(assignments.get(i), months.get(i), hours.get(i));
-						// success message
-						message = "<div class=\"row\">" 
-								+ "<div class=\"callout success\">"
-								+ "<h5>Hours successfully booked</h5>" 
-								+ "<p>The hours were successfully booked to the project "
-								+ project.getName() 
-								+ ".</p>" 
-								+ "</div></div>";
 				}
-				
-				// call get method with error message
+				// set success message
+				message = "<div class=\"row\">" 
+						+ "<div class=\"callout success\">"
+						+ "<h5>Hours successfully booked</h5>" 
+						+ "<p>The hours were successfully booked to the project "
+						+ project.getName() 
+						+ ".</p>" 
+						+ "</div></div>";
 				request.setAttribute("msg", message);
-	            doGet(request, response); 
 	            
 			} catch (SQLException e) {
-				// error message
+				// set error message
 				message = "<div class=\"row\">" 
 				        + "<div class=\"callout alert\">" 
 				        + "<h5>Something went wrong</h5>"
 				        + "<p>The hours could not be booked.</p>" 
 				        + "</div>"
 				        + "</div>";
-				
-				
-				// call get method with error message
 				request.setAttribute("msg", message);
-	            doGet(request, response); 
 			}
+			// call get method
+            doGet(request, response); 
 	
 		} else {
 			String url = request.getContextPath() + "/AccessDenied";

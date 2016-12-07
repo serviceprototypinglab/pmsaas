@@ -16,6 +16,13 @@ import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.Mail;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 
+/**
+ * Projectmanagement tool, setup page
+ * (set Admin mail and password)
+ * 
+ * @author Janine Walther, ZHAW
+ * 
+ */
 @SuppressWarnings("serial")
 @WebServlet("/setup")
 public class Setup extends HttpServlet {
@@ -23,26 +30,27 @@ public class Setup extends HttpServlet {
 	// connection to database
 	DBConnection con = new DBConnection();
 	
+	/*
+	 * method to handle get requests
+	 * Form to set admin mail and password
+	 */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	response.setContentType("text/html;charset=UTF8");
     	
+    	// prepare response
+    	response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
+    	
+		// do this only when there are no users
     	if (con.noUsers()){
-			PrintWriter out = response.getWriter();	    	
 			
+    		// set error message
 			String message = "";
-	    	
 	    	if (request.getAttribute("error") != null){
-	    		message = "<div class=\"row\">" 
-	  					+ "<div class=\"small-6 small-offset-3 end columns\">"
-	    				+ "<div class=\"row\">" 
-					    + "<div class=\"callout alert\">" 
-					    + "<h5>Something went wrong.</h5>"
-					    + "</div></div>"
-					    + "</div></div>";
+	    		message = (String) request.getAttribute("error");
 	    	}
 			
-			
+	    	// print HTML
 	    	out.println(HTMLHeader.getInstance().printHeader("Setup - Project Management Saas", "") 
 					  + "<body>"
 					  + "<div id=\"wrapper\">" 
@@ -108,28 +116,39 @@ public class Setup extends HttpServlet {
     	}
     }
 
+    /*
+     *  method to handle post requests
+     *  creates new employee "Admin"
+     *  creates session
+     *  sends mail to admin
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
+    	// prepare response
     	response.setContentType("text/html;charset=UTF8");
+        PrintWriter out = response.getWriter();	 
 
+    	// get parameters
     	String mailAddress = request.getParameter("mail");
         String password = request.getParameter("password");
         
         
         try {
+        	// create new employee "Admin" in database
         	Employee e = con.newEmployee(0, "Admin", " ", "admin", mailAddress, password, 0);
-        	int id = e.getID();
+        	
+        	// create session
             request.getSession().setAttribute("user", e.getFirstName());
-            request.getSession().setAttribute("ID", id);
+            request.getSession().setAttribute("ID", e.getID());
             request.getSession().setAttribute("kuerzel", e.getKuerzel());
             request.getSession().setMaxInactiveInterval(60*60);
             
+            // send mail to admin
             Mail mail = new Mail(e);
-            
             mail.sendInitialSetupMail();
-            
-            PrintWriter out = response.getWriter();	    	
-	    	        
+               	
+	    	// print HTML
             out.println(HTMLHeader.getInstance().printHeader("Setup - Project Management Saas", "") 
 					  + "<body>"
 					  + "<div id=\"wrapper\">" 
@@ -152,7 +171,7 @@ public class Setup extends HttpServlet {
   					  + "<div class=\"row\">" 
   					  + "<div class=\"callout success\">" 
   					  + "<h5>Initial setup successful</h5>"
-  					  + "<p><a href=\"\">Go to properties</a></p>"
+  					  + "<p><a href=\"/admin/properties\">Go to properties</a></p>"
   					  + "</div>"
   					  + "</div>"
 					  + "</div>"
@@ -166,7 +185,17 @@ public class Setup extends HttpServlet {
 					  + "</body>"
 					  + "</html>");  	
         } catch (NullPointerException | SQLException | MessagingException ex){
-            request.setAttribute("error", "Something went wrong");
+        	// set error message and call get method
+        	String message = "<div class=\"row\">" 
+  						   + "<div class=\"small-6 small-offset-3 end columns\">"
+  						   + "<div class=\"row\">" 
+  						   + "<div class=\"callout alert\">" 
+  						   + "<h5>Something went wrong.</h5>"
+  						   + "</div>"
+  						   + "</div>"
+  						   + "</div>"
+  						   + "</div>";
+        	request.setAttribute("error", message);
             doGet(request, response);        	
         }
     }

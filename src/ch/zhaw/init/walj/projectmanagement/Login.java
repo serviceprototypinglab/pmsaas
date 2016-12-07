@@ -128,8 +128,7 @@ public class Login extends HttpServlet {
 	 */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	response.setContentType("text/html;charset=UTF8");
-
+    	
     	// get parameters
     	String user = request.getParameter("mail");
         String password = request.getParameter("password");

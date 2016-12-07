@@ -18,12 +18,12 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 
 public class LineChart {
 
 	private Project project;
-	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
+	private ArrayList<Task> tasks = new ArrayList<Task>();
 	
 		
 	public LineChart(Project project) {

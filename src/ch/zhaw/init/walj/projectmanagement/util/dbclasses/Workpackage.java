@@ -12,7 +12,7 @@ public class Workpackage {
 	private String name;
 	private String start;
 	private String end;
-	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
+	private ArrayList<Task> tasks = new ArrayList<Task>();
 	private ArrayList<Employee> employees = new ArrayList<Employee>();
 	
 	public Workpackage(int id, int projectID, String name, String start, String end){
@@ -23,7 +23,7 @@ public class Workpackage {
 		this.end = end;		
 	}
 	
-	public void addTask(ProjectTask task){
+	public void addTask(Task task){
 		tasks.add(task);		
 	}
 	
@@ -31,12 +31,12 @@ public class Workpackage {
 		return tasks.size();
 	}	
 	
-	public ArrayList<ProjectTask> getTasks(){
+	public ArrayList<Task> getTasks(){
 		return tasks;		
 	}
 
 	public ArrayList<Employee> addEmployees(){
-		for(ProjectTask task : tasks){
+		for(Task task : tasks){
 		int nbrOfEmployees = task.nbrOfEmployees();
 			for (int i = 0; i < nbrOfEmployees; i++){
 				Employee employee = task.getEmployee(i);

@@ -179,27 +179,26 @@ public class AddTask extends HttpServlet {
 			try {	
 				// create the new workpackages in the DB
 				con.newTask(taskWP, taskName, taskStart, taskEnd, taskPM, taskBudget);
-										
+
+				// set success message as request attribute
 				String message = "<div class=\"callout success small-12 columns\">"
 						  	   + "<h5>Task successfully created</h5>"
 						  	   + "<p>The new task has succsessfully been created.</p>"
 						  	   + "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + pID + "\">Click here to go back to the project overview</a>"
 						  	   + "</div>";
-
-				// set success message as request attribute
 				request.setAttribute("msg", message);
 				
 			} catch (SQLException e) {
+
+				// set error message as request attribute
 				String message = "<div class=\"callout alert small-12 columns\">"
 						       + "<h5>Task could not be created</h5>"
 						       + "<p>An error occured and the task could not be created.</p>"
 						       + "</div>";
-
-				// set error message as request attribute
 				request.setAttribute("msg", message);
 			}
 
-			// call get method with message
+			// call get method
 	        doGet(request, response);  
 	        
 		} else {

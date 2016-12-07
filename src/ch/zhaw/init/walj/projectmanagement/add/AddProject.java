@@ -23,8 +23,13 @@ import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 public class AddProject extends HttpServlet {
 			
 	@Override
+	/*
+	 * method to handle get requests
+	 * form to create a new project
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
 		PrintWriter out = response.getWriter();
 
@@ -73,8 +78,8 @@ public class AddProject extends HttpServlet {
 					  + "document.getElementById(divName).appendChild(newdiv);}"
 					  + "</script>";		
 		
+		// print HTML
 		out.println(HTMLHeader.getInstance().printHeader("New Project", "../", "New Project", script, "")
-				  // HTML section with form
 				  + "<section>"
 				  + message
 				  + "<div class=\"row\">"
@@ -205,12 +210,13 @@ public class AddProject extends HttpServlet {
 	}
 	
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		// set response content type to HTML
-		response.setContentType("text/html;charset=UTF8");
-	
+	/*
+	 * method to handle post requests
+	 * creates a new project in the database
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		// get user ID
 		int id = (int) request.getSession(false).getAttribute("ID");
 		
 		// get project parameters

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 
 /**
  * Projectmanagement tool, Page to assign employees (choose task)
@@ -28,9 +28,13 @@ public class ChooseTask extends HttpServlet{
 	
 	// connection to database
 	private DBConnection con = new DBConnection();
-	
+
+	/*
+	 * method to handle get requests
+	 * Form to assign employees to tasks, 
+	 * choose tasks
+	 */
 	@Override
-	// method to handle post-requests
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// prepare response
@@ -57,7 +61,7 @@ public class ChooseTask extends HttpServlet{
 			
 			// get parameters
 			int employeeID = Integer.parseInt(request.getParameter("employee"));
-			ArrayList<ProjectTask> tasks = project.getTasks();
+			ArrayList<Task> tasks = project.getTasks();
 			ArrayList<Integer> assignedTasks = null;
 
 			// get assignments
@@ -88,7 +92,7 @@ public class ChooseTask extends HttpServlet{
 					  + "<span class=\"grey\">multiple options possible</span> <select name=\"tasks\" size=\"5\" multiple required>");
 					
 			// print all tasks, where the employee is not assigned to
-			for (ProjectTask task : tasks){
+			for (Task task : tasks){
 				int i = 0;
 				for (int assignedTask : assignedTasks){
 					if (task.getID() == assignedTask){

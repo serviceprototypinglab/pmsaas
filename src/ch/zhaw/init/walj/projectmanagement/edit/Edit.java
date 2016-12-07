@@ -13,13 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.ExpenseTypes;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Booking;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Expense;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.ProjectTask;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Workpackage;
 
 /**
@@ -28,9 +29,6 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Workpackage;
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Edit")
 public class Edit extends HttpServlet {
-	
-	// TODO Enum 
-	private String[] expenseTypes = {"Travel", "Overnight Stay", "Meals", "Office Supplies", "Events"};
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -76,7 +74,7 @@ public class Edit extends HttpServlet {
 						
 			ArrayList <Employee> employees = project.getEmployees();
 			ArrayList <Workpackage> workpackages = project.getWorkpackages();
-			ArrayList <ProjectTask> tasks = project.getTasks();
+			ArrayList <Task> tasks = project.getTasks();
 			ArrayList <Expense> expenses = project.getExpenses();
 			Effort effort = new Effort(project.getTasks());
 			
@@ -208,7 +206,7 @@ public class Edit extends HttpServlet {
 					  + "</thead>"
 					  + "<tbody>");
 			
-			for (ProjectTask t : tasks){
+			for (Task t : tasks){
 				out.println("<form method=\"post\" action=\"EditTask\" data-abide novalidate>"
 						  + "<tr>"
 						  + "<td>"
@@ -304,11 +302,11 @@ public class Edit extends HttpServlet {
 						  + "</td>"
 						  + "<td>"
 						  + "<select name=\"type\" required>");
-				for (String s : expenseTypes){
-					if (s.equals(ex.getType())){
-						out.println("<option selected>" + s + "</option>");
+				for (ExpenseTypes type : ExpenseTypes.values()){
+					if (type.toString().equals(ex.getType())){
+						out.println("<option selected>" + type + "</option>");
 					} else {
-						out.println("<option>" + s + "</option>");
+						out.println("<option>" + type + "</option>");
 					}
 				}
 			    out.println("</select>"
@@ -388,7 +386,7 @@ public class Edit extends HttpServlet {
 				}
 				
 				for (Booking b : bookings){
-					ProjectTask t = project.getTask(b.getTaskID());
+					Task t = project.getTask(b.getTaskID());
 					
 					out.println("<tr>"
 							  + "<td>"

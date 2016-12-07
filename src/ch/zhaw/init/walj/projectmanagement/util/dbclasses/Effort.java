@@ -13,7 +13,7 @@ import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
  */
 public class Effort {
 	
-	private ArrayList<ProjectTask> tasks = new ArrayList<ProjectTask>();
+	private ArrayList<Task> tasks = new ArrayList<Task>();
 	
 	DBConnection con;
 	
@@ -21,7 +21,7 @@ public class Effort {
 	 * constructor of the Effort class
 	 * @param tasks ArrayList with all tasks
 	 */
-	public Effort (ArrayList<ProjectTask> tasks){
+	public Effort (ArrayList<Task> tasks){
 		this.tasks = tasks;
 		con = new DBConnection();
 	}
@@ -32,7 +32,7 @@ public class Effort {
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		
 		
-		for (ProjectTask task : tasks){
+		for (Task task : tasks){
 			
     	}	
 		
@@ -44,7 +44,7 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		
 		
-		for (ProjectTask task : tasks){
+		for (Task task : tasks){
 			ArrayList<Assignment> assignments = con.getAssignments(task.getID());
 			for (Assignment a : assignments){
 				bookings.addAll(con.getBookings(a));
@@ -62,7 +62,7 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 	public double getPlannedEffort (double month){
 		double effort = 0;
 		int y = 0;
-		for (ProjectTask task : tasks){
+		for (Task task : tasks){
 			Weight w = task.getWeight(month);
 			double weight;
 			
@@ -99,7 +99,7 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 		
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		
-		for (ProjectTask task : tasks){
+		for (Task task : tasks){
 			ArrayList<Assignment> assignments = con.getAssignments(task.getID());
 			for (Assignment a : assignments){
 				bookings = con.getBookings(a);
@@ -134,7 +134,7 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 		float effort = 0;
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 				
-		for (ProjectTask task : tasks){
+		for (Task task : tasks){
 			// get assignments to the task
 			Assignment a;
 			try {
@@ -159,7 +159,7 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 		
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		
-		for (ProjectTask task : tasks){
+		for (Task task : tasks){
 			try {
 				// get assignments to the task
 				Assignment a = con.getAssignment(employee, task.getID());
