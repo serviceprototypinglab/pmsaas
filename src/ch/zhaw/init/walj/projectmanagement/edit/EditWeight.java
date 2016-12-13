@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
@@ -204,7 +205,7 @@ public class EditWeight extends HttpServlet {
 							   + "</div>";
 			}
 			
-			final PrintWriter out = response.getWriter();
+			PrintWriter out = response.getWriter();
 			
 			out.println(HTMLHeader.getInstance().printHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  // HTML section with form
@@ -214,6 +215,8 @@ public class EditWeight extends HttpServlet {
 					  + errorMessage
 					  + "</div>"
 					  + "</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
+					  + HTMLFooter.getInstance().printFooter(false)
 					  // required JavaScript
 					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
 					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
@@ -224,108 +227,9 @@ public class EditWeight extends HttpServlet {
 			
 			
 			
-		}
-		
-	/*	
-		if (project.getLeader() == id){
-			ArrayList<Workpackage> workpackages = project.getWorkpackages();		
-			
-			
-			final PrintWriter out = response.getWriter();
-					
-			String message = "";
-			
-			try {	
-				// create the new workpackages in the DB
-				con.newTask(taskWP, taskName, taskStart, taskEnd, taskPM, taskBudget);
-										
-				message = "<div class=\"callout success small-12 columns\">"
-						  + "<h5>Task successfully created</h5>"
-						  + "<p>The new task has succsessfully been created.</p>"
-						  + "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + pID + "\">Click here to go back to the project overview</a>"
-						  + "</div>";
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
-				message = "<div class=\"callout alert small-12 columns\">"
-						  + "<h5>Task could not be created</h5>"
-						  + "<p>An error occured and the task could not be created.</p>"
-						  + "</div>";
-			}
-					
-			out.println(HTMLHeader.getInstance().getHeader("Add Tasks", "../../", "Add Tasks", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
-					  // HTML section with form
-					  + "<section>"
-					  + "<div class=\"row\">"
-					  + "<h2 class=\"small-12\">Add Task</h2>"
-					  + message
-					  + "</div>"
-					  + "<form method=\"post\" action=\"addTask\" data-abide novalidate>"
-					  // project ID
-					  + "<input type=\"hidden\" name=\"projectID\" value=\"" + pID + "\">"
-					  + "<div class=\"row\">"
-					  // error message (if something's wrong with the form)
-					  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
-					  + "<p><i class=\"fa fa-exclamation-triangle\"></i> There are some errors in your form.</p>"
-					  + "</div>"
-					  + "</div>"
-					  // fields for the tasks
-					  + "<div class=\"row\">"
-					  + "<h2 class=\"small-12\">Tasks</h2>"
-					  + "</div>"
-					  + "<div class=\"row\">"
-					  // labels
-					  + "<p class=\"small-2 columns\">Name</p>"
-					  + "<p class=\"small-2 columns\">Start<span class =\"grey\"> (dd.mm.yyyy)</span></p>"
-					  + "<p class=\"small-2 columns\">End<span class =\"grey\"> (dd.mm.yyyy)</span></p>"
-					  + "<p class=\"small-2 columns\">PMs</p>"
-					  + "<p class=\"small-2 columns\">Budget</p>"
-					  + "<p class=\"small-2 columns\">Workpackage</p>"
-					  + "<div id=\"task\">"
-					  + "<div class=\"small-2 columns\">"
-					  // field for name
-					  + "<input type=\"text\" name=\"taskName\" required>"
-					  + "</div>"
-					  + "<div class=\"small-2 columns\">"
-					  // field for start date
-					  + "<input type=\"text\" name=\"taskStart\" required>"
-					  + "</div>"
-					  + "<div class=\"small-2 columns\">"
-					  // field for end date
-					  + "<input type=\"text\" name=\"taskEnd\" required>"
-					  + "</div>"
-					  + "<div class=\"small-2 columns\">"
-					  // field for amount of PMs
-					  + "<input type=\"number\" name=\"taskPM\" required>"
-					  + "</div>"
-					  + "<div class=\"small-2 columns\">"
-					  // field for the budget per task
-					  + "<input type=\"number\" name=\"taskBudget\" required>"
-					  + "</div>"
-					  + "<div class=\"small-2 columns\">"
-					  // field to assign the task to a workpackage
-					  + "<select name=\"wpID\" required>"
-					  + "<option></option>");
-			
-			// option for every task
-			for (Workpackage w : workpackages){
-				out.println("<option value =\"" + w.getID() + "\">" + w.getName() + "</option>");
-			}				
-			
-			out.println("</select></div>"
-					  // submit button
-					  + "<input type=\"submit\" class=\"small-3 columns large button float-right create\" value=\"Add Task\">"
-					  + "</form>"
-					  +	"</div>"
-					  + "</section>"
-					  // required JavaScript
-					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
-					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
-					  + "<script>$(document).foundation();</script>"
-					  + "</body></html>");
 		} else {
 			String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);
-		}*/
+		}
 	}
 }

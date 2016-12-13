@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
@@ -104,6 +105,7 @@ public class BookHours extends HttpServlet {
 	
 			// print required JavaScript
 			out.println("</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
 					  + "</div>"
 					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
 					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"

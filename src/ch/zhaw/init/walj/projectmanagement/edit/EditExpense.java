@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
@@ -96,6 +97,7 @@ public class EditExpense extends HttpServlet {
 				  + message
 				  + "</div>"
 				  + "</section>"
+				  + HTMLFooter.getInstance().printFooter(false)
 				  // required JavaScript
 				  + "<script src=\"../js/vendor/jquery.js\"></script>"
 				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"

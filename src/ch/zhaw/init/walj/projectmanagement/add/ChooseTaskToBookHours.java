@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
@@ -139,6 +140,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 					  + "<button type=\"submit\" class=\"small-3 columns large button float-right create\">Hours  <i class=\"fa fa-chevron-right\"></i></button>"
 					  + "</div>"
 					  + "</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
 					  + "</div>"
 					  + "<script src=\"../../../js/vendor/jquery.js\"></script>"
 					  + "<script src=\"../../../js/vendor/foundation.min.js\"></script>"
@@ -296,6 +298,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			
 			// required JavaScript
 			out.println("</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
 					  + "</div>"
 					  + "<script src=\"../../../js/vendor/jquery.js\"></script>"
 					  + "<script src=\"../../../js/vendor/foundation.min.js\"></script>"

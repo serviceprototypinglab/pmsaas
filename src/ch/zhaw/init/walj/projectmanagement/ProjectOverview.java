@@ -12,13 +12,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ch.zhaw.init.walj.projectmanagement.chart.GanttChart;
-import ch.zhaw.init.walj.projectmanagement.chart.LineChart;
-import ch.zhaw.init.walj.projectmanagement.chart.PieChart;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.chart.GanttChart;
+import ch.zhaw.init.walj.projectmanagement.util.chart.LineChart;
+import ch.zhaw.init.walj.projectmanagement.util.chart.PieChart;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Expense;
@@ -294,8 +295,8 @@ public class ProjectOverview extends HttpServlet {
 					  + "</div>"
 					  + "</div>"
 					  // share/edit/archive project buttons
-					  + "<div class=\"panel small-12 columns\">"
-					  + "<div class=\"row round\">"
+					  + "<div class=\"row\">"
+					  + "<div class=\"small-12 columns button-bar\">"
 					  + "<div class=\"expanded large button-group\">"
 					  + "<a class=\"large button\" id=\"shareProject\" href=\"../Share?projectID=" + project.getID() + "\"><i class=\"fa fa-share\"></i> Share Project</a>"
 					  + "<a class=\"large button\" id=\"editProject\" href=\"../Edit?projectID=" + project.getID() + "\"><i class=\"fa fa-pencil-square-o\"></i> Edit Project</a>"
@@ -313,6 +314,7 @@ public class ProjectOverview extends HttpServlet {
 					  + "</button>"
 					  + "</div>"					  
 					  + "</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
 					  + "</div>"
 					  // required JavaScript
 					  + "<script src=\"../../js/vendor/jquery.js\"></script>"

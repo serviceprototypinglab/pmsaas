@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 
 /**
@@ -59,6 +60,7 @@ public class Logout extends HttpServlet {
 				  + "<p><a href=\"../login\">Click here to log in again</a></p>"
 				  + "</div>"
 				  + "</section>"
+				  + HTMLFooter.getInstance().printFooter(false)
 				  + "</div>"
 				  // required JavaScript
 				  + "<script src=\"../js/vendor/jquery.js\"></script>"

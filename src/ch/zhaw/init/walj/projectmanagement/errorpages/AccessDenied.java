@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 
 @SuppressWarnings("serial")
@@ -38,6 +39,7 @@ public class AccessDenied extends HttpServlet {
 				  + "</div>"
 				  + "</div>"
 				  + "</section>"
+				  + HTMLFooter.getInstance().printFooter(false)
 				  + "</div>"
 				  // required JavaScript
 				  + "<script src=\"js/vendor/jquery.js\"></script>"

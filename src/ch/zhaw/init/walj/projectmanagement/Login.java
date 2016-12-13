@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.PasswordService;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
@@ -111,6 +112,7 @@ public class Login extends HttpServlet {
 				  + "</div>"
 				  + "</div>"
 				  + "</section>"
+				  + HTMLFooter.getInstance().printFooter(false)
 				  + "</div>"
 				  // required JavaScript
 				  + "<script src=\"js/vendor/jquery.js\"></script>"

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
@@ -99,7 +100,7 @@ public class Overview extends HttpServlet {
 					// print list item
 					out.println("<li class=\"accordion-item\" data-accordion-item><a href=\"#\" class=\"accordion-title\">"
 							  + "<span class=\"bigtext small-3 columns down\">" + project.getShortname() + "</span>"
-							  + "<span class=\"middletext small-6 columns down\">" + project.getName() + "</span>"
+							  + "<span class=\"middletext small-7 columns down\">" + project.getName() + "</span>"
 							  + "<button class=\"button small-2 columns end down smalltext\" onclick=\"Redirect(" + project.getID() + ");\">Select</button>"
 							  + "</a>"
 							  + "<div class=\"accordion-content\" data-tab-content>"
@@ -316,6 +317,7 @@ public class Overview extends HttpServlet {
 		} catch (SQLException e) {
 		}
 		out.println("</section>"
+				  + HTMLFooter.getInstance().printFooter(false)
 				  + "</div>"
 				  + "<script src=\"../js/vendor/jquery.js\"></script>"
 				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"

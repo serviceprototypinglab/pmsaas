@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 
 /**
@@ -36,6 +37,7 @@ public class Help extends HttpServlet {
 				  + "</div>");
 				  
 		out.println("</section>"
+				  + HTMLFooter.getInstance().printFooter(false)
 				  + "</div>"
 				  + "<script src=\"../js/vendor/jquery.js\"></script>"
 				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"

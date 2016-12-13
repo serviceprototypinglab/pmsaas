@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
@@ -101,6 +102,7 @@ public class ShareProject extends HttpServlet{
 					  + "</div>");
 			
 			out.println("</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
 					  + "</div>"
 					  + "<script src=\"../js/vendor/jquery.js\"></script>"
 					  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
@@ -170,7 +172,7 @@ public class ShareProject extends HttpServlet{
 				message = "<div class=\"row\">" 
 					    + "<div class=\"callout alert\">" 
 					    + "<h5>Something went wrong</h5>"
-					    + "<p>The employee could not be assigned</p>" + "</div></div>";
+					    + "<p>The project could not be shared</p>" + "</div></div>";
 			}
 	
 		
@@ -181,6 +183,7 @@ public class ShareProject extends HttpServlet{
 					  + "<section>" 
 					  + message
 					  + "</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
 					  + "</div>"
 					  + "<script src=\"../js/vendor/jquery.js\"></script>"
 					  + "<script src=\"../js/vendor/foundation.min.js\"></script>"

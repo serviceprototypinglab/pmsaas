@@ -2,14 +2,66 @@
 
 * {
 	border: none;
+	z-index: 1;
 }
 
-body {
+html, body {
+	height: 100%;
+	background-color: #fff;
+}
+
+#wrapper {
+	min-height: 100%;
+	position: relative;
+}
+
+header {
 	background-color: #0065a6;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 99;
 }
 
-#wrapper, header {
-	margin: 10px 0;
+section {
+	padding-bottom: 2.9em;
+	padding-top: 6.5em;
+}
+
+footer {
+	background-color: #0065a6;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+footer .row, header .row {
+	background-color: #0065a6;
+	color: #fff;
+	max-width: 100%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);	
+}
+
+header .row {
+	padding: 0;
+}
+
+footer .row a, header .row a {
+	color: #fff;
+}
+
+header .row .menu a {
+	display: inline-block;
+	margin: 10px;
+}
+
+footer .row a:hover, header .row a:hover {
+	color: #ccc;
+}
+
+header .row .menu a:hover {
+	color: #fff;
+    text-shadow: 0 0 2px #fff;
 }
 
 .row {
@@ -17,8 +69,20 @@ body {
 	padding: 10px;
 }
 
+.logo {
+	background-color: #fff;
+	min-height: 100%;
+	padding-bottom: 15px;
+	text-align: center;
+	display: block;
+}
+
 .round {
-	margin: 2px !important;
+	/*-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;*/
+	margin: 1px !important;
+    box-shadow: inset 0 0 4px 0 rgba(0, 0, 0, 0.4);	
 }
 
 p {
@@ -154,9 +218,12 @@ p span {
 }
 
 .panel {
-	background-color: #eee;
-	border: solid white 5px;
-	padding: 5px;
+	margin-bottom: 25px;
+}
+
+.button-bar {
+	margin: 0 5px;
+	padding-right: 24px;
 }
 
 .bold {
@@ -243,8 +310,7 @@ img {
 }
 
 .small-img {
-	height: 65px;
-	margin-right: 20px;
+	max-height: 65px;
 }
 
 .horizontal-scroll {

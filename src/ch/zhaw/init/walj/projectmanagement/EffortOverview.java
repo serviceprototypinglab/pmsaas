@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Booking;
@@ -195,6 +196,7 @@ public class EffortOverview extends HttpServlet {
 					  + "<i class=\"fa fa-clock-o\"></i> Book Hours</a>"
 					  + "</div>"
 					  + "</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
 					  + "</div>"
 					  // required JavaScript
 					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
