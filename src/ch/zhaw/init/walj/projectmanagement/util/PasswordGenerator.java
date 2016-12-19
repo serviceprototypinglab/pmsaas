@@ -2,13 +2,23 @@ package ch.zhaw.init.walj.projectmanagement.util;
 
 import java.security.SecureRandom;
 
+/**
+ * Class to generate random passwords
+ * @author Janine Walther, ZHAW
+ *
+ */
 public class PasswordGenerator {
 	
 	private static PasswordGenerator instance;
 
+	// possible characters and length of password
 	private String characters = "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
 	private int pwLength = 8;
 	
+	/**
+	 * generates a new, random password
+	 * @return a random password
+	 */
 	public String getNewPassword(){
 		// generate random password
 		SecureRandom random = new SecureRandom();
@@ -20,6 +30,9 @@ public class PasswordGenerator {
 		return password.toString();
 	}
 	
+	/**
+	 * @return an instance of Password Generator
+	 */
 	public static synchronized PasswordGenerator getInstance(){
 	  
 	    if(instance == null){

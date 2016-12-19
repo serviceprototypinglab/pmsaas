@@ -5,10 +5,19 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Projectmanagement tool, Class to format dates
+ * 
+ * @author Janine Walther, ZHAW
+ * 
+ */
 public class DateFormatter {
 
 	private static DateFormatter instance;
 		
+	/**
+	 * @return instance of a DateFormatter
+	 */
 	public static synchronized DateFormatter getInstance(){
 	  
 	    if(instance == null){
@@ -87,6 +96,7 @@ public class DateFormatter {
 			Date startDate = format.parse(start);
 			Date endDate = format.parse(end);
 			
+			// make sure there is only the date without time
 			cStart.setTime(format2.parse(format2.format(startDate)));
 			cEnd.setTime(format2.parse(format2.format(endDate)));
 	
@@ -122,7 +132,8 @@ public class DateFormatter {
 			Calendar cEnd = Calendar.getInstance();
 			
 			Date endDate = format.parse(end);
-			startDate = format.parse(format.format(startDate)); // make sure only date without time is saved in startDate
+			// make sure only date without time is saved in startDate
+			startDate = format.parse(format.format(startDate)); 
 			cStart.setTime(startDate);
 			cEnd.setTime(endDate);
 
@@ -166,7 +177,13 @@ public class DateFormatter {
 		return dates;
 	}
 	
-	
+	/**
+	 * get names of months (like 'September 2016')
+	 * 
+	 * @param start date of the first month
+	 * @param nbrOfMonths amount of needed months
+	 * @return String array with all months
+	 */
 	public String[] getMonthStrings(Date start, int nbrOfMonths) {
 		String months[][] = getMonths(start, nbrOfMonths);
 		String month[] = new String[nbrOfMonths];

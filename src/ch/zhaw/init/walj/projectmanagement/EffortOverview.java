@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Booking;
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
@@ -109,7 +109,7 @@ public class EffortOverview extends HttpServlet {
 				employees.add(project.getSpecificEmployee(employeeID));
 				// get all bookings that belong to the employee
 				try {
-					bookings = effort.getBookings(employeeID);
+					bookings = effort.getBookings();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

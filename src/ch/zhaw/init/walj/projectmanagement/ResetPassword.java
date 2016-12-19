@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
-import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -118,7 +117,7 @@ public class ResetPassword extends HttpServlet {
 			mail.sendNewPasswordMail();
 			
 
-		} catch (NullPointerException | MessagingException | SQLException e1) {
+		} catch (NullPointerException | SQLException e1) {
 
 		}
         

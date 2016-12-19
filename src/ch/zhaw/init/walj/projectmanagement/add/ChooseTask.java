@@ -90,7 +90,7 @@ public class ChooseTask extends HttpServlet{
 					  
 					  // select tasks
 					  + "<label class=\"small-12 medium-6 end columns\">Task "
-					  + "<span class=\"grey\">multiple options possible</span> <select name=\"tasks\" size=\"5\" multiple required>");
+					  + "<span class=\"grey\">multiple options possible</span> <select name=\"tasks\" size=\"10\" multiple required>");
 					
 			// print all tasks, where the employee is not assigned to
 			for (Task task : tasks){

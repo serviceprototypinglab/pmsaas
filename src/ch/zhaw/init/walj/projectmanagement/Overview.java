@@ -81,7 +81,7 @@ public class Overview extends HttpServlet {
 					if (!employee.isEmpty()){
 						employees = employee.get(0).getName();
 						for (int i = 1; i < employee.size(); i++){
-							employees += ", " + employee.get(i).getName();
+							employees += "<br> " + employee.get(i).getName();
 						}
 					} else {
 						employees = "no employees assigned";
@@ -108,14 +108,14 @@ public class Overview extends HttpServlet {
 							  +"<p>"
 							  + "<span class=\"small-3 columns\">Projectduration</span>"
 							  + "<span class=\"small-4 columns\">" + project.getDuration() + "</span>"
-					  		  + "<span class=\"small-4 end columns align-right\">" + daysUntilEnd + "</span>"
+					  		  + "<span class=\"small-5 end columns align-right\">" + daysUntilEnd + "</span>"
 			  		  		  + "</p>"
 			  		  		  // Write Budget
 			  		  		  + "<p>"
 			  		  		  + "<span class=\"small-3 columns\">Budget</span>"
 			  		  		  + "<span class=\"small-4 columns\">" + project.getCurrency() 
 							  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
-			  		  		  + "<span class=\"small-4 end columns align-right\">" + project.getCurrency()
+			  		  		  + "<span class=\"small-5 end columns align-right\">" + project.getCurrency()
 			  		  		  + " " + NumberFormatter.getInstance().formatDouble(project.getRemainingBudget()) + " left</span>"
 			  		  		  + "</p>"
 							  // Write Workpackages
@@ -131,12 +131,12 @@ public class Overview extends HttpServlet {
 							  // Write Employees
 							  + "<p>"
 							  + "<span class=\"small-3 columns\">Employees</span>"
-							  + "<span class=\"small-4 columns\">" + project.nbrOfEmployees() 
-							  + "</span><span class=\"small-4 end columns align-right\">" + employees
-							  + "</span></p>"
+							  + "<span class=\"small-9 end columns\">" + employees 
+							  + "</span>"
+							  + "</p>"
 							  // Write Partners
 							  + "<p><span class=\"small-3 columns\">Partner</span>"
-							  + "<span class=\"small-4 end columns\">" + project.getPartners() + "</span>"
+							  + "<span class=\"small-9 end columns\">" + project.getPartners() + "</span>"
 							  + "</p>"
 							  + "</div>"
 							  + "</li>");
@@ -152,7 +152,8 @@ public class Overview extends HttpServlet {
 						  + "</div>");				
 			}
 		
-			out.println("</div>");
+			out.println("</div>"
+					  + "<hr>");
 			
 			// get all projects that are shared with the user
 			ArrayList<Project> sharedProjects = con.getSharedProjects(id);
@@ -176,7 +177,7 @@ public class Overview extends HttpServlet {
 					if (!employee.isEmpty()){
 						employees = employee.get(0).getName();
 						for (int i = 1; i < employee.size(); i++){
-							employees += ", " + employee.get(i).getName();
+							employees += "<br> " + employee.get(i).getName();
 						}
 					} else {
 						employees = "no employees assigned";
@@ -206,14 +207,14 @@ public class Overview extends HttpServlet {
 							  + "<p>"
 							  + "<span class=\"small-3 columns\">Projectduration</span>"
 							  + "<span class=\"small-4 columns\">" + project.getDuration() + "</span>"
-					  		  + "<span class=\"small-4 end columns align-right\">" + daysUntilEnd + "</span>"
+					  		  + "<span class=\"small-5 end columns align-right\">" + daysUntilEnd + "</span>"
 			  		  		  + "</p>"
 			  		  		  // Write Budget
 			  		  		  + "<p>"
 			  		  		  + "<span class=\"small-3 columns\">Budget</span>"
 			  		  		  + "<span class=\"small-4 columns\">" + project.getCurrency() 
 							  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
-			  		  		  + "<span class=\"small-4 end columns align-right\">" + project.getCurrency()
+			  		  		  + "<span class=\"small-5 end columns align-right\">" + project.getCurrency()
 			  		  		  + " " + NumberFormatter.getInstance().formatDouble(project.getRemainingBudget()) + " left</span>"
 			  		  		  + "</p>"
 							  // Write Workpackages
@@ -229,9 +230,9 @@ public class Overview extends HttpServlet {
 							  // Write Employees
 							  + "<p>"
 							  + "<span class=\"small-3 columns\">Employees</span>"
-							  + "<span class=\"small-4 columns\">" + project.nbrOfEmployees() 
-							  + "</span><span class=\"small-4 end columns align-right\">" + employees
-							  + "</span></p>"
+							  + "<span class=\"small-9 end columns\">" + employees 
+							  + "</span>"
+							  + "</p>"
 							  // Write Partners
 							  + "<p><span class=\"small-3 columns\">Partner</span>"
 							  + "<span class=\"small-9 end columns\">" + project.getPartners() + "</span>"
@@ -242,7 +243,8 @@ public class Overview extends HttpServlet {
 			}				
 		
 
-			out.println("</div>");
+			out.println("</div>"
+					  + "<hr>");
 			
 			// get archived projects
 			projects = con.getProjects(id, true);
@@ -265,7 +267,7 @@ public class Overview extends HttpServlet {
 					if (!employee.isEmpty()){
 						employees = employee.get(0).getName();
 						for (int i = 1; i < employee.size(); i++){
-							employees += ", " + employee.get(i).getName();
+							employees += "<br> " + employee.get(i).getName();
 						}
 					} else {
 						employees = "no employees assigned";

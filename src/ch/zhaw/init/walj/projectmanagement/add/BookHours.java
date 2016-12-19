@@ -63,6 +63,12 @@ public class BookHours extends HttpServlet {
 		// check if user is project leader
 		if (project.getLeader() == id){
 		
+			// set error/success message
+	    	String message = "";    	
+	    	if (request.getAttribute("msg") != null){
+	    		message = (String) request.getAttribute("msg");
+	    	}
+			
 			// get all employees
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			try {
@@ -75,6 +81,7 @@ public class BookHours extends HttpServlet {
 			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../", "Book Hours", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  + "<section>"
 					  + "<div class=\"row\">" 
+					  + message
 					  + "<h3>Choose Employee</h3>"
 					  + "<form method=\"get\" action=\"bookHours/chooseTask\" data-abide novalidate>"
 	
@@ -93,7 +100,7 @@ public class BookHours extends HttpServlet {
 	
 			// option for every employee
 			for (Employee employee : employees) {
-				out.println("<option value =\"" + employee.getID() + "\">" + employee.getName() + "</option>");
+				out.println("<option value =\"" + employee.getID() + "\">" + employee.getFullName() + "</option>");
 			}
 	
 			// print submit button
@@ -167,7 +174,6 @@ public class BookHours extends HttpServlet {
 				assignments.add(Integer.parseInt(s));
 			}
 	
-			// TODO better error handling
 			String message = "";
 			try {
 				// create new bookings in DB

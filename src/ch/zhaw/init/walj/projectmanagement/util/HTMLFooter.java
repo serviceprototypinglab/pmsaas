@@ -1,8 +1,21 @@
 package ch.zhaw.init.walj.projectmanagement.util;
 
+/**
+ * Gives a string with the footer back.
+ * Content of the footer depends on the parameters.
+ * 
+ * @author Janine Walther, ZHAW
+ *
+ */
 public final class HTMLFooter {
+
 	  private static HTMLFooter instance;
 		  
+	  /**
+	   * gives a string with the footer back
+	   * @param linkToTop true if there should be a link to the top of the page
+	   * @return a string with the footer
+	   */
 	  public String printFooter(boolean linkToTop){
 		  
 		  String footer = "<footer>"
@@ -22,6 +35,9 @@ public final class HTMLFooter {
 		  return footer;
 	  }
 	  
+	  /**
+	   * @return instance of HTMLFooter class
+	   */
 	  public static synchronized HTMLFooter getInstance(){
 		    if(instance == null){
 		       instance = new HTMLFooter(); 

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
-import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -187,7 +186,7 @@ public class Setup extends HttpServlet {
 					  + "<script>$(document).foundation();</script>"
 					  + "</body>"
 					  + "</html>");  	
-        } catch (NullPointerException | SQLException | MessagingException ex){
+        } catch (NullPointerException | SQLException ex){
         	// set error message and call get method
         	String message = "<div class=\"row\">" 
   						   + "<div class=\"small-6 small-offset-3 end columns\">"

@@ -73,10 +73,18 @@ public class Employee {
 	}
 	
 	/**
-	 * @return the firstname and lastname of the employee together as a string
+	 * @return the firstname and lastname of the employee in form of "firstname lastname"
 	 */
 	public String getName(){
-		String name = lastname + " " + firstname;
+		String name = firstname + " " + lastname;
+		return name;
+	}
+	
+	/**
+	 * @return the firstname and lastname of the employee in form of "lastname, firstname"
+	 */
+	public String getFullName(){
+		String name = lastname + ", " + firstname;
 		return name;
 	}
 	

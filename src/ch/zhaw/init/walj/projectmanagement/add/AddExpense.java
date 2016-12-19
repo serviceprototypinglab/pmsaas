@@ -92,7 +92,7 @@ public class AddExpense extends HttpServlet {
 	
 			// option for every employee
 			for (Employee employee : employees) {
-				out.println("<option value =\"" + employee.getID() + "\">" + employee.getName() + "</option>");
+				out.println("<option value =\"" + employee.getID() + "\">" + employee.getFullName() + "</option>");
 			}
 	
 			// Print fields for costs, type of expense, description and date

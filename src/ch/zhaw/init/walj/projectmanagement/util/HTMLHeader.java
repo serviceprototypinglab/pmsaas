@@ -1,16 +1,44 @@
 package ch.zhaw.init.walj.projectmanagement.util;
 
+/**
+ * Gives a string with the header back.
+ * Content of the header depends on the parameters.
+ * 
+ * @author Janine Walther, ZHAW
+ *
+ */
 public final class HTMLHeader {
 	  private static HTMLHeader instance;
 		  
+	  /**
+	   * prints a simple header without navigation
+	   * @param tabTitle Title of the tab
+	   * @param path path for css, etc. (Example: "../../")
+	   * @return string with the header
+	   */
 	  public String printHeader(String tabTitle, String path){
 		  return printHeader(tabTitle, path, "");
 	  }
 	  	  
+	  /**
+	   * prints a header with navigation, without a link next to the title
+	   * @param tabTitle Title of the tab
+	   * @param path path for CSS, etc. (Example: "../../")
+	   * @param title the title of the page
+	   * @param script JavaScript code
+	   * @return string with the header
+	   */
 	  public String printHeader(String tabTitle, String path, String title, String script){
 		  return printHeader(tabTitle, path, title, script, "");
 	  }
 	  
+	  /**
+	   * prints a header without navigation, but with JavaScript code
+	   * @param tabTitle Title of the tab
+	   * @param path path for CSS, etc. (Example: "../../")
+	   * @param script JavaScript code
+	   * @return string with the header
+	   */
 	  public String printHeader(String tabTitle, String path, String script){
 		  String header = "<!DOCTYPE html>"
 				  + "<html>"
@@ -26,6 +54,15 @@ public final class HTMLHeader {
 	    return header;
 	  }
 	  	  
+	  /**
+	   * prints a header with navigation, title and link next to the title
+	   * @param tabTitle Title of the tab
+	   * @param path path for CSS, etc. (Example: "../../")
+	   * @param title title of the page 
+	   * @param script JavaScript code
+	   * @param link link shown next to the title
+	   * @return string with the header
+	   */
 	  public String printHeader(String tabTitle, String path, String title, String script, String link){
 		    String header = printHeader(tabTitle, path, script);
 		    header += "<body>"
@@ -54,6 +91,9 @@ public final class HTMLHeader {
 		    return header;
 	  }
 	  
+	  /**
+	   * @return instance of HTMLHeader class
+	   */
 	  public static synchronized HTMLHeader getInstance(){
 		    if(instance == null){
 		       instance = new HTMLHeader(); 

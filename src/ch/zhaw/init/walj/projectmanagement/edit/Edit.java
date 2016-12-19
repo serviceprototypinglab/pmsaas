@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.ExpenseTypes;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Booking;
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Expense;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
@@ -46,7 +46,7 @@ public class Edit extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		// get user and project ID
-		int id = (int) request.getSession(false).getAttribute("ID");
+		int userID = (int) request.getSession(false).getAttribute("ID");
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 
 		// Database connection
@@ -63,7 +63,7 @@ public class Edit extends HttpServlet {
 		}
 		
 		// check if user is project leader 	
-		if (project.getLeader() == id) {
+		if (project.getLeader() == userID) {
 			
 			// print html
 			out.println(HTMLHeader.getInstance().printHeader("Edit " + project.getShortname(), "../", "Edit " + project.getShortname(), "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
@@ -99,7 +99,8 @@ public class Edit extends HttpServlet {
 				
 			// form to edit project
 			out.println("<div class=\"small-12 columns\">" 
-					  + "<h3 class=\"no-margin edit\" id=\"project\">Project</h3>"
+					  + "<h3 class=\"no-margin blue\" id=\"project\">Project</h3>"
+					  + "<br>"
 					  + "</div>"
 					  + "<form method=\"post\" action=\"EditProject\" data-abide novalidate>"
 					  + "<input type=\"hidden\" name=\"id\" value=\"" + project.getID() + "\">"
@@ -141,7 +142,8 @@ public class Edit extends HttpServlet {
 			// form to edit workpackages
 			out.println("<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">" 
-					  + "<h3 class=\"no-margin edit\" id=\"workpackages\">Workpackages</h3>"
+					  + "<h3 class=\"no-margin blue\" id=\"workpackages\">Workpackages</h3>"
+					  + "<br>"
 					  + "</div>"
 					  + "<table>"
 					  + "<thead>"
@@ -195,7 +197,8 @@ public class Edit extends HttpServlet {
 					  + "</div>"
 					  + "<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">" 
-					  + "<h3 class=\"no-margin edit\" id=\"tasks\">Tasks</h3>"
+					  + "<h3 class=\"no-margin blue\" id=\"tasks\">Tasks</h3>"
+					  + "<br>"
 					  + "</div>"
 					  + "<div class=\"horizontal-scroll\">"
 					  + "<table class=\"table\">"
@@ -276,7 +279,8 @@ public class Edit extends HttpServlet {
 					  + "</div>"
 					  + "<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">" 
-					  + "<h3 class=\"no-margin edit\" id=\"expenses\">Expenses</h3>"
+					  + "<h3 class=\"no-margin blue\" id=\"expenses\">Expenses</h3>"
+					  + "<br>"
 					  + "</div>"
 					  + "<div class=\"horizontal-scroll\">"
 					  + "<table class=\"table\">"
@@ -304,9 +308,9 @@ public class Edit extends HttpServlet {
 				// select field with every employee
 				for (Employee e : project.getEmployees()){
 					if (e.getID() == ex.getEmployeeID()){
-						out.println("<option value=\"" + e.getID() + "\" selected>" + e.getName() + "</option>");
+						out.println("<option value=\"" + e.getID() + "\" selected>" + e.getFullName() + "</option>");
 					} else {
-						out.println("<option value=\"" + e.getID() + "\">" + e.getName() + "</option>");
+						out.println("<option value=\"" + e.getID() + "\">" + e.getFullName() + "</option>");
 					}
 				}
 			    out.println("</select>"
@@ -361,15 +365,7 @@ public class Edit extends HttpServlet {
 					  + "</div>"
 					  + "<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">" 
-					  + "<h3 class=\"no-margin edit\" id=\"effort\">Effort</h3>"
-					  + "</div>"
-					  + "<ul class=\"menu\">");
-			// link for every employee
-			for (Employee e : project.getEmployees()){
-				out.println("<li><a href=\"#"+ e.getKuerzel() + "\">"+ e.getName() + "</a></li>");
-			}
-			out.println("</ul>"
-					  + "<hr>"
+					  + "<h3 class=\"no-margin blue\" id=\"effort\">Effort</h3>"
 					  + "</div>"
 					  + "<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">"
@@ -380,7 +376,7 @@ public class Edit extends HttpServlet {
 			
 				out.println("<li class=\"accordion-item\" data-accordion-item>"
 						  + "<a href=\"#\" class=\"accordion-title\">"
-						  + "<h4 class=\"no-margin blue\" id=\"" + e.getKuerzel() + "\">" + e.getName() + "</h4>"
+						  + "<h4 class=\"no-margin blue\">" + e.getName() + "</h4>"
 						  + "</a>"
 						  + "<div class=\"accordion-content\" data-tab-content>"
 						  + "<div class=\"horizontal-scroll\">"
@@ -481,6 +477,9 @@ public class Edit extends HttpServlet {
 					  + "<script>$(document).foundation();</script>"
 					  + "</body>"
 					  + "</html>");
+		} else {
+			String url = request.getContextPath() + "/AccessDenied";
+	        response.sendRedirect(url);
 		}
 	}
 }

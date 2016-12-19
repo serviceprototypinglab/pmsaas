@@ -18,7 +18,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 
 /**
- * Projectmanagement tool, Page to assign employees (choose task)
+ * Projectmanagement tool, Page share projects
  * 
  * @author Janine Walther, ZHAW
  * 
@@ -30,17 +30,22 @@ public class ShareProject extends HttpServlet{
 	// connection to database
 	private DBConnection con = new DBConnection();
 		
-	
+	/*
+	 * 	method to handle get requests
+	 * 	form to share project
+	 */
 	@Override
-	// method to handle post-requests
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF8");
-
-		int id = (int) request.getSession(false).getAttribute("ID");
 		
-		// variable declaration, get parameters
+		// prepare response
+		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
+
+		// get user and project ID
+		int userID = (int) request.getSession(false).getAttribute("ID");
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
@@ -50,22 +55,22 @@ public class ShareProject extends HttpServlet{
             return;
 		}
 		
-		if (project.getLeader() == id){			
+		// check if user is project leader
+		if (project.getLeader() == userID){			
 
+			// get all employees
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			try {
 				employees = con.getAllEmployees();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			ArrayList<Employee> assignedEmployees = con.getSharedEmployees(project.getID());
+			ArrayList<Employee> sharedEmployees = con.getSharedEmployees(project.getID());
 			
-			PrintWriter out = response.getWriter();
 			
 			// print HTML
-			out.println(HTMLHeader.getInstance().printHeader("Share project", "../", "Share project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
-			// print HTML section with form
-			out.println("<section>"
+			out.println(HTMLHeader.getInstance().printHeader("Share project", "../", "Share project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+					  + "<section>"
 					  + "<div class=\"row\">"
 					  + "<h3>Choose employees you want to share the project with:</h3>" 
 					  + "<form method=\"post\" action=\"Share\" data-abide novalidate>"
@@ -79,29 +84,29 @@ public class ShareProject extends HttpServlet{
 					  
 					  // select employees
 					  + "<label class=\"small-12 medium-6 end columns\">Employee "
-					  + "<span class=\"grey\">multiple options possible</span> <select name=\"employees\" size=\"5\" multiple required>");
+					  + "<span class=\"grey\">multiple options possible</span> <select name=\"employees\" size=\"10\" multiple required>");
 					
-			// only tasks, the employee is not assigned to yet
-			for (Employee e : employees){
+			// option for every employee the task is not already shared with
+			for (Employee employee : employees){
 				int i = 0;
-				for (Employee emp : assignedEmployees){
-					if (emp.getID() == e.getID()){
+				for (Employee sharedEmployee : sharedEmployees){
+					if (sharedEmployee.getID() == employee.getID()){
 						i++;
 					}
 				}
 				if (i == 0){
-					out.println("<option value =\"" + e.getID() + "\">" + e.getName() + "</option>");
+					out.println("<option value =\"" + employee.getID() + "\">" + employee.getFullName() + "</option>");
 				}
 			}
 					
-			out.println("</select></label></div>");
-		
-			// print return and submit buttons
-			out.println("<div class=\"row\">"
+			out.println("</select>"
+					  + "</label>"
+					  + "</div>"
+					  // print return and submit buttons
+					  + "<div class=\"row\">"
 					  + "<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Share project\">"
-					  + "</div>");
-			
-			out.println("</section>"
+					  + "</div>"
+					  + "</section>"
 					  + HTMLFooter.getInstance().printFooter(false)
 					  + "</div>"
 					  + "<script src=\"../js/vendor/jquery.js\"></script>"
@@ -115,17 +120,22 @@ public class ShareProject extends HttpServlet{
 		}		
 	}
 	
+	/*
+	 * 	method to handle post requests
+	 * 	shares the project with the given employees
+	 */
 	@Override
-	// method to handle post-requests
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF8");
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		// prepare response
+		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
+		
+		// get user and project ID
 		int id = (int) request.getSession(false).getAttribute("ID");
-
-		// variable declaration and get the parameters
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 
+		// get project
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
@@ -135,26 +145,27 @@ public class ShareProject extends HttpServlet{
             return;
 		}
 		
+		// check if user is project leader
 		if (project.getLeader() == id){
 		
-			String message = "";
+			// get parameters
 			String[] employeeIDs = request.getParameterValues("employees");
 			ArrayList<Employee> employees = new ArrayList<Employee>();
 			
+			// get employees
 			for (int i = 0; i < employeeIDs.length; i++){
-				try {
-					employees.add(con.getEmployee(Integer.parseInt(employeeIDs[i])));
-				} catch (SQLException e) {
-				}
+				employees.add(project.getSpecificEmployee(Integer.parseInt(employeeIDs[i])));
 			}
 	
+
+			String message = "";
 			try {
 
-				// create new assignment
+				// create new share
 				for (Employee e : employees) {
 					con.newShare(project.getID(), e.getID());
 				}
-				// write success message
+				// success message
 				message = "<div class=\"row\">" 
 						+ "<div class=\"callout success\">" 
 						+ "<h5>" 
@@ -176,7 +187,6 @@ public class ShareProject extends HttpServlet{
 			}
 	
 		
-			PrintWriter out = response.getWriter();
 	
 			// print HTML
 			out.println(HTMLHeader.getInstance().printHeader("Share Project", "../", "Share Project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")

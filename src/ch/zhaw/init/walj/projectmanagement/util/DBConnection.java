@@ -59,6 +59,10 @@ public class DBConnection {
 		}
 	}
 	
+	/**
+	 * checks if there are users in the database
+	 * @return true if there are no users
+	 */
 	public boolean noUsers(){
 		try {
 			st = conn.prepareStatement("SELECT * FROM  Employees");
@@ -71,7 +75,6 @@ public class DBConnection {
 		}
 		return false;
 	}
-	
 
 	/**
 	 * creates a new Project object and returns it to the user
@@ -112,7 +115,6 @@ public class DBConnection {
 	
 		// variables for data from workpackage table
 		int wID;
-		int wProjectID;
 		String wName;
 		String wStart;
 		String wEnd;
@@ -184,12 +186,11 @@ public class DBConnection {
 		resWP = getWorkpackages(pID);
 		while (resWP.next()) {
 			wID = resWP.getInt("WorkpackageID");
-			wProjectID = resWP.getInt("ProjectIDFS");
 			wName = resWP.getString("WPName");
 			wStart = DateFormatter.getInstance().formatDate(resWP.getString("WPStart"));
 			wEnd = DateFormatter.getInstance().formatDate(resWP.getString("WPEnd"));
 	
-			Workpackage wp = new Workpackage(wID, wProjectID, wName, wStart, wEnd);
+			Workpackage wp = new Workpackage(wID, wName, wStart, wEnd);
 	
 			// get all tasks
 			resTask = getTasks(wID);
@@ -357,7 +358,7 @@ public class DBConnection {
 	}
 
 	/**
-	 * returns all employees, working at the current project
+	 * get all employees, working at the current project
 	 * 
 	 * @param id
 	 *            id of the current task
@@ -373,10 +374,14 @@ public class DBConnection {
 		res = st.executeQuery();
 		return res;
 	}
-
+	
+	/**
+	 * get all employees with whom the project is shared
+	 * @param projectID id of the project
+	 * @return List of all employees the project is shared with
+	 */
 	public ArrayList<Employee> getSharedEmployees(int projectID){
 		ArrayList<Employee> employees = new ArrayList<Employee>();
-		
 		
 		PreparedStatement stEmployees;
 		ResultSet resEmployee;
@@ -405,12 +410,16 @@ public class DBConnection {
 			}
 		
 		} catch (SQLException e) {
-			return employees;
 		}
 
 		return employees;
 	}
 
+	/**
+	 * get all projects who are shared with the given user
+	 * @param id ID of the user
+	 * @return list of all projects who are shared with the user
+	 */
 	public ArrayList<Project> getSharedProjects(int id) {
 		ArrayList<Project> projects = new ArrayList<Project>();
 		
@@ -504,6 +513,12 @@ public class DBConnection {
 		return tasks;
 	}
 	
+	/**
+	 * get all assignments to a specific task
+	 * @param taskID ID of the task
+	 * @return List of all assignments to a task
+	 * @throws SQLException
+	 */
 	public ArrayList<Assignment> getAssignments(int taskID) throws SQLException{
 		ArrayList<Assignment> assignments = new ArrayList<Assignment>();
 		
@@ -526,19 +541,29 @@ public class DBConnection {
 	 * @return Assignment ID
 	 * @throws SQLException
 	 */
-	public Assignment getAssignment(int employee, int task) throws SQLException {
+	public Assignment getAssignment(int employee, int task){
 	
 		// get the ID of the assignment
-		st = conn.prepareStatement("SELECT AssignmentID from Assignments WHERE EmployeeIDFS = ? and TaskIDFS = ?");
-		st.setInt(1, employee);
-		st.setInt(2, task);
-		res = st.executeQuery();
-		res.next();
-		
-		return new Assignment(res.getInt("AssignmentID"), task, employee);
+		try {
+			st = conn.prepareStatement("SELECT AssignmentID from Assignments WHERE EmployeeIDFS = ? and TaskIDFS = ?");
+
+			st.setInt(1, employee);
+			st.setInt(2, task);
+			res = st.executeQuery();
+			res.next();
+			
+			return new Assignment(res.getInt("AssignmentID"), task, employee);
+		} catch (SQLException e) {
+			return null;
+		}
 	}
 	
-	
+	/**
+	 * get all bookings to a specific assignment
+	 * @param assignment the assignment the bookings should be searched for
+	 * @return List of bookings
+	 * @throws SQLException
+	 */
 	public ArrayList<Booking> getBookings (Assignment assignment) throws SQLException {
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		
@@ -557,6 +582,12 @@ public class DBConnection {
 		return bookings;
 	}
 
+	/**
+	 * get the used budget 
+	 * @param project
+	 * @return used budget
+	 * @throws SQLException
+	 */
 	public double getUsedBudget(Project project) throws SQLException{
 		double usedBudget = 0;
 		st = conn.prepareStatement("select Costs from Expenses where ProjectIDFS = ?" + project.getID() );
@@ -582,6 +613,12 @@ public class DBConnection {
 		return usedBudget;
 	}
 
+	/**
+	 * find a user with his name (shortname or mail) and password
+	 * @param user
+	 * @param password
+	 * @return employee or null
+	 */
 	public Employee findUser(String user, String password){
 		try {
 			st = conn.prepareStatement("SELECT * from Employees WHERE (Mail=? OR Kuerzel=?) and Password=?");
@@ -604,7 +641,11 @@ public class DBConnection {
 		}
 	}
 	
-	
+	/**
+	 * find a user only with his e-mail address
+	 * @param user e-mail address of the user
+	 * @return employee or null
+	 */
 	public Employee findUser(String user) {
 		try {
 			st = conn.prepareStatement("SELECT * from Employees WHERE Mail=?");
@@ -749,7 +790,6 @@ public class DBConnection {
 
 	}
 	
-	
 	/**
 	 * creates a new task in the database
 	 * 
@@ -783,7 +823,6 @@ public class DBConnection {
 		st = conn.prepareStatement("INSERT INTO Weight (TaskIDFS, Month, Weight) VALUES (?, ?, ?)");
 				
 	}
-
 
 	/**
 	 * create a new employee in the database
@@ -884,7 +923,6 @@ public class DBConnection {
 		return user;
 	}
 
-	
 	/**
 	 * create a new expense in the database
 	 * 
@@ -963,6 +1001,13 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 	
+	/**
+	 * create a new wage in the database
+	 * @param userID ID of the user
+	 * @param wage amount of the new wage
+	 * @param date date of the wage
+	 * @throws SQLException
+	 */
 	public void newWage(int userID, double wage, String date) throws SQLException {
 		st = conn.prepareStatement("INSERT INTO Wage (EmployeeIDFS, WagePerHour, ValidFrom) VALUES (?, ?, ?)");
 		
@@ -973,6 +1018,13 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * create a new weight in the database
+	 * @param taskID ID of the task the weight belongs to
+	 * @param month number of the month
+	 * @param weight the weight
+	 * @throws SQLException
+	 */
 	public void newWeight(int taskID, int month, double weight) throws SQLException {
 		st = conn.prepareStatement("INSERT INTO Weight (TaskIDFS, Month, Weight) VALUES (?, ?, ?)");
 		
@@ -983,6 +1035,12 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * create a new share in the database
+	 * @param projectID ID of the project which will be shared
+	 * @param employeeID ID of the employee the project will be shared with
+	 * @throws SQLException
+	 */
 	public void newShare(int projectID, int employeeID) throws SQLException {
 		st = conn.prepareStatement("INSERT INTO Share (ProjectID, EmployeeIDFS) VALUES (?, ?)");
 
@@ -992,6 +1050,18 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * updates a project in the database
+	 * @param id ID of the project
+	 * @param name name of the project
+	 * @param shortname shortname of the project
+	 * @param budget budget of the project
+	 * @param currency currency of the project
+	 * @param start start date of the project
+	 * @param end end date of the project
+	 * @param partners all partners of the project (as a string)
+	 * @throws SQLException
+	 */
 	public void updateProject(int id, String name, String shortname, double budget, String currency, String start, String end, String partners) throws SQLException {
 		st = conn.prepareStatement("UPDATE Projects SET ProjectShortname=?,ProjectName=?,TotalBudget=?,Currency=?,ProjectStart=?,ProjectEnd=?,Partner=? WHERE Projects.ProjectIDFS=?");
 		st.setString(1, shortname);
@@ -1006,6 +1076,14 @@ public class DBConnection {
 		st.executeUpdate();		
 	}
 
+	/**
+	 * updates a workpackage in the database
+	 * @param id ID of the workpackage
+	 * @param name name of the workpackage
+	 * @param start start date of the workpackage
+	 * @param end end date of the workpackage
+	 * @throws SQLException
+	 */
 	public void updateWorkpackage(int id, String name, String start, String end) throws SQLException {
 		
 		st = conn.prepareStatement("UPDATE Workpackages SET WPName=?,WPStart=?,WPEnd=? WHERE WorkpackageID=?");
@@ -1017,6 +1095,17 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * updates a task in the database
+	 * @param id ID of the task	
+	 * @param name name of the task
+	 * @param start start date of the task
+	 * @param end end date of the task
+	 * @param pm total amount of planned PMs
+	 * @param budget budget of the task
+	 * @param wp ID of the workpackage the task belongs to
+	 * @throws SQLException
+	 */
 	public void updateTask(int id, String name, String start, String end, int pm, double budget, int wp) throws SQLException {
 		st = conn.prepareStatement("UPDATE Tasks SET WorkpackageIDFS=?,TaskName=?,TaskStart=?,TaskEnd=?,PMs=?,Budget=? WHERE TaskID='");
 
@@ -1031,6 +1120,16 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * updates an expense in the database
+	 * @param id ID of the expense
+	 * @param employee ID of the employee who booked the expense
+	 * @param costs total amount of costs of the expense
+	 * @param type type of the expense 
+	 * @param description small description what the expense was
+	 * @param date date of the expense
+	 * @throws SQLException
+	 */
 	public void updateExpense(int id, int employee, double costs, String type, String description, String date) throws SQLException {
 		st = conn.prepareStatement("UPDATE Expenses SET EmployeeIDFS=?,Costs=?,Type=?,Description=?,Date=? WHERE ExpenseID=?");
 
@@ -1044,6 +1143,13 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * updates an effort in the database
+	 * @param id ID of the effort
+	 * @param month month the effort was booked
+	 * @param hours amount of hours that where booked
+	 * @throws SQLException
+	 */
 	public void updateEffort(int id, String month, String hours) throws SQLException {
 		st = conn.prepareStatement("UPDATE Bookings SET Month=?,Hours=? WHERE BookingID=?");
 
@@ -1054,6 +1160,15 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * updates an user in the database
+	 * @param userID ID of the user
+	 * @param firstname first name of the user
+	 * @param lastname last name of the user
+	 * @param kuerzel kuerzel of the user
+	 * @param mail e-mail address of the user
+	 * @throws SQLException
+	 */
 	public void updateUser(int userID, String firstname, String lastname, String kuerzel, String mail) throws SQLException {
 		st = conn.prepareStatement("UPDATE Employees SET Firstname=?,Lastname=?,Kuerzel=?,Mail=? WHERE EmployeeID=?");
 		
@@ -1066,6 +1181,12 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * updates a password in the database
+	 * @param userID ID of the user
+	 * @param password the new password (encrypted)
+	 * @throws SQLException
+	 */
 	public void updatePassword(int userID, String password) throws SQLException {
 		st = conn.prepareStatement("UPDATE Employees SET Password=? WHERE EmployeeID=?");
 		
@@ -1075,6 +1196,13 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * updates a weight in the database
+	 * @param taskID ID of the task the weight belongs to
+	 * @param month the affected month
+	 * @param weight the new weight
+	 * @throws SQLException
+	 */
 	public void updateWeight(int taskID, int month, double weight) throws SQLException {
 		st = conn.prepareStatement("UPDATE Weight SET Weight=? WHERE (TaskIDFS=?) AND (Month=?)");
 
@@ -1085,12 +1213,22 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * set the archive flag to 1 (=archived)
+	 * @param projectID ID of the project
+	 * @throws SQLException
+	 */
 	public void archiveProject(int projectID) throws SQLException {
 		st = conn.prepareStatement("UPDATE projectmanagement.Projects SET Archive=1 WHERE Projects.ProjectIDFS = ?");
 		st.setInt(1, projectID);
 		st.executeUpdate();
 	}
 
+	/**
+	 * deletes a workpackage from the database (with all tasks, etc.)
+	 * @param workpackageID the ID of the workpackage
+	 * @throws SQLException
+	 */
 	public void deleteWorkpackage(int workpackageID) throws SQLException {
 		st = conn.prepareStatement("DELETE FROM Workpackages WHERE WorkpackageID=?");
 		
@@ -1099,6 +1237,11 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * deletes a task from the database (with all assignments, etc.)
+	 * @param taskID ID of the task
+	 * @throws SQLException
+	 */
 	public void deleteTask(int taskID) throws SQLException {
 		st = conn.prepareStatement("DELETE FROM Tasks WHERE TaskID=?");
 		
@@ -1107,6 +1250,11 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * deletes an expense from the database
+	 * @param expenseID ID of the expense
+	 * @throws SQLException
+	 */
 	public void deleteExpense(int expenseID) throws SQLException {
 		st = conn.prepareStatement("DELETE FROM Expenses WHERE ExpenseID=?");
 		
@@ -1115,6 +1263,11 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
+	/**
+	 * deletes an effort from the database
+	 * @param effortID ID of the effort
+	 * @throws SQLException
+	 */
 	public void deleteEffort(int effortID) throws SQLException {
 		st = conn.prepareStatement("DELETE FROM Bookings WHERE BookingID=?");
 		
@@ -1123,5 +1276,4 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 
-	
 }

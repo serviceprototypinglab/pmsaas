@@ -6,39 +6,50 @@ import java.security.NoSuchAlgorithmException;
 
 import sun.misc.BASE64Encoder;
 
+/**
+ * encrypts a password
+ * @author Janine Walther, ZHAW
+ *
+ */
 public final class PasswordService {
-  private static PasswordService instance;
 
-  private PasswordService(){
-	  
-  }
+	private static PasswordService instance;
 
-  public synchronized String encrypt(String plaintext){
-    MessageDigest md = null;
-    try{
-      md = MessageDigest.getInstance("SHA"); //step 2
-    }
-    catch(NoSuchAlgorithmException e){
-    
-    }
-    
-    try{
-      md.update(plaintext.getBytes("UTF-8")); //step 3
-    }
-    catch(UnsupportedEncodingException e){
-      
-    }
-
-    byte raw[] = md.digest(); //step 4
-    String hash = (new BASE64Encoder()).encode(raw); //step 5
-    return hash; //step 6
-  }
+	/**
+	 * encrypts a password
+	 * @param plaintext the password that should be encrypted
+	 * @return the encrypted password
+	 */
+	public synchronized String encrypt(String plaintext){
+	   
+		// encrypt password
+		MessageDigest md = null;
+	    try{
+	    	md = MessageDigest.getInstance("SHA");
+	    } catch(NoSuchAlgorithmException e){
+	    
+	    }
+	    
+	    try{
+	    	md.update(plaintext.getBytes("UTF-8"));
+	    } catch(UnsupportedEncodingException e){
+	      
+	    }
+	
+	    byte raw[] = md.digest();
+	    String hash = (new BASE64Encoder()).encode(raw);
+	    
+	    return hash;
+	}
   
-  public static synchronized PasswordService getInstance(){ //step 1
+	/**
+	 * @return an instance of PasswordService
+	 */
+	public static synchronized PasswordService getInstance(){
   
-    if(instance == null){
-       instance = new PasswordService(); 
-    } 
-    return instance;
-  }
+	    if(instance == null){
+	       instance = new PasswordService(); 
+	    } 
+	    return instance;
+	}
 }

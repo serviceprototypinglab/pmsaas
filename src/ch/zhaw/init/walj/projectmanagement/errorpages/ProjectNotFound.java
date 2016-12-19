@@ -12,16 +12,27 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 
+/**
+ * Projectmanagement tool, Project not found page
+ * 
+ * @author Janine Walther, ZHAW
+ * 
+ */
 @SuppressWarnings("serial")
 @WebServlet("/ProjectNotFound")
 public class ProjectNotFound extends HttpServlet {
 
+	/*
+	 * 	User sees this page if the project, he requested, was not found
+	 */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	response.setContentType("text/html;charset=UTF8");
-    	   	
-		PrintWriter out = response.getWriter();
     	
+    	// prepare response
+    	response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
+
+		// print HTML
     	out.println(HTMLHeader.getInstance().printHeader("Project not found - Project Management SaaS", "", "Project not found", "")  
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 

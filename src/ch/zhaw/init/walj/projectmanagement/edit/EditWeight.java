@@ -19,39 +19,52 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Weight;
 
-// TODO /** kommentare
+/**
+ * Projectmanagement tool, Page to edit weight of months
+ * 
+ * @author Janine Walther, ZHAW
+ * 
+ */
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview/editWeight")
 public class EditWeight extends HttpServlet {
 	
 	// create a new DB connection
 	private DBConnection con = new DBConnection();
-		
+	
+	/*
+	 * 	method to handle get requests
+	 * 	shows form to change weight of each month
+	 * 	when possible, shows existing data from database
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
 		
-		int id = (int) request.getSession(false).getAttribute("ID");
-		
-		int pID = Integer.parseInt(request.getParameter("projectID"));
-			
+		// get user and project ID
+		int userID = (int) request.getSession(false).getAttribute("ID");
+		int projectID = Integer.parseInt(request.getParameter("projectID"));
+
+		// get project
 		Project project = null;
-		
 		try {
-			project = con.getProject(pID);
+			project = con.getProject(projectID);
 		} catch (SQLException e) {
 			String url = request.getContextPath() + "/ProjectNotFound";
             response.sendRedirect(url);
             return;
 		}
 
-		if (project.getLeader() == id){
-			ArrayList<Task> tasks = project.getTasks();
+		// check if user is project leader
+		if (project.getLeader() == userID){
 			
-			PrintWriter out = response.getWriter();
-					
-			out.println(HTMLHeader.getInstance().printHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
-					  // HTML section with form
+			ArrayList<Task> tasks = project.getTasks();
+
+			// print HTML
+			out.println(HTMLHeader.getInstance().printHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  + "<section>"
 					  + "<form method=\"post\" action=\"editWeight\" data-abide novalidate>"
 					  + "<div class=\"row\">"
@@ -59,23 +72,26 @@ public class EditWeight extends HttpServlet {
 					  
 			for (Task task : tasks){
 				
-				boolean firstInitialisation = false;
-				
+				// get months and weight
 				int nbrOfMonths = task.getNumberOfMonths();
 				int startMonth = task.getStartMonth();
 				String months[] = DateFormatter.getInstance().getMonthStrings(task.getStartAsDate(), nbrOfMonths);
-				
 				ArrayList<Weight> weight = task.getWeight();
+
+				// check if this is the first initialization
+				boolean firstInitialization = false;
 				if (weight.size() != nbrOfMonths){
-					firstInitialisation = true;
+					firstInitialization = true;
 				}
 				
-				if (firstInitialisation){
-					out.println("<input type=\"hidden\" name=\"firstInitialisation\" value=\"true\">");
+				// set (hidden) first initialization field true or false
+				if (firstInitialization){
+					out.println("<input type=\"hidden\" name=\"firstInitialization\" value=\"true\">");
 				} else {
-					out.println("<input type=\"hidden\" name=\"firstInitialisation\" value=\"false\">");
+					out.println("<input type=\"hidden\" name=\"firstInitialization\" value=\"false\">");
 				}
 				
+				// print task witch fields for all months
 				out.println("<h2 class=\"blue\">" + task.getName() + "</h2>"
 						  // task ID
 						  + "<input type=\"hidden\" name=\"taskID\" value=\"" + task.getID() + "\">"
@@ -83,27 +99,37 @@ public class EditWeight extends HttpServlet {
 						  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
 						  + "<p><i class=\"fa fa-exclamation-triangle\"></i> There are some errors in your form.</p>"
 						  + "</div>");
+				// print table
 				out.println("<table>"
 						  + "<tr>"
 						  + "<th class=\"th-200\">Month</th>"
 						  + "<th class=\"th-300\">Weight</th>");
+				
+				// print second column if more than one month 
 				if (months.length > 1) {
 					out.println("<th class=\"space\"></th>"	
 							  + "<th class=\"th-200\">Month</th>"
 							  + "<th class=\"th-300\">Weight</th>");	
 				}
 				out.println("</tr>");
+				
+				// print fields for months
 				for (int i = 0; i < months.length; i++){
+					
+					// print new row or space field
 					if (i % 2 != 1) {
 						out.println("<tr>");
 					} else {
 						out.println("<td class=\"space\"></td>");
 					}
+					
+					// print fields for weight
 					out.println("<input type=\"hidden\" name=\"month" + task.getID() + "\" value=\"" + startMonth + "\">"
 							  + "<td>" + months[i] + "</td>"
 							  + "<td>"
 							  + "<input type=\"text\" name=\"weight" + task.getID() + "\" value=\"");
-					if (firstInitialisation){
+					// value for weight
+					if (firstInitialization){
 						out.println("1");
 					} else {
 						for (Weight w : weight){
@@ -114,6 +140,8 @@ public class EditWeight extends HttpServlet {
 					}
 					out.println("\" required>"
 							  + "</td>");
+					
+					// print end of row if needed
 					if ((i % 2 == 1) || (i + 1 == months.length)) {
 						out.println("</tr>");						
 					}
@@ -121,10 +149,11 @@ public class EditWeight extends HttpServlet {
 				}
 				out.println("</table>");	
 			}
-			out.println("<input type=\"submit\" class=\"small-3 columns large button float-right create\"value=\"Edit Weight\">"
+			out.println("<input type=\"submit\" class=\"small-3 columns large button float-right\"value=\"Edit Weight\">"
 					  + "</div>"
 					  + "</form>"
 					  + "</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
 					  // required JavaScript
 					  + "<script src=\"../../js/vendor/jquery.js\"></script>"
 					  + "<script src=\"../../js/vendor/foundation.min.js\"></script>"
@@ -137,20 +166,23 @@ public class EditWeight extends HttpServlet {
 		}
 	}
 		
-	
+	/*
+	 * 	method to handle post requests
+	 * 	writes weight into database
+	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// set response content type to HTML
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
 
-		int id = (int) request.getSession(false).getAttribute("ID");
-		
+		// get user and project ID
+		int userID = (int) request.getSession(false).getAttribute("ID");
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
-		
+
+		// get project
 		Project project = null;
-		
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
@@ -159,25 +191,30 @@ public class EditWeight extends HttpServlet {
             return;
 		}
 		
-
-		if (project.getLeader() == id){
+		// check if user id project leader
+		if (project.getLeader() == userID){
 		
-			// get the parameters
+			// get parameters
 			String taskIDs[] = request.getParameterValues("taskID");
-			String firstInitialisation[] = request.getParameterValues("firstInitialisation");
+			String firstInitialization[] = request.getParameterValues("firstInitialization");
 	
 			String successMessage = "";
 			String errorMessage = "";
 			
+			// create/update weight for every task
 			for (String tID : taskIDs) {
+				
+				// get all months and their weight for this task
 				String month[] = request.getParameterValues("month" + tID);
 				String weight[] = request.getParameterValues("weight" + tID);
 				
+				// get task
 				Task task = project.getTask(Integer.parseInt(tID));
 				
-					try {
+				try {
 					for (int i = 0; i < month.length; i++){
-						if (firstInitialisation[0].equals("true")){
+						// create or update weight
+						if (firstInitialization[0].equals("true")){
 							con.newWeight(Integer.parseInt(tID), Integer.parseInt(month[i]), Double.parseDouble(weight[i]));
 						} else {
 							con.updateWeight(Integer.parseInt(tID), Integer.parseInt(month[i]), Double.parseDouble(weight[i]));
@@ -189,6 +226,7 @@ public class EditWeight extends HttpServlet {
 				}
 			}
 		
+			// write success message if at least one of the tasks was successful
 			if (!successMessage.equals("")){
 				successMessage = "<div class=\"callout success small-12 columns\">"
 						       + "<h5>Weight of the following tasks changed:</h5>"
@@ -196,7 +234,8 @@ public class EditWeight extends HttpServlet {
 							   + "<a href=\"Project?id=" + projectID + "\">go back to project overview</a>"
 							   + "</div>";
 			}
-			
+
+			// write error message if at least one of the tasks was not successful
 			if (!errorMessage.equals("")){
 				errorMessage = "<div class=\"callout alert small-12 columns\">"
 						       + "<h5>Weight of the following tasks could not be changed:</h5>"
@@ -204,8 +243,6 @@ public class EditWeight extends HttpServlet {
 							   + "<a href=\"editWeight?projectID=" + projectID + "\">try again</a>"
 							   + "</div>";
 			}
-			
-			PrintWriter out = response.getWriter();
 			
 			out.println(HTMLHeader.getInstance().printHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
 					  // HTML section with form
@@ -223,10 +260,6 @@ public class EditWeight extends HttpServlet {
 					  + "<script>$(document).foundation();</script>"
 					  + "</body>"
 					  + "</html>");
-			
-			
-			
-			
 		} else {
 			String url = request.getContextPath() + "/AccessDenied";
             response.sendRedirect(url);

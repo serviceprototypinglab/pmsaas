@@ -1,5 +1,9 @@
 package ch.zhaw.init.walj.projectmanagement.util;
 
+/**
+ * 	possible types for expenses
+ * 	@author Janine Walther, ZHAW
+ */	
 public enum ExpenseTypes {
 	
 	TRAVEL {

@@ -3,9 +3,6 @@ package ch.zhaw.init.walj.projectmanagement.edit;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,11 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 
-
-// TODO /** kommentare
+/**
+ * Projectmanagement tool, Page to edit tasks
+ * 
+ * @author Janine Walther, ZHAW
+ * 
+ */
 @SuppressWarnings("serial")
 @WebServlet("/Projects/EditTask")
 public class EditTask extends HttpServlet {
@@ -25,14 +28,20 @@ public class EditTask extends HttpServlet {
 	// create a new DB connection
 	private DBConnection con = new DBConnection();
 		
+	/*
+	 * 	method to handle post requests
+	 * 	makes changes in database
+	 * 	returns error/success message
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
-		// set response content type to HTML
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
 		
-		// get the parameters
-		int id = Integer.parseInt(request.getParameter("id"));
+		// get parameters and user ID
+		int taskID = Integer.parseInt(request.getParameter("id"));
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		String name = request.getParameter("name");
 		String start = request.getParameter("start");
@@ -40,62 +49,68 @@ public class EditTask extends HttpServlet {
 		int pm = Integer.parseInt(request.getParameter("pm"));
 		double budget = Double.parseDouble(request.getParameter("budget"));
 		int wp = Integer.parseInt(request.getParameter("workpackage"));
+		int userID = (int) request.getSession(false).getAttribute("ID");
 		
-
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+		// get project
+		Project project = null;
 		try {
-			Date date = format.parse(start);
-			start = format2.format(date);
-			date = format.parse(end);
-			end = format2.format(date);
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		}
-		
-		final PrintWriter out = response.getWriter();
-				
-		String message = "";
-		
-		try {
-			con.updateTask(id, name, start, end, pm, budget, wp);
-			
-			message = "<div class=\"callout success\">"
-					+ "<h5>Task successfully updated</h5>"
-					+ "<p>The task has succsessfully been updated with the following data:</p>"
-					+ "<p>Name: " + name + "</p>"
-					+ "<p>Duration: " + start + " - " + end + "</p>"
-					+ "<p>PMs: " + pm + ""
-					+ "<p>Budget: " + budget + "</p>"
-					+ "<p>Workpackage: " + wp + "</p>"
-					+ "<a href=\"/Projektverwaltung/Projects/Edit?projectID=" + projectID + "#tasks\">Click here to go back to the edit page</a>"
-					+ "<br>"
-					+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + projectID + "\">Click here to go to the project overview</a>"
-					+ "</div>";
+			project = con.getProject(projectID);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			message = "<div class=\"callout alert\">"
-				    + "<h5>Task could not be updated</h5>"
-				    + "<p>An error occured and the task could not be updated.</p>"
-					+ "<a href=\"/Projektverwaltung/Projects/Edit?projectID=" + id + "#tasks\">Click here to go back to the edit page</a>"
-					+ "<br>"
-					+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + id + "\">Click here to go to the project overview</a>"
-					+ "</div>";
+			String url = request.getContextPath() + "/ProjectNotFound";
+            response.sendRedirect(url);
+            return;
 		}
-						
-		out.println(HTMLHeader.getInstance().printHeader("Edit " + name, "../", "Edit " + name, "")
-				  // HTML section with form
-				  + "<section>"
-				  + "<div class=\"row\">"
-				  + message
-				  + "</div>"
-				  + "</section>"
-				  + HTMLFooter.getInstance().printFooter(false)
-				  // required JavaScript
-				  + "<script src=\"../js/vendor/jquery.js\"></script>"
-				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
-				  + "<script>$(document).foundation();</script>"
-				  + "</body>"
-				  + "</html>");
+
+		// check if user is project leader 	
+		if (project.getLeader() == userID) {
+			
+			String message = "";
+			try {
+				// update task
+				con.updateTask(taskID, name, DateFormatter.getInstance().formatDateForDB(start), DateFormatter.getInstance().formatDateForDB(end), pm, budget, wp);
+				
+				// success message
+				message = "<div class=\"callout success\">"
+						+ "<h5>Task successfully updated</h5>"
+						+ "<p>The task has succsessfully been updated with the following data:</p>"
+						+ "<p>Name: " + name + "</p>"
+						+ "<p>Duration: " + start + " - " + end + "</p>"
+						+ "<p>PMs: " + pm + ""
+						+ "<p>Budget: " + budget + "</p>"
+						+ "<p>Workpackage: " + wp + "</p>"
+						+ "<a href=\"/Projektverwaltung/Projects/Edit?projectID=" + projectID + "#tasks\">Click here to go back to the edit page</a>"
+						+ "<br>"
+						+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + projectID + "\">Click here to go to the project overview</a>"
+						+ "</div>";
+			} catch (SQLException e) {
+				
+				// error message
+				message = "<div class=\"callout alert\">"
+					    + "<h5>Task could not be updated</h5>"
+					    + "<p>An error occured and the task could not be updated.</p>"
+						+ "<a href=\"/Projektverwaltung/Projects/Edit?projectID=" + taskID + "#tasks\">Click here to go back to the edit page</a>"
+						+ "<br>"
+						+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + taskID + "\">Click here to go to the project overview</a>"
+						+ "</div>";
+			}
+					
+			// print HTML
+			out.println(HTMLHeader.getInstance().printHeader("Edit " + name, "../", "Edit " + name, "")
+					  + "<section>"
+					  + "<div class=\"row\">"
+					  + message
+					  + "</div>"
+					  + "</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
+					  // required JavaScript
+					  + "<script src=\"../js/vendor/jquery.js\"></script>"
+					  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
+					  + "<script>$(document).foundation();</script>"
+					  + "</body>"
+					  + "</html>");
+		} else {
+			String url = request.getContextPath() + "/AccessDenied";
+	        response.sendRedirect(url);
+		}
 	}
 }

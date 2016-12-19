@@ -124,7 +124,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 					  
 					  // select (multiple) tasks
 					  + "<label class=\"small-12 medium-6 end columns\">Task "
-					  + "<span class=\"grey\">multiple options possible</span> <select name=\"tasks\" size=\"5\" multiple required " + disabled +">");
+					  + "<span class=\"grey\">multiple options possible</span> <select name=\"tasks\" size=\"10\" multiple required " + disabled +">");
 			
 			// option for every task
 			for (Task task : finalAssignedTasks){
@@ -259,11 +259,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 				
 				// get assignment with the given employee and task ID
 				int assignmentID = 0;
-				try {
-					assignmentID = con.getAssignment(employeeID, taskIDs.get(i)).getID();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				assignmentID = con.getAssignment(employeeID, taskIDs.get(i)).getID();
 				
 				out.println("<input type=\"hidden\" name=\"assignmentID\" value=\"" + assignmentID + "\">");
 				

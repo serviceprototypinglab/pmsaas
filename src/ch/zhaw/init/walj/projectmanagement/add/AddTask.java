@@ -73,7 +73,6 @@ public class AddTask extends HttpServlet {
 					  + "<section>"
 					  + message
 					  + "<div class=\"row\">"
-					  + "<h2 class=\"small-12\"></h2>"// TODO Titel überlegen
 					  + "</div>"
 					  + "<form method=\"post\" action=\"addTask\" data-abide novalidate>"
 					  // project ID

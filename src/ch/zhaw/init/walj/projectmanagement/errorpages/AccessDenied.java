@@ -12,16 +12,27 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 
+/**
+ * Projectmanagement tool, Access Denied page
+ * 
+ * @author Janine Walther, ZHAW
+ * 
+ */
 @SuppressWarnings("serial")
 @WebServlet("/AccessDenied")
 public class AccessDenied extends HttpServlet {
 
+	/*
+	 * 	User sees this page if he is not allowed to see the requested page
+	 */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    	// prepare response
     	response.setContentType("text/html;charset=UTF8");
-    	   	
 		PrintWriter out = response.getWriter();
     	
+		// print HTML
     	out.println(HTMLHeader.getInstance().printHeader("Access denied - Project Management SaaS", "", "Access denied", "")  
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 

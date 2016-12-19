@@ -15,6 +15,12 @@ import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 
+/**
+ * Projectmanagement tool, Page to edit effort
+ * 
+ * @author Janine Walther, ZHAW
+ * 
+ */
 @SuppressWarnings("serial")
 @WebServlet("/Projects/EditEffort")
 public class EditEffort extends HttpServlet {
@@ -22,19 +28,27 @@ public class EditEffort extends HttpServlet {
 	// create a new DB connection
 	private DBConnection con = new DBConnection();
 		
+	/*
+	 * 	method to handle post requests
+	 * 	makes changes in database
+	 * 	returns error/success message
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
-		// set response content type to HTML
+		// prepare response
 		response.setContentType("text/html;charset=UTF8");
+		PrintWriter out = response.getWriter();
 		
-		// get the parameters
-		int id = Integer.parseInt(request.getParameter("id"));
+		// get the parameters and user ID
+		int effortID = Integer.parseInt(request.getParameter("id"));
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 		int taskID = Integer.parseInt(request.getParameter("taskID"));
 		String month = request.getParameter("month");
 		String hours = request.getParameter("hours");
+		int userID = (int) request.getSession(false).getAttribute("ID");
 		
+		// get project 
 		Project project = null;
 		try {
 			project = con.getProject(projectID);
@@ -43,51 +57,58 @@ public class EditEffort extends HttpServlet {
             response.sendRedirect(url);
             return;
 		}
-		
-		Task t = project.getTask(taskID);
-		
-		
-		final PrintWriter out = response.getWriter();
-				
-		String message = "";
-		
-		try {
-			con.updateEffort(id, month, hours);
+
+		// check if user is project leader 	
+		if (project.getLeader() == userID) {
 			
-			message = "<div class=\"callout success\">"
-					+ "<h5>Project successfully updated</h5>"
-					+ "<p>The new project has succsessfully been updated with the following data:</p>"
-					+ "<p>Task: " + t.getName() + "</p>"
-					+ "<p>Month: " + month + "</p>"
-					+ "<p>Hours: " + hours + "</p>"
-					+ "<a href=\"/Projektverwaltung/Projects/Edit?projectID=" + projectID + "#effort\">Click here to go back to the edit page</a>"
-					+ "<br>"
-					+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + projectID + "#effort\">Click here to go to the project overview</a>"
-					+ "</div>";
-		} catch (SQLException e) {
-			e.printStackTrace();
-			message = "<div class=\"callout alert\">"
-				    + "<h5>Project could not be updated</h5>"
-				    + "<p>An error occured and the project could not be updated.</p>"
-					+ "<a href=\"/Projektverwaltung/Projects/Edit?projectID=" + projectID + "#effort\">Click here to go back to the edit page</a>"
-					+ "<br>"
-					+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + projectID + "#effort\">Click here to go to the project overview</a>"
-					+ "</div>";
+			// get task
+			Task t = project.getTask(taskID);
+							
+			String message = "";
+			
+			try {
+				// update effort
+				con.updateEffort(effortID, month, hours);
+				
+				// success message
+				message = "<div class=\"callout success\">"
+						+ "<h5>Project successfully updated</h5>"
+						+ "<p>The new project has succsessfully been updated with the following data:</p>"
+						+ "<p>Task: " + t.getName() + "</p>"
+						+ "<p>Month: " + month + "</p>"
+						+ "<p>Hours: " + hours + "</p>"
+						+ "<a href=\"/Projektverwaltung/Projects/Edit?projectID=" + projectID + "#effort\">Click here to go back to the edit page</a>"
+						+ "<br>"
+						+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + projectID + "#effort\">Click here to go to the project overview</a>"
+						+ "</div>";
+			} catch (SQLException e) {
+				// error message
+				message = "<div class=\"callout alert\">"
+					    + "<h5>Project could not be updated</h5>"
+					    + "<p>An error occured and the project could not be updated.</p>"
+						+ "<a href=\"/Projektverwaltung/Projects/Edit?projectID=" + projectID + "#effort\">Click here to go back to the edit page</a>"
+						+ "<br>"
+						+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + projectID + "#effort\">Click here to go to the project overview</a>"
+						+ "</div>";
+			}
+							
+			// print HTML
+			out.println(HTMLHeader.getInstance().printHeader("Edit Effort", "../", project.getName(), "")
+					  + "<section>"
+					  + "<div class=\"row\">"
+					  + message
+					  + "</div>"
+					  + "</section>"
+					  + HTMLFooter.getInstance().printFooter(false)
+					  // required JavaScript
+					  + "<script src=\"../js/vendor/jquery.js\"></script>"
+					  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
+					  + "<script>$(document).foundation();</script>"
+					  + "</body>"
+					  + "</html>");
+		} else {
+			String url = request.getContextPath() + "/AccessDenied";
+	        response.sendRedirect(url);
 		}
-						
-		out.println(HTMLHeader.getInstance().printHeader("Edit Effort", "../", project.getName(), "")
-				  // HTML section with form
-				  + "<section>"
-				  + "<div class=\"row\">"
-				  + message
-				  + "</div>"
-				  + "</section>"
-				  + HTMLFooter.getInstance().printFooter(false)
-				  // required JavaScript
-				  + "<script src=\"../js/vendor/jquery.js\"></script>"
-				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
-				  + "<script>$(document).foundation();</script>"
-				  + "</body>"
-				  + "</html>");
 	}
 }

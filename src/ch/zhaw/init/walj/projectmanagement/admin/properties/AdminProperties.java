@@ -15,7 +15,7 @@ import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
  */
 @SuppressWarnings("serial")
 @WebServlet("/admin/properties")
-public class Properties extends HttpServlet {
+public class AdminProperties extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

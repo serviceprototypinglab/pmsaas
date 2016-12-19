@@ -16,7 +16,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Effort;
+import ch.zhaw.init.walj.projectmanagement.util.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 

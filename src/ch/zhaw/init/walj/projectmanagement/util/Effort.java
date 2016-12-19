@@ -1,9 +1,12 @@
-package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
+package ch.zhaw.init.walj.projectmanagement.util;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Assignment;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Booking;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
+import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Weight;
 
 /**
  * Class to calculate the effort per month and employee
@@ -33,21 +36,29 @@ public class Effort {
 		
 		
 		for (Task task : tasks){
-			
+			ArrayList<Assignment> assignments = con.getAssignments(task.getID());
+			for (Assignment a : assignments){
+				bookings.addAll(con.getBookings(a));
+			}
     	}	
 		
 		return bookings;
 	}
 	
-public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
+	/**
+	 * get all bookings for a specific employee
+	 * @param employeeID ID of the employee
+	 * @return list of all bookings of the employee
+	 * @throws SQLException
+	 */
+	public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 				
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		
-		
 		for (Task task : tasks){
-			ArrayList<Assignment> assignments = con.getAssignments(task.getID());
-			for (Assignment a : assignments){
-				bookings.addAll(con.getBookings(a));
+			Assignment assignment = con.getAssignment(employeeID, task.getID());
+			if (assignment != null) {
+				bookings.addAll(con.getBookings(assignment));
 			}
     	}			
 		return bookings;
@@ -144,7 +155,7 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 				for (Booking b : bookings){
 						effort += b.getHours(); 		
 	    		}
-			} catch (SQLException e) {
+			} catch (SQLException | NullPointerException e) {
 			
 			}
 			
@@ -154,6 +165,12 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 	}
 
 
+	/**
+	 * get the booked effort for a specific month and employee
+	 * @param month number of the month
+	 * @param employee ID of the employee
+	 * @return amount of hours booked by the employee in a specific month
+	 */
 	public double getBookedEffortPerMonth(double month, int employee){
 		double effort = 0.0;
 		
@@ -170,7 +187,7 @@ public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 						effort += b.getHours();
 					} 		
 	    		}
-			} catch (SQLException e) {
+			} catch (SQLException | NullPointerException e) {
 			}
     	}		
 		

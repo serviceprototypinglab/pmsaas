@@ -99,7 +99,7 @@ public class AssignEmployee extends HttpServlet {
 	
 			// Option for every Employee
 			for (Employee employee : employees) {
-				out.println("<option value =\"" + employee.getID() + "\">" + employee.getName() + "</option>");
+				out.println("<option value =\"" + employee.getID() + "\">" + employee.getFullName() + "</option>");
 			}
 	
 			// submit button
