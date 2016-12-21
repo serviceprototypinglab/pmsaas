@@ -27,7 +27,7 @@ public final class HTMLFooter {
 			  		  + "</span>";
 		  }
 				  		
-		  footer += "<p>ProjectmanagementSaaS</p>"
+		  footer += "<p>Project Management SaaS</p>"
 		  		  + "</div>"
 				  + "</div>"
 				  + "</footer>";
