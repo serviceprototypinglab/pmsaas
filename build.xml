@@ -71,6 +71,11 @@
             <classpath refid="Projektverwaltung.classpath"/>
         </java>
     </target>
+    <target name="DataBaseAccess">
+        <java classname="ch.zhaw.init.walj.projectmanagement.util.DataBaseAccess" failonerror="true" fork="yes">
+            <classpath refid="Projektverwaltung.classpath"/>
+        </java>
+    </target>
     <target name="TestDBConnection">
         <java classname="ch.zhaw.init.walj.projectmanagement.TestDBConnection" failonerror="true" fork="yes">
             <classpath refid="Projektverwaltung.classpath"/>
