@@ -62,9 +62,7 @@ public class DateFormatter {
 		try {
 			Date date = format.parse(unformattedDate);			
 			String formattedDate = format2.format(date);
-			
-			System.out.println(formattedDate);
-			
+						
 			return formattedDate;
 		} catch (ParseException e) {
 			

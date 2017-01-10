@@ -24,9 +24,9 @@ public class Effort {
 	 * constructor of the Effort class
 	 * @param tasks ArrayList with all tasks
 	 */
-	public Effort (ArrayList<Task> tasks){
+	public Effort (ArrayList<Task> tasks, String path){
 		this.tasks = tasks;
-		con = new DBConnection();
+		con = new DBConnection(path);
 	}
 	
 	

@@ -30,7 +30,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Weight;
 public class EditWeight extends HttpServlet {
 	
 	// create a new DB connection
-	private DBConnection con = new DBConnection();
+	private DBConnection con;
 	
 	/*
 	 * 	method to handle get requests
@@ -39,6 +39,8 @@ public class EditWeight extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");
@@ -172,6 +174,8 @@ public class EditWeight extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");

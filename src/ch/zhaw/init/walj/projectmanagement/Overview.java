@@ -45,7 +45,7 @@ public class Overview extends HttpServlet {
 		String name = (String) request.getSession(false).getAttribute("user");
 				
 		// connection to the database
-		DBConnection con = new DBConnection();
+		DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// get print writer
 		PrintWriter out = response.getWriter();
@@ -116,7 +116,7 @@ public class Overview extends HttpServlet {
 			  		  		  + "<span class=\"small-4 columns\">" + project.getCurrency() 
 							  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
 			  		  		  + "<span class=\"small-5 end columns align-right\">" + project.getCurrency()
-			  		  		  + " " + NumberFormatter.getInstance().formatDouble(project.getRemainingBudget()) + " left</span>"
+			  		  		  + " " + NumberFormatter.getInstance().formatDouble(con.getRemainingBudget(project)) + " left</span>"
 			  		  		  + "</p>"
 							  // Write Workpackages
 							  + "<p>"
@@ -215,7 +215,7 @@ public class Overview extends HttpServlet {
 			  		  		  + "<span class=\"small-4 columns\">" + project.getCurrency() 
 							  + " " + NumberFormatter.getInstance().formatDouble(project.getBudget()) + "</span>"
 			  		  		  + "<span class=\"small-5 end columns align-right\">" + project.getCurrency()
-			  		  		  + " " + NumberFormatter.getInstance().formatDouble(project.getRemainingBudget()) + " left</span>"
+			  		  		  + " " + NumberFormatter.getInstance().formatDouble(con.getRemainingBudget(project)) + " left</span>"
 			  		  		  + "</p>"
 							  // Write Workpackages
 							  + "<p>"

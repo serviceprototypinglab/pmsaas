@@ -93,7 +93,7 @@ public class ResetPassword extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
     	// connection to database
-    	DBConnection con = new DBConnection();
+    	DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
     	
     	// get mail address
     	String user = request.getParameter("mail");

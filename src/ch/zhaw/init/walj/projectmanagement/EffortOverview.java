@@ -30,9 +30,14 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 @SuppressWarnings("serial")
 @WebServlet("/Projects/Overview/Effort")
 public class EffortOverview extends HttpServlet {
+	
+
 		
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String path = this.getServletContext().getRealPath("/");
+		
 		// set content type for response
 		response.setContentType("text/html;charset=UTF8");
 
@@ -46,7 +51,7 @@ public class EffortOverview extends HttpServlet {
 		
 		
 		// create a new connection to the database
-		DBConnection con = new DBConnection();
+		DBConnection con = new DBConnection(path);
 		
 		// get user ID from session
 		id = (int) request.getSession(false).getAttribute("ID");
@@ -76,7 +81,7 @@ public class EffortOverview extends HttpServlet {
 			}
 			
 			// create a new effort object with the tasks of the project
-			Effort effort = new Effort(project.getTasks());
+			Effort effort = new Effort(project.getTasks(), path);
 			
 			// prepare link for HTML header
 			String link = "<a href=\"Project?id=" + projectID + "\" class=\"back\">"

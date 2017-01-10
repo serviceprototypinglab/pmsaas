@@ -24,8 +24,6 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 @WebServlet("/login")
 public class Login extends HttpServlet {
 	
-	// connection to database
-	DBConnection con = new DBConnection();
 	
 	/*
 	 * method to handle get requests
@@ -34,6 +32,9 @@ public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	response.setContentType("text/html;charset=UTF8");
+
+    	// connection to database
+    	DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
     	
     	// send redirect to setup if there are no users yet (first initialization) 
     	if (con.noUsers()){
@@ -130,6 +131,9 @@ public class Login extends HttpServlet {
 	 */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    	// connection to database
+    	DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
     	
     	// get parameters
     	String user = request.getParameter("mail");

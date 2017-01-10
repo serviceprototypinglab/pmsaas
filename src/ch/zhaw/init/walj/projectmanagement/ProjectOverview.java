@@ -42,6 +42,9 @@ public class ProjectOverview extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		String path = this.getServletContext().getRealPath("/");
+		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");
 		PrintWriter out = response.getWriter();
@@ -53,7 +56,7 @@ public class ProjectOverview extends HttpServlet {
 		int projectID = Integer.parseInt(request.getParameter("id"));
 		
 		// Database connection
-		DBConnection con = new DBConnection();
+		DBConnection con = new DBConnection(path);
 		
 		// get project
 		try {
@@ -71,10 +74,10 @@ public class ProjectOverview extends HttpServlet {
 			// get expenses, employees, effort, charts
 			ArrayList<Expense> expenses = project.getExpenses();
 			ArrayList<Employee> employees = project.getEmployees();
-			Effort effort = new Effort(project.getTasks());
+			Effort effort = new Effort(project.getTasks(), path);
 			
-			PieChart pieChart = new PieChart(project);
-			LineChart lineChart = new LineChart(project);
+			PieChart pieChart = new PieChart(project, path);
+			LineChart lineChart = new LineChart(project, path);
 			GanttChart ganttChart = new GanttChart(project);
 			
 			// create charts and save them in Charts folder
@@ -135,11 +138,11 @@ public class ProjectOverview extends HttpServlet {
 					  + "</br>"
 					  + "<span class=\"legend-1  smallbadge\"></span> "
 					  // remaining budget
-					  + "Remaining: </br>" + project.getCurrency() + " " + NumberFormatter.getInstance().formatDouble(project.getRemainingBudget())
+					  + "Remaining: </br>" + project.getCurrency() + " " + NumberFormatter.getInstance().formatDouble(con.getRemainingBudget(project))
 					  + "</br>"
 					  + "<span class=\"legend-2 smallbadge\"></span> "
 					  // used budget
-					  + "Spent: </br>" + project.getCurrency() + " " + NumberFormatter.getInstance().formatDouble(project.getUsedBudget()) 
+					  + "Spent: </br>" + project.getCurrency() + " " + NumberFormatter.getInstance().formatDouble(con.getUsedBudget(project)) 
 					  + "</div>"
 					  + "<div class=\"small-8 columns\">"
 					  // Expenses

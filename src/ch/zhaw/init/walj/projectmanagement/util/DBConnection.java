@@ -26,11 +26,12 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Workpackage;
  */
 public class DBConnection {
 
-	private String driver = DataBaseAccess.DRIVER;
-	private String url = DataBaseAccess.URL;
-	private String dbName = DataBaseAccess.DBNAME;
-	private String userName	= DataBaseAccess.USERNAME;
-	private String password	= DataBaseAccess.PASSWORD;
+	private String driver = "com.mysql.jdbc.Driver";
+	private DataBaseAccess dbAccess;
+	private String url;
+	private String dbName;
+	private String userName;
+	private String password;
 	private Connection conn;
 	private PreparedStatement st;
 	private ResultSet res;
@@ -48,8 +49,14 @@ public class DBConnection {
 	 * @param password
 	 * 			  password for login
 	 */
-	public DBConnection() {
+	public DBConnection(String path) {
+		
 		// get connection to database
+		dbAccess = new DataBaseAccess(path);
+		url = dbAccess.getUrl();
+		dbName = dbAccess.getDbname();
+		userName = dbAccess.getUsername();
+		password = dbAccess.getPassword();
 		try {
 			Class.forName(driver).newInstance();
 			conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
@@ -588,31 +595,41 @@ public class DBConnection {
 	 * @return used budget
 	 * @throws SQLException
 	 */
-	public double getUsedBudget(Project project) throws SQLException{
+	public double getUsedBudget(Project project){
 		double usedBudget = 0;
-		st = conn.prepareStatement("select Costs from Expenses where ProjectIDFS = ?" + project.getID() );
-		st.setInt(1, project.getID());	
-		res = st.executeQuery();
-		while (res.next()){
-			usedBudget += res.getDouble("Costs");
-		}
-	
-		for (Task task : project.getTasks()){
-			ArrayList<Assignment> assignments = getAssignments(task.getID());
-			for (Assignment a : assignments){
-				ArrayList<Booking> bookings = getBookings(a);
-				for (Booking b : bookings){
-					for (Employee e : project.getEmployees()){
-						if (e.getID() == a.getEmployeeID()){
-							usedBudget += (e.getWage() * b.getHours());
+		try {
+			st = conn.prepareStatement("select Costs from Expenses where ProjectIDFS = ?" + project.getID() );
+			st.setInt(1, project.getID());	
+			res = st.executeQuery();
+			while (res.next()){
+				usedBudget += res.getDouble("Costs");
+			}
+		
+			for (Task task : project.getTasks()){
+				ArrayList<Assignment> assignments = getAssignments(task.getID());
+				for (Assignment a : assignments){
+					ArrayList<Booking> bookings = getBookings(a);
+					for (Booking b : bookings){
+						for (Employee e : project.getEmployees()){
+							if (e.getID() == a.getEmployeeID()){
+								usedBudget += (e.getWage() * b.getHours());
+							}
 						}
 					}
 				}
 			}
+		} catch (SQLException e) {
+			return 0;
 		}
 		return usedBudget;
 	}
 
+	public double getRemainingBudget(Project project){
+		double remaining = project.getBudget() - getUsedBudget(project);
+		return remaining;
+	}
+	
+	
 	/**
 	 * find a user with his name (shortname or mail) and password
 	 * @param user
@@ -1107,7 +1124,7 @@ public class DBConnection {
 	 * @throws SQLException
 	 */
 	public void updateTask(int id, String name, String start, String end, int pm, double budget, int wp) throws SQLException {
-		st = conn.prepareStatement("UPDATE Tasks SET WorkpackageIDFS=?,TaskName=?,TaskStart=?,TaskEnd=?,PMs=?,Budget=? WHERE TaskID='");
+		st = conn.prepareStatement("UPDATE Tasks SET WorkpackageIDFS=?,TaskName=?,TaskStart=?,TaskEnd=?,PMs=?,Budget=? WHERE TaskID=?");
 
 		st.setInt(1, wp);
 		st.setString(2, name);

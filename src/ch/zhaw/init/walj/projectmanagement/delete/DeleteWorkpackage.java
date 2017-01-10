@@ -26,11 +26,13 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 public class DeleteWorkpackage extends HttpServlet {
 
 	// connection to database
-	private DBConnection con = new DBConnection();
+	private DBConnection con;
 
 	@Override
 	// method to handle get-requests
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");

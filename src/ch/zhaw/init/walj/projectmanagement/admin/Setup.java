@@ -28,7 +28,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 public class Setup extends HttpServlet {
 	
 	// connection to database
-	DBConnection con = new DBConnection();
+	DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
 	
 	/*
 	 * method to handle get requests

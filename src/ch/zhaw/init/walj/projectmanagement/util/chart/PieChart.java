@@ -11,6 +11,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
+import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 
 /**
@@ -22,13 +23,15 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 public class PieChart {
 		
 	private Project project;
+	private DBConnection con;
 		
 	/**
 	 * Constructor of the PieChart class
 	 * @param project the project for which the chart should be created
 	 */
-	public PieChart(Project project) {
+	public PieChart(Project project, String path) {
 		this.project = project;		
+		con = new DBConnection(path);
 	}
     
 	/**
@@ -42,8 +45,8 @@ public class PieChart {
     	
     	// create dataset with used and remaining budget
     	DefaultPieDataset dataset = new DefaultPieDataset( );
-    	dataset.setValue("spent", project.getUsedBudget());
-    	dataset.setValue("remaining", project.getRemainingBudget());
+    	dataset.setValue("spent", con.getUsedBudget(project));
+    	dataset.setValue("remaining", con.getRemainingBudget(project));
     	
     	// create chart
     	JFreeChart chart = ChartFactory.createPieChart("", dataset, false, false, false );

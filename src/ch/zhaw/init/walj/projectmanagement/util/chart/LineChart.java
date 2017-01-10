@@ -29,16 +29,17 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 public class LineChart {
 
 	private Project project;
+	private String path;
 	private ArrayList<Task> tasks = new ArrayList<Task>();
 	
 	/**
 	 * Constructor of the LineChart class
 	 * @param project the project for which the chart should be created
 	 */
-	public LineChart(Project project) {
+	public LineChart(Project project, String path) {
 		this.project = project;
     	tasks = project.getTasks();
-			
+		this.path = path;
 	}
     
 	/**
@@ -49,7 +50,7 @@ public class LineChart {
     private XYDataset createDataset() throws SQLException{
     	
     	// initialize variables
-    	Effort effort = new Effort(tasks);
+    	Effort effort = new Effort(tasks, path);
     	double plannedEffort = 0;
     	double bookedEffort = 0;
     	XYSeries planned = new XYSeries("Planned");
@@ -85,7 +86,7 @@ public class LineChart {
 	private XYSeriesCollection createDataset(int employeeID){
 
     	// initialize variables
-		Effort effort = new Effort(tasks);
+		Effort effort = new Effort(tasks, path);
     	double bookedEffort = 0;
     	XYSeries booked = new XYSeries("Booked");
     	int projectMonths = project.getNumberOfMonths();

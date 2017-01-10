@@ -23,7 +23,7 @@ public class AdminProperties extends HttpServlet {
 		// set response content type to HTML
 		response.setContentType("text/html;charset=UTF8");
 		
-		DBConnection con = new DBConnection();
+		DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// TODO implementation of properties page
 		

@@ -26,7 +26,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 public class Profile extends HttpServlet {
 	
 	// Database connection
-	private DBConnection con = new DBConnection();
+	private DBConnection con;
 	
 	/*
 	 * method to handle get requests
@@ -35,6 +35,8 @@ public class Profile extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		con = new DBConnection(this.getServletContext().getRealPath("/"));
+		
 		// set response content type to HTML
 		response.setContentType("text/html;charset=UTF8");
 		
@@ -124,6 +126,8 @@ public class Profile extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		con = new DBConnection(this.getServletContext().getRealPath("/"));
+		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");
 		PrintWriter out = response.getWriter();

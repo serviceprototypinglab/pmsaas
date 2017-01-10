@@ -29,7 +29,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 public class BookHours extends HttpServlet {
 	
 	// Database connection
-	private DBConnection con = new DBConnection();
+	private DBConnection con;
 
 	/*
 	 * method to handle get requests
@@ -39,6 +39,8 @@ public class BookHours extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");
@@ -133,6 +135,8 @@ public class BookHours extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// get user and project ID
 		int id = (int) request.getSession(false).getAttribute("ID");

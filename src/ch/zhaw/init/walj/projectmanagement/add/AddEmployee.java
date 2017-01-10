@@ -27,7 +27,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 public class AddEmployee extends HttpServlet {
 	
 	// connection to database
-	private DBConnection con = new DBConnection();
+	private DBConnection con;
 	
 	/*
 	 * method to handle get requests
@@ -35,6 +35,8 @@ public class AddEmployee extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");
 		PrintWriter out = response.getWriter();
@@ -122,6 +124,8 @@ public class AddEmployee extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// get user id from session
 		int id = (int) request.getSession(false).getAttribute("ID");

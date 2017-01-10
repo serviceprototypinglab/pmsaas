@@ -26,7 +26,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 public class EditProject extends HttpServlet {
 	
 	// create a new DB connection
-	private DBConnection con = new DBConnection();
+	private DBConnection con;
 	
 	/*
 	 * 	method to handle post requests
@@ -35,6 +35,8 @@ public class EditProject extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		
+		con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");

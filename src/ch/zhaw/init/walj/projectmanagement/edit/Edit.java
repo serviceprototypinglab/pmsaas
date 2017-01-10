@@ -50,7 +50,7 @@ public class Edit extends HttpServlet {
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 
 		// Database connection
-		DBConnection con = new DBConnection();
+		DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// get project
 		Project project = null;
@@ -394,7 +394,7 @@ public class Edit extends HttpServlet {
 				
 				// get bookings
 				ArrayList<Booking> bookings = null;
-				Effort effort = new Effort(project.getTasks());
+				Effort effort = new Effort(project.getTasks(), this.getServletContext().getRealPath("/"));
 				try {
 					bookings = effort.getBookings(e.getID());
 				} catch (SQLException e1) {

@@ -246,7 +246,7 @@ public class AddProject extends HttpServlet {
 		
 		try {
 			// create a new DB connection
-			DBConnection con = new DBConnection();
+			DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
 			
 			// create a new project in the DB
 			int pID = con.newProject(pName, pShortname, id,  pBudget, pCurrency, pStart, pEnd, pPartners);

@@ -1,9 +1,7 @@
 package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 
 /**
@@ -275,24 +273,4 @@ public class Project {
 		}
 		return total;
 	}
-	
-	/**
-	 * @return part of the project budget that is already used
-	 */
-	public double getUsedBudget(){
-    	DBConnection con = new DBConnection();
-    	try {
-			return con.getUsedBudget(this);
-		} catch (SQLException e) {
-			return 0;
-		}
-	}
-	
-	/**
-	 * @return the remaining project budget 
-	 */
-	public double getRemainingBudget(){
-    	double remainingBudget = budget - getUsedBudget();
-    	return remainingBudget;
-    }
 }
