@@ -82,9 +82,9 @@ public class ProjectOverview extends HttpServlet {
 			
 			// create charts and save them in Charts folder
 			try {
-				pieChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/");
-				lineChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/");
-				ganttChart.createChart("/home/janine/workspace/Projektverwaltung/WebContent/Charts/");
+				pieChart.createChart(path + "/Charts/");
+				lineChart.createChart(path + "/Charts/");
+				ganttChart.createChart(path + "/Charts/");
 			} catch (NumberFormatException | SQLException | ParseException e) {
 				e.printStackTrace();
 			}

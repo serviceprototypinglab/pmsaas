@@ -65,7 +65,7 @@ public class AddWorkpackage extends HttpServlet {
 		if (project.getLeader() == id){
 		
 			// print HTML
-			out.println(HTMLHeader.getInstance().printHeader("Add Workpackages", "../../", "Add Workpackages", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Add Workpackages", "../../", "Add Workpackages", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false)
 					  + "<section>"
 					  + message 
 					  + "<form method=\"post\" action=\"addWorkpackage\" data-abide novalidate>"

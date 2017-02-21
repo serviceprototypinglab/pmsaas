@@ -265,6 +265,8 @@ public class DBConnection {
 	 * 
 	 * @param id
 	 *            id of the current user
+	 * @param archive
+	 *            true if archived projects should be listed
 	 * 
 	 * @return all projects with current user as project leader
 	 * @throws SQLException 
@@ -450,10 +452,7 @@ public class DBConnection {
 
 	/**
 	 * Get all the employees
-	 * 
-	 * @param supervisor
-	 *            ID of the supervisor
-	 * 
+	 *  
 	 * @return ArrayList with all employees
 	 * 
 	 * @throws SQLException
@@ -504,20 +503,24 @@ public class DBConnection {
 	 * @return ArrayList with all task IDs
 	 * @throws SQLException
 	 */
-	public ArrayList<Integer> getAssignedTasks(int employee) throws SQLException {
+	public ArrayList<Integer> getAssignedTasks(int employee){
 		ArrayList<Integer> tasks = new ArrayList<Integer>();
 	
 		// get the task IDs
-		st = conn.prepareStatement("SELECT TaskIDFS from Assignments WHERE EmployeeIDFS =?");
-		st.setInt(1, employee);
-		res = st.executeQuery();
-	
-		while (res.next()) {
-			// add the IDs to the ArrayList
-			tasks.add(res.getInt("TaskIDFS"));
+		try {
+			st = conn.prepareStatement("SELECT TaskIDFS from Assignments WHERE EmployeeIDFS =?");
+			st.setInt(1, employee);
+			res = st.executeQuery();
+			while (res.next()) {
+				// add the IDs to the ArrayList
+				tasks.add(res.getInt("TaskIDFS"));
+			}
+		} catch (SQLException e) {
+			
 		}
-	
+		
 		return tasks;
+		
 	}
 	
 	/**
@@ -565,6 +568,25 @@ public class DBConnection {
 		}
 	}
 	
+	public ArrayList<Integer> getExpenses(int id) {
+		ArrayList<Integer> expenses = new ArrayList<Integer>();
+		try {
+			st = conn.prepareStatement("SELECT ExpenseID from Expenses WHERE EmployeeIDFS = ?");
+
+			st.setInt(1, id);
+			res = st.executeQuery();
+			res.next();
+			
+			while (res.next()) {
+				// add the IDs to the ArrayList
+				expenses.add(res.getInt("ExpenseID"));
+			}
+		} catch (SQLException e) {
+			
+		}
+		return expenses;
+	}
+
 	/**
 	 * get all bookings to a specific assignment
 	 * @param assignment the assignment the bookings should be searched for
@@ -1289,6 +1311,14 @@ public class DBConnection {
 		st = conn.prepareStatement("DELETE FROM Bookings WHERE BookingID=?");
 		
 		st.setInt(1, effortID);
+		
+		st.executeUpdate();
+	}
+
+	public void deleteEmployee(int id) throws SQLException {
+		st = conn.prepareStatement("DELETE FROM Employees WHERE EmployeeID=?");
+		
+		st.setInt(1, id);
 		
 		st.executeUpdate();
 	}

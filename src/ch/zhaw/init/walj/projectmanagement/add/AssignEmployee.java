@@ -77,7 +77,7 @@ public class AssignEmployee extends HttpServlet {
 			}
 	
 			// print HTML header
-			out.println(HTMLHeader.getInstance().printHeader("Assign Employees", "../../", "Assign Employees", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
+			out.println(HTMLHeader.getInstance().printHeader("Assign Employees", "../../", "Assign Employees", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false));
 			
 			// print HTML section with form
 			out.println("<section>"

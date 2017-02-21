@@ -75,11 +75,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			ArrayList<Task> finalAssignedTasks = new ArrayList<Task>(); 
 			tasks.addAll(project.getTasks());
 			ArrayList<Integer> assignedTasks = null;
-			try {
-				assignedTasks = con.getAssignedTasks(employeeID);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			assignedTasks = con.getAssignedTasks(employeeID);
 					
 			String message = "";
 			String disabled = "";
@@ -107,7 +103,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			}		
 	
 			// Print HTML head and header
-			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../../", "Book Hours", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
+			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../../", "Book Hours", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false));
 			
 			// print HTML section with form
 			out.println("<section>"
@@ -219,7 +215,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 			}
 			
 			// Print HTML
-			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../../", "Book Hours", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../../", "Book Hours", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false)
 					  + "<section>"
 					  + message
 					  + "<div class=\"row\">"

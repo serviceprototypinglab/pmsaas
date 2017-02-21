@@ -80,7 +80,7 @@ public class BookHours extends HttpServlet {
 			}	
 	
 			// print HTML
-			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../", "Book Hours", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Book Hours", "../../", "Book Hours", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false)
 					  + "<section>"
 					  + "<div class=\"row\">" 
 					  + message

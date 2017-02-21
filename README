@@ -1,0 +1,12 @@
+Project Management SaaS
+2017 Janine Walther <janine.walther@zhaw.ch>
+********************************************
+
+Project Management SaaS, or short PMSaaS , is a tool for project management. 
+The User can create new projects and employee accounts, add work packages 
+and tasks to projects, assign employees to tasks, book hours for them, 
+compare the booked hours to the planned PMs, weight each month differently 
+and add expenses. The project can be edited, shared with other users and 
+archived. To make it easier to keep track of all these things, the tool 
+generates different graphs.
+

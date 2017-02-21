@@ -19,7 +19,7 @@ import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
  * @author Janine Walther, ZHAW
  */
 @SuppressWarnings("serial")
-@WebServlet("/Projects/logout")
+@WebServlet("/logout")
 public class Logout extends HttpServlet {
 
 	/*
@@ -40,13 +40,13 @@ public class Logout extends HttpServlet {
 		PrintWriter out = response.getWriter();
     	
 		// print html
-    	out.println(HTMLHeader.getInstance().printHeader("Logout", "../") 
+    	out.println(HTMLHeader.getInstance().printHeader("Logout", "") 
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
 				  + "<section>" 
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-4 small-offset-4 end columns\">"
-				  + "<img src=\"../img/logo.png\">"
+				  + "<img src=\"img/logo.png\">"
 				  + "</div>"
 				  + "</div>"
 				  + "<div class=\"row\">" 
@@ -57,14 +57,14 @@ public class Logout extends HttpServlet {
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-6 small-offset-3 end columns align-center\">"
 				  + "<h5>Thank you for using Project Management SaaS</h5>"
-				  + "<p><a href=\"../login\">Click here to log in again</a></p>"
+				  + "<p><a href=\"login\">Click here to log in again</a></p>"
 				  + "</div>"
 				  + "</section>"
 				  + HTMLFooter.getInstance().printFooter(false)
 				  + "</div>"
 				  // required JavaScript
-				  + "<script src=\"../js/vendor/jquery.js\"></script>"
-				  + "<script src=\"../js/vendor/foundation.min.js\"></script>"
+				  + "<script src=\"js/vendor/jquery.js\"></script>"
+				  + "<script src=\"js/vendor/foundation.min.js\"></script>"
 				  + "<script>$(document).foundation();</script>"
 				  + "</body>"
 				  + "</html>");  	

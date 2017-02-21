@@ -155,7 +155,7 @@ public class Profile extends HttpServlet {
 				
 				// prepare success message
 				message = "<div class=\"callout success\">"
-						+ "<h5>Project successfully updated</h5>"
+						+ "<h5>User successfully updated</h5>"
 						+ "<p>The user has succsessfully been updated with the following data:</p>"
 						+ "<p>First Name: " + firstname + "</p>"
 						+ "<p>Last Name: " + lastname + "</p>"

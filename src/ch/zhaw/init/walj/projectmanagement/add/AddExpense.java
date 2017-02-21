@@ -73,7 +73,7 @@ public class AddExpense extends HttpServlet {
 			employees = project.getEmployees();
 	
 			// Print HTML head and header
-			out.println(HTMLHeader.getInstance().printHeader("Add Expenses", "../../", "Add Expenses", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
+			out.println(HTMLHeader.getInstance().printHeader("Add Expenses", "../../", "Add Expenses", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false));
 	
 			// print HTML section with form
 			out.println("<section>"

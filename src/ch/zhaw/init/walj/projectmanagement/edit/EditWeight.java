@@ -66,7 +66,7 @@ public class EditWeight extends HttpServlet {
 			ArrayList<Task> tasks = project.getTasks();
 
 			// print HTML
-			out.println(HTMLHeader.getInstance().printHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false)
 					  + "<section>"
 					  + "<form method=\"post\" action=\"editWeight\" data-abide novalidate>"
 					  + "<div class=\"row\">"
@@ -248,7 +248,7 @@ public class EditWeight extends HttpServlet {
 							   + "</div>";
 			}
 			
-			out.println(HTMLHeader.getInstance().printHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Edit Weight", "../../", "Edit Weight", "", "<a href=\"Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false)
 					  // HTML section with form
 					  + "<section>"
 					  + "<div class=\"row\">"

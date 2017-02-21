@@ -71,7 +71,7 @@ public class ShareProject extends HttpServlet{
 			
 			
 			// print HTML
-			out.println(HTMLHeader.getInstance().printHeader("Share project", "../", "Share project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Share project", "../", "Share project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false)
 					  + "<section>"
 					  + "<div class=\"row\">"
 					  + "<h3>Choose employees you want to share the project with:</h3>" 
@@ -193,7 +193,7 @@ public class ShareProject extends HttpServlet{
 		
 	
 			// print HTML
-			out.println(HTMLHeader.getInstance().printHeader("Share Project", "../", "Share Project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Share Project", "../", "Share Project", "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false)
 					  + "<section>" 
 					  + message
 					  + "</section>"

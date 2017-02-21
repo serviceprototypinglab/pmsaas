@@ -67,15 +67,10 @@ public class ChooseTask extends HttpServlet{
 			ArrayList<Task> tasks = project.getTasks();
 			ArrayList<Integer> assignedTasks = null;
 
-			// get assignments
-			try {
-				assignedTasks = con.getAssignedTasks(employeeID);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			assignedTasks = con.getAssignedTasks(employeeID);
 			
 			// print HTML header
-			out.println(HTMLHeader.getInstance().printHeader("Assign Employees", "../../../", "Assign Employees", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>"));
+			out.println(HTMLHeader.getInstance().printHeader("Assign Employees", "../../../", "Assign Employees", "", "<a href=\"../Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false));
 			// print HTML section with form
 			out.println("<section>"
 					  + "<div class=\"row\">"

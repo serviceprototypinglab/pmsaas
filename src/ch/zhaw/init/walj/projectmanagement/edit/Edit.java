@@ -66,7 +66,7 @@ public class Edit extends HttpServlet {
 		if (project.getLeader() == userID) {
 			
 			// print html
-			out.println(HTMLHeader.getInstance().printHeader("Edit " + project.getShortname(), "../", "Edit " + project.getShortname(), "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Edit " + project.getShortname(), "../", "Edit " + project.getShortname(), "", "<a href=\"Overview/Project?id=" + projectID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false)
 					  + "<section>"
 					  + "<div class=\"row\">"
 					  + "<div class=\"small-12 columns\">"

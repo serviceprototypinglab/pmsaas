@@ -71,7 +71,7 @@ public class AddTask extends HttpServlet {
 			ArrayList<Workpackage> workpackages = project.getWorkpackages();
 								
 			// print HTML
-			out.println(HTMLHeader.getInstance().printHeader("Add Tasks", "../../", "Add Tasks", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>")
+			out.println(HTMLHeader.getInstance().printHeader("Add Tasks", "../../", "Add Tasks", "", "<a href=\"Project?id=" + pID + "\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Project</a>", false)
 					  + "<section>"
 					  + message
 					  + "<div class=\"row\">"

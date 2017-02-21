@@ -54,7 +54,7 @@ public class Overview extends HttpServlet {
 		String script = "<script>function Redirect(ID) {var url = \"Overview/Project?id=\" + ID; window.location=url;}</script>";
 		
 		// print html
-		out.println(HTMLHeader.getInstance().printHeader("Projects", "../", "Projects", script, "")
+		out.println(HTMLHeader.getInstance().printHeader("Projects", "../", "Projects", script, "", false)
 				  // HTML section with list of all projects
 				  + "<section>" 
 				  + "<div class=\"row\">"

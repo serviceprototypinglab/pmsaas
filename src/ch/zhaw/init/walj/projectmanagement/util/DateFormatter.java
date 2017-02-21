@@ -50,6 +50,20 @@ public class DateFormatter {
 	/**
 	 * 
 	 * @param unformattedDate
+	 * 				date object
+	 * @return
+	 * 				date 'DD.MM.YYYY' as a string
+	 */
+	public String formatDate(Date unformattedDate){
+		
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+		String formattedDate = format.format(unformattedDate);
+		return formattedDate;
+	}
+	
+	/**
+	 * 
+	 * @param unformattedDate
 	 * 				date 'DD.MM.YYYY' as a string
 	 * @return
 	 * 				date 'YYYY-MM-DD' as a string
@@ -68,6 +82,20 @@ public class DateFormatter {
 			
 			return unformattedDate;
 		}
+	}
+	
+	/**
+	 * 
+	 * @param unformattedDate
+	 * 				date object
+	 * @return
+	 * 				date 'YYYY-MM-DD' as a string
+	 */
+	public String formatDateForDB(Date unformattedDate){
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedDate = format.format(unformattedDate);
+		return formattedDate;
 	}
 	
 	

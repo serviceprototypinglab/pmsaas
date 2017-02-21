@@ -14,9 +14,10 @@ public class DataBaseAccess{
  	
 	public DataBaseAccess(String path){
 		try {
-
+			// reads the url, the database name, username and password from the .config file 
 			FileReader fr = new FileReader(path + ".config");
 		    BufferedReader br = new BufferedReader(fr);
+		    
 		    url = br.readLine();
 		    helper = url.split("=");
 		    url = helper[1];

@@ -80,7 +80,7 @@ public class AddProject extends HttpServlet {
 					  + "</script>";		
 		
 		// print HTML
-		out.println(HTMLHeader.getInstance().printHeader("New Project", "../", "New Project", script, "")
+		out.println(HTMLHeader.getInstance().printHeader("New Project", "../", "New Project", script, "", false)
 				  + "<section>"
 				  + message
 				  + "<div class=\"row\">"
