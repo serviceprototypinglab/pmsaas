@@ -3,7 +3,7 @@ package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
 import java.util.ArrayList;
 import java.util.Date;
 
-import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.format.DateFormatter;
 
 /**
  * implementation of the database class Workpackages

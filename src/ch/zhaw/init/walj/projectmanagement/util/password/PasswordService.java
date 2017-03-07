@@ -1,4 +1,4 @@
-package ch.zhaw.init.walj.projectmanagement.util;
+package ch.zhaw.init.walj.projectmanagement.util.password;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

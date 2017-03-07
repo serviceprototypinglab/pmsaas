@@ -13,17 +13,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
-import ch.zhaw.init.walj.projectmanagement.util.NumberFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.chart.GanttChart;
 import ch.zhaw.init.walj.projectmanagement.util.chart.LineChart;
 import ch.zhaw.init.walj.projectmanagement.util.chart.PieChart;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Expense;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
+import ch.zhaw.init.walj.projectmanagement.util.format.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.format.NumberFormatter;
 
 /**
  * project management tool, project overview page

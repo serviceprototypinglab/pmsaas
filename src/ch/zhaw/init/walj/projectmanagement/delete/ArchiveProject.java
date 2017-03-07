@@ -67,7 +67,7 @@ public class ArchiveProject extends HttpServlet {
 					    + "<h2>The Project " + project.getName() + " has sucessfully been archived.</h2>"
 						+ "<a href=\"/Projektverwaltung/Projects/Overview\">"
 						+ "<i class=\"fa fa-chevron-left fa-4x\" aria-hidden=\"true\"></i></br>"
-						+ "Click here to go back to overview</a>"
+						+ "Click here to go back to the properties page</a>"
 						+ "</div>"
 						+ "</div>";
 			} catch (SQLException e) {
@@ -77,7 +77,7 @@ public class ArchiveProject extends HttpServlet {
 					    + "<h2>The Project " + project.getName() + " could not be archived</h2>"
 						+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + project.getID() + "\">"
 						+ "<i class=\"fa fa-chevron-left fa-4x\" aria-hidden=\"true\"></i></br>"
-						+ "Click here to go back to project</a>"
+						+ "Click here to go back to the properties page</a>"
 						+ "</div>"
 						+ "</div>";			
 			}

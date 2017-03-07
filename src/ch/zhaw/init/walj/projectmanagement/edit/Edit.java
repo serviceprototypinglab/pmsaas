@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.Effort;
 import ch.zhaw.init.walj.projectmanagement.util.ExpenseTypes;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
@@ -23,6 +22,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Expense;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Workpackage;
+import ch.zhaw.init.walj.projectmanagement.util.format.DateFormatter;
 
 /**
  * Projectmanagement tool, Page edit project

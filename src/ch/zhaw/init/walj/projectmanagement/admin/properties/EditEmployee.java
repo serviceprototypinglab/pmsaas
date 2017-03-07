@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
-import ch.zhaw.init.walj.projectmanagement.util.DateFormatter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.format.DateFormatter;
 
 /**
  * project management tool, profile page
@@ -55,7 +55,7 @@ public class EditEmployee extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		// print html
-		out.println(HTMLHeader.getInstance().printHeader("Edit " + employee.getName(), "../", "Edit " + employee.getName(), "", "<a href=\"properties\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to Properties</a>", true)
+		out.println(HTMLHeader.getInstance().printHeader("Edit " + employee.getName(), "../", "Edit " + employee.getName(), "", "<a href=\"properties\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to properties</a>", true)
 				  + "<section>"					  
 				  // form to edit user information
 				  + "<div class=\"row\" id=\"user\">"

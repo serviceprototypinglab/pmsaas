@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
-import ch.zhaw.init.walj.projectmanagement.util.PasswordService;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.password.PasswordService;
 
 /**
  * project management tool, profile page
@@ -70,7 +70,6 @@ public class DeleteEmployee extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		
 		// print html
 		out.println(HTMLHeader.getInstance().printHeader("Delete " + employee.getName(), "../", "Delete " + employee.getName(), "", "", true)

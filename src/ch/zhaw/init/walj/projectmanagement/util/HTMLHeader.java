@@ -61,6 +61,7 @@ public final class HTMLHeader {
 	   * @param title title of the page 
 	   * @param script JavaScript code
 	   * @param link link shown next to the title
+	   * @param admin set true if admin is logged in
 	   * @return string with the header
 	   */
 	  public String printHeader(String tabTitle, String path, String title, String script, String link, boolean admin){

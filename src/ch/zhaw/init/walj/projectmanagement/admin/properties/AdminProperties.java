@@ -44,8 +44,7 @@ public class AdminProperties extends HttpServlet {
     	String message = "";    	
     	if (request.getAttribute("msg") != null){
     		message = (String) request.getAttribute("msg");
-    	}
-
+    	}    	
 		ArrayList<Employee> employees = new ArrayList<>();
 		
 		try {
@@ -64,9 +63,8 @@ public class AdminProperties extends HttpServlet {
 					projects.addAll(p);
 				}
 			}
-		} catch (SQLException e) {
-			
-		}
+		} catch (SQLException e) {}
+		
 		ArrayList<Project> archivedProjects = new ArrayList<>();
 		
 		try {
@@ -76,9 +74,7 @@ public class AdminProperties extends HttpServlet {
 					archivedProjects.addAll(p);
 				}
 			}
-		} catch (SQLException e) {
-			
-		}
+		} catch (SQLException e) {}
 		
 		out.println(HTMLHeader.getInstance().printHeader("Admin Properties", "../", "Properties", "", "", true)
 				  // HTML section with panels
@@ -86,7 +82,8 @@ public class AdminProperties extends HttpServlet {
 				  + "<div class=\"row\">"
 				  + "<h2>Hello Admin!</h2>"
 				  + "</div>"
-				  // change logo panel
+				  
+// -------------- change logo panel -----------------------------------------------------------------------------------------------
 				  + "<div class=\"row\">"
 				  + "<div class=\"panel small-12 columns\">"
 				  + "<div class=\"row round\">"
@@ -139,7 +136,7 @@ public class AdminProperties extends HttpServlet {
 					  + "<div class=\"reveal\" id=\"deleteEmployee" + employee.getID() + "\" data-reveal>"
 					  + "<h1 class=\"align-left\">Are you sure?</h1>"
 					  + "<p class=\"lead\"></p>"
-					  + "<a class=\"expanded alert button\" id=\"finalDelete\" href=\"deleteEmployee?id=" + employee.getID() + "\"><i class=\"fa fa-trash\"></i> Delete Employee</a>"
+					  + "<a class=\"expanded alert button\" href=\"deleteEmployee?id=" + employee.getID() + "\"><i class=\"fa fa-trash\"></i> Delete Employee</a>"
 					  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
 					  + "<span aria-hidden=\"true\">&times;</span>"
 					  + "</button>"
@@ -178,11 +175,31 @@ public class AdminProperties extends HttpServlet {
 				out.println("<tr>"
 						  + "<td>" + project.getName() + "</td>"
 						  + "<td>" + con.getEmployee(project.getLeader()).getName() + "</td>"					  	
-						  + "<td style=\"width: 10%\"><a href=\"\" title=\"Edit\"><i class=\"fa fa-pencil-square-o fa-lg\"></i></a></td>"
-						  + "<td style=\"width: 10%\"><a href=\"\" title=\"Archive\"><i class=\"fa fa-archive fa-lg\"></i></a></td>"
-						  + "<td style=\"width: 10%\"><a href=\"\" title=\"Delete\"><i class=\"fa fa-trash fa-lg\"></i></a></td>"
+						  + "<td style=\"width: 10%\"><a href=\"editProject?id=" + project.getID() + "\" title=\"Edit\"><i class=\"fa fa-pencil-square-o fa-lg\"></i></a></td>"
+						  + "<td style=\"width: 10%\"><a data-open=\"archive" + project.getID() + "\" title=\"Archive\"><i class=\"fa fa-archive fa-lg\"></i></a></td>"
+						  + "<td style=\"width: 10%\"><a data-open=\"delete" + project.getID() + "\" title=\"Delete\"><i class=\"fa fa-trash fa-lg\"></i></a></td>"
 						  + "</tr>");
 			} catch (SQLException e) {}
+			
+			// archive project window
+			out.println("<div class=\"reveal\" id=\"archive" + project.getID() + "\" data-reveal>"
+					  + "<h1 class=\"align-left\">Are you sure?</h1>"
+					  + "<p class=\"lead\"></p>"
+					  + "<a class=\"expanded warning button\" href=\"archiveProject?projectID=" + project.getID() + "\"><i class=\"fa fa-archive\"></i> Archive Project</a>"
+					  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
+					  + "<span aria-hidden=\"true\">&times;</span>"
+					  + "</button>"
+					  + "</div>");
+			
+			// delete project window
+			out.println("<div class=\"reveal\" id=\"delete" + project.getID() + "\" data-reveal>"
+					  + "<h1 class=\"align-left\">Are you sure?</h1>"
+					  + "<p class=\"lead\"></p>"
+					  + "<a class=\"expanded alert button\" href=\"deleteProject?projectID=" + project.getID() + "\"><i class=\"fa fa-archive\"></i> Archive Project</a>"
+					  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
+					  + "<span aria-hidden=\"true\">&times;</span>"
+					  + "</button>"
+					  + "</div>");
 		}
 		
 		for (Project project : archivedProjects){
@@ -190,11 +207,31 @@ public class AdminProperties extends HttpServlet {
 				out.println("<tr>"
 						  + "<td>" + project.getName() + " (Archived)</td>"
 						  + "<td>" + con.getEmployee(project.getLeader()).getName() + "</td>"	
-						  + "<td style=\"width: 10%\"><a href=\"\" title=\"Edit\"><i class=\"fa fa-pencil-square-o fa-lg\"></i></a></td>"
-						  + "<td style=\"width: 10%\"><a href=\"\" title=\"Restore\"><i class=\"fa fa-undo fa-lg\"></i></a></td>"
-						  + "<td style=\"width: 10%\"><a href=\"\" title=\"Delete\"><i class=\"fa fa-trash fa-lg\"></i></a></td>"
+						  + "<td style=\"width: 10%\"><a href=\"editProject?id=" + project.getID() + "\" title=\"Edit\"><i class=\"fa fa-pencil-square-o fa-lg\"></i></a></td>"
+						  + "<td style=\"width: 10%\"><a data-open=\"restore" + project.getID() + "\" title=\"Restore\"><i class=\"fa fa-undo fa-lg\"></i></a></td>"
+						  + "<td style=\"width: 10%\"><a data-open=\"delete" + project.getID() + "\" title=\"Delete\"><i class=\"fa fa-trash fa-lg\"></i></a></td>"
 						  + "</tr>");
 			} catch (SQLException e) {}
+			
+			// archive project window
+			out.println("<div class=\"reveal\" id=\"restore" + project.getID() + "\" data-reveal>"
+					  + "<h1 class=\"align-left\">Are you sure?</h1>"
+					  + "<p class=\"lead\"></p>"
+					  + "<a class=\"expanded warning button\" href=\"restoreProject?projectID=" + project.getID() + "\"><i class=\"fa fa-undo\"></i> Restore Project</a>"
+					  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
+					  + "<span aria-hidden=\"true\">&times;</span>"
+					  + "</button>"
+					  + "</div>");
+			
+			// delete project window
+			out.println("<div class=\"reveal\" id=\"delete" + project.getID() + "\" data-reveal>"
+					  + "<h1 class=\"align-left\">Are you sure?</h1>"
+					  + "<p class=\"lead\"></p>"
+					  + "<a class=\"expanded alert button\" href=\"deleteProject?projectID=" + project.getID() + "\"><i class=\"fa fa-archive\"></i> Archive Project</a>"
+					  + "<button class=\"close-button\" data-close aria-label=\"Close reveal\" type=\"button\">"
+					  + "<span aria-hidden=\"true\">&times;</span>"
+					  + "</button>"
+					  + "</div>");
 		}
 		
 		out.println("</tbody>"

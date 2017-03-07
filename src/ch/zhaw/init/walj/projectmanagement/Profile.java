@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
-import ch.zhaw.init.walj.projectmanagement.util.PasswordService;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
+import ch.zhaw.init.walj.projectmanagement.util.password.PasswordService;
 
 /**
  * project management tool, profile page

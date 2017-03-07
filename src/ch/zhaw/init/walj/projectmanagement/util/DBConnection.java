@@ -17,6 +17,9 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Weight;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Workpackage;
+import ch.zhaw.init.walj.projectmanagement.util.format.DateFormatter;
+import ch.zhaw.init.walj.projectmanagement.util.password.PasswordGenerator;
+import ch.zhaw.init.walj.projectmanagement.util.password.PasswordService;
 
 /**
  * creates a connection to the database
@@ -273,23 +276,29 @@ public class DBConnection {
 	 */
 	public ArrayList<Project> getProjects(int id, boolean archive) throws SQLException {
 		ArrayList<Project> projects = new ArrayList<Project>();
+		ArrayList<Integer> projectsIds = new ArrayList<Integer>();
 		
+		st = conn.prepareStatement("SELECT ProjectIDFS FROM  Projects where ProjectLeader=? and Archive=?");
+		st.setInt(1, id);
 		if (archive){
-			st = conn.prepareStatement("SELECT * FROM  Projects where ProjectLeader=? and Archive=1");
-			st.setInt(1, id);
-			res = st.executeQuery();
+			st.setInt(2, 1);
 		} else {
-			st = conn.prepareStatement("SELECT * FROM  Projects where ProjectLeader=? and Archive=0");
-			st.setInt(1, id);
-			res = st.executeQuery();			
+			st.setInt(2, 0);
 		}
+		res = st.executeQuery();	
 		
 		while (res.next()){
-			projects.add(getProject(res.getInt("ProjectIDFS")));
+			projectsIds.add(res.getInt("ProjectIDFS"));
 		}
+		
+		for (int i : projectsIds){
+			projects.add(getProject(i));
+		}
+		
 		if (projects.isEmpty()){
-			return null;
+			return null;			
 		}
+			
 		return projects;
 	}
 
@@ -1253,12 +1262,24 @@ public class DBConnection {
 	}
 
 	/**
-	 * set the archive flag to 1 (=archived)
+	 * set the archive flag to 1 (= archived)
 	 * @param projectID ID of the project
 	 * @throws SQLException
 	 */
 	public void archiveProject(int projectID) throws SQLException {
 		st = conn.prepareStatement("UPDATE projectmanagement.Projects SET Archive=1 WHERE Projects.ProjectIDFS = ?");
+		st.setInt(1, projectID);
+		st.executeUpdate();
+	}
+	
+
+	/**
+	 * set the archive flag to 0 (= not archived)
+	 * @param projectID ID of the project
+	 * @throws SQLException
+	 */
+	public void restoreProject(int projectID) throws SQLException {
+		st = conn.prepareStatement("UPDATE projectmanagement.Projects SET Archive=0 WHERE Projects.ProjectIDFS = ?");
 		st.setInt(1, projectID);
 		st.executeUpdate();
 	}
