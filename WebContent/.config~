@@ -1,0 +1,4 @@
+URL=jdbc:mysql://localhost:3306/
+Database=projectmanagement
+Username=Janine
+Password=test123

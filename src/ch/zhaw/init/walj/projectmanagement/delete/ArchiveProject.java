@@ -1,3 +1,20 @@
+/**
+ *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ *	All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may
+ *  not use this file except in compliance with the License. You may obtain
+ *  a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ *  License for the specific language governing permissions and limitations
+ *  under the License.
+ */
+
 package ch.zhaw.init.walj.projectmanagement.delete;
 
 import java.io.IOException;
@@ -67,7 +84,7 @@ public class ArchiveProject extends HttpServlet {
 					    + "<h2>The Project " + project.getName() + " has sucessfully been archived.</h2>"
 						+ "<a href=\"/Projektverwaltung/Projects/Overview\">"
 						+ "<i class=\"fa fa-chevron-left fa-4x\" aria-hidden=\"true\"></i></br>"
-						+ "Click here to go back to the properties page</a>"
+						+ "Click here to go back to overview</a>"
 						+ "</div>"
 						+ "</div>";
 			} catch (SQLException e) {
@@ -77,7 +94,7 @@ public class ArchiveProject extends HttpServlet {
 					    + "<h2>The Project " + project.getName() + " could not be archived</h2>"
 						+ "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + project.getID() + "\">"
 						+ "<i class=\"fa fa-chevron-left fa-4x\" aria-hidden=\"true\"></i></br>"
-						+ "Click here to go back to the properties page</a>"
+						+ "Click here to go back to project</a>"
 						+ "</div>"
 						+ "</div>";			
 			}

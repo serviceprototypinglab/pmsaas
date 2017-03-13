@@ -1,3 +1,20 @@
+/**
+ *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ *	All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may
+ *  not use this file except in compliance with the License. You may obtain
+ *  a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ *  License for the specific language governing permissions and limitations
+ *  under the License.
+ */
+
 package ch.zhaw.init.walj.projectmanagement.errorpages;
 
 import java.io.IOException;
@@ -19,7 +36,7 @@ import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
  * 
  */
 @SuppressWarnings("serial")
-@WebServlet("/AccessDenied")
+@WebServlet("/NoDatabase")
 public class AccessDenied extends HttpServlet {
 
 	/*
@@ -40,13 +57,13 @@ public class AccessDenied extends HttpServlet {
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-6 small-offset-3 end columns\">"
 				  + "<h1 class=\"align-center\"><i class=\"fa fa-exclamation-triangle fa-3x\"></i></h1>"
-				  + "<h1 class=\"align-center\">Access denied</h1>"
+				  + "<h1 class=\"align-center\">Database not found</h1>"
 				  + "</div>"
 				  + "</div>"
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-12 columns text-center\">"
-				  + "<p>You don't have the permission to access this site</p>"
-				  + "<a href=\"/Projektverwaltung/Projects/Overview\">Click here to go back to the overview</a>"
+				  + "<p>Maybe the database does not exist or there's a mistake in the .config file</p>"
+				  + "<a href=\"/Projektverwaltung/login\">Click here to try again</a>"
 				  + "</div>"
 				  + "</div>"
 				  + "</section>"
