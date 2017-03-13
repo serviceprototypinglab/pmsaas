@@ -101,9 +101,9 @@ public final class HTMLHeader {
 				header += "<a href=\"/Projektverwaltung/Projects/Overview\" title=\"All Projects\"><i class=\"fa fa-list fa-fw fa-lg\"></i></a> "
 					    + "<a href=\"/Projektverwaltung/Projects/newProject\" title=\"New Project\"><i class=\"fa fa-file fa-fw fa-lg\"></i></a> "
 					    + "<a href=\"/Projektverwaltung/Projects/newEmployee\" title=\"New Employee\"><i class=\"fa fa-user-plus fa-fw fa-lg\"></i></a> "
-					    + "<a href=\"/Projektverwaltung/Projects/employee\" title=\"My Profile\"><i class=\"fa fa-user fa-fw fa-lg\"></i></a> ";
+					    + "<a href=\"/Projektverwaltung/Projects/employee\" title=\"My Profile\"><i class=\"fa fa-user fa-fw fa-lg\"></i></a> "
 					 // + "<a href=\"/Projektverwaltung/Projects/properties\" title=\"Properties\"><i class=\"fa fa-cog fa-fw fa-lg\"></i></a> "
-				     // + "<a href=\"/Projektverwaltung/Projects/help\" title=\"Help\"><i class=\"fa fa-book fa-fw fa-lg\"></i></a> "
+				        + "<a href=\"/Projektverwaltung/Projects/help\" title=\"Help\"><i class=\"fa fa-book fa-fw fa-lg\"></i></a> ";
 		    } else {
 		    	
 		    }
