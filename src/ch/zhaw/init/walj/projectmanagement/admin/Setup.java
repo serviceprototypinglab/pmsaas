@@ -44,8 +44,6 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 @WebServlet("/setup")
 public class Setup extends HttpServlet {
 	
-	// connection to database
-	DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
 	
 	/*
 	 * method to handle get requests
@@ -53,85 +51,87 @@ public class Setup extends HttpServlet {
 	 */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	
+
     	// prepare response
     	response.setContentType("text/html;charset=UTF8");
 		PrintWriter out = response.getWriter();
-    	
-		// do this only when there are no users
-    	if (con.noUsers()){
-			
-    		// set error message
-			String message = "";
-	    	if (request.getAttribute("error") != null){
-	    		message = (String) request.getAttribute("error");
-	    	}
-			
-	    	// print HTML
-	    	out.println(HTMLHeader.getInstance().printHeader("Setup - Project Management Saas", "") 
-					  + "<body>"
-					  + "<div id=\"wrapper\">" 
-					  + "<section>" 
-					  + "<div class=\"row\">" 
-					  + "<div class=\"small-4 columns\">"
-					  + "<img src=\"img/logo.png\" class=\"add\">"
-					  + "</div>"
-					  + "</div>"
-					  + "<div class=\"row\">" 
-					  + "<div class=\"small-12 columns\">"
-					  + "<h1 class=\"blue add\">Project Management SaaS</h1>"
-					  + "</div>"
-					  + "<div class=\"small-12 columns\">"
-					  + "<h2 class=\"blue\">Initial setup</h2>"
-					  + "</div>"
-					  + "</div>"
-					  + "<div class=\"row\">" 
-					  + "<div class=\"small-12 columns\">"
-					  + message
-					  + "<form method=\"post\" action=\"setup\" data-abide novalidate>"
-					  // error message (if something's wrong with the form)
-					  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
-					  + "<p><i class=\"fa fa-exclamation-triangle\"></i> There are some errors in your form.</p>"
-					  + "</div>"
-					  + "<div class=\"small-12 columns\">"
-					  + "<p>Set the Admin's e-mail and password</p>"
-					  + "</div>"
-					  // field for e-mail address
-					  + "<label class=\"small-12 columns\">Admin Mail "
-					  + "<input type=\"email\" name=\"mail\" required>"
-					  + "</label>"
-					  // field for password
-					  + "<label class=\"small-12 large-6 end columns\">New Password "
-					  + "<input type=\"password\" name=\"password\" id=\"password\" required>"
-					  + "<span class=\"form-error\">"
-			          + "Password is required!"
-			          + "</span>"
-					  + "</label>"
-					  // field to re-enter password
-					  + "<label class=\"small-12 large-6 end columns\">Re-enter Password "
-					  + "<input type=\"password\" data-equalto=\"password\" required>"
-					  + "<span class=\"form-error\">"
-			          + "Passwords don't match!"
-			          + "</span>"
-					  + "</label>"
-					  // submit button
-					  + "<input type=\"submit\" class=\"small-3 columns large button float-right create\" value=\"submit\">"
-					  + "</form>"
-					  + "</div>"
-					  + "</div>"
-					  + "</section>"
-					  + HTMLFooter.getInstance().printFooter(false)
-					  + "</div>"
-					  // required JavaScript
-					  + "<script src=\"js/vendor/jquery.js\"></script>"
-					  + "<script src=\"js/vendor/foundation.min.js\"></script>"
-					  + "<script>$(document).foundation();</script>"
-					  + "</body>"
-					  + "</html>");  	
-    	} else {
-    		String url = request.getContextPath() + "/login";
-            response.sendRedirect(url);
+	    			
+		// set error message
+		String message = "";
+    	if (request.getAttribute("error") != null){
+    		message = (String) request.getAttribute("error");
     	}
+		
+    	// print HTML
+    	out.println(HTMLHeader.getInstance().printHeader("Setup", "", "Setup", "", "", true)
+				  + "<body>"
+				  + "<div id=\"wrapper\">" 
+				  + "<section>"
+				  + "<div class=\"row\">" 
+				  + "<div class=\"small-12 columns\">"
+				  + "<h1 class=\"blue add\">Project Management SaaS</h1>"
+				  + "</div>"
+				  + "<div class=\"small-12 columns\">"
+				  + "<h2 class=\"blue\">Initial setup</h2>"
+				  + "</div>"
+				  + "</div>"
+				  + "<div class=\"row\">" 
+				  + "<div class=\"small-12 columns\">"
+				  + message
+				  + "<form method=\"post\" action=\"setup\" data-abide novalidate>"
+				  // error message (if something's wrong with the form)
+				  + "<div data-abide-error class=\"alert callout\" style=\"display: none;\">"
+				  + "<p><i class=\"fa fa-exclamation-triangle\"></i> There are some errors in your form.</p>"
+				  + "</div>"
+				  + "<div class=\"small-12 columns\">"
+				  + "<p>Set database</p>"
+				  + "</div>"
+				  + "<label class=\"small-12 columns\">Database url "
+				  + "<input type=\"text\" name=\"dbURL\" required>"
+				  + "</label>"
+				  + "<label class=\"small-12 columns\">Database username "
+				  + "<input type=\"text\" name=\"dbUser\" required>"
+				  + "</label>"
+				  + "<label class=\"small-12 columns\">Database password "
+				  + "<input type=\"password\" name=\"dbPassword\" required>"
+				  + "</label>"
+				  + "<hr>"					  
+				  + "<div class=\"small-12 columns\">"
+				  + "<p>Set the Admin's e-mail and password</p>"
+				  + "</div>"
+				  // field for e-mail address
+				  + "<label class=\"small-12 columns\">Admin Mail "
+				  + "<input type=\"email\" name=\"mail\" required>"
+				  + "</label>"
+				  // field for password
+				  + "<label class=\"small-12 large-6 end columns\">New Password "
+				  + "<input type=\"password\" name=\"password\" id=\"password\" required>"
+				  + "<span class=\"form-error\">"
+		          + "Password is required!"
+		          + "</span>"
+				  + "</label>"
+				  // field to re-enter password
+				  + "<label class=\"small-12 large-6 end columns\">Re-enter Password "
+				  + "<input type=\"password\" data-equalto=\"password\" required>"
+				  + "<span class=\"form-error\">"
+		          + "Passwords don't match!"
+		          + "</span>"
+				  + "</label>"
+				  // submit button
+				  + "<input type=\"submit\" class=\"small-3 columns large button float-right create\" value=\"submit\">"
+				  + "</form>"
+				  + "</div>"
+				  + "</div>"
+				  + "</section>"
+				  + HTMLFooter.getInstance().printFooter(false)
+				  + "</div>"
+				  // required JavaScript
+				  + "<script src=\"js/vendor/jquery.js\"></script>"
+				  + "<script src=\"js/vendor/foundation.min.js\"></script>"
+				  + "<script>$(document).foundation();</script>"
+				  + "</body>"
+				  + "</html>");  	
+    	 
     }
 
     /*
@@ -142,6 +142,8 @@ public class Setup extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
+    	DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
     	
     	// prepare response
     	response.setContentType("text/html;charset=UTF8");

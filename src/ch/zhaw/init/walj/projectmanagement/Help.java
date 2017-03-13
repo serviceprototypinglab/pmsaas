@@ -48,6 +48,7 @@ public class Help extends HttpServlet {
 				  + "<section>"
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-12 columns\">"
+				  + "<h2 id=\"overview\" class=\"no-margin\">Help page</h2>"
 				  + "<ol>"
 				  	  + "<li><a href=\"#overview\">Overview</a>"
 						  + "<ol>"

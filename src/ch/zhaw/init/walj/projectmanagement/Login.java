@@ -50,13 +50,19 @@ public class Login extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	response.setContentType("text/html;charset=UTF8");
 
-    	// connection to database
-    	DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
+    	DBConnection con = null;    	
+    	try {
+    		// connection to database
+    		con = new DBConnection(this.getServletContext().getRealPath("/"));            
+    	} catch (NullPointerException e){
+            String setupURI = request.getContextPath() + "/setup";
+    		response.sendRedirect(setupURI);
+    		return;
+    	}
     	
-    	// send redirect to setup if there are no users yet (first initialization) 
-    	if (con.noUsers()){
-            String loginURI = request.getContextPath() + "/setup";
-    		response.sendRedirect(loginURI);
+    	if (con.noConnection){
+    		String setupURI = request.getContextPath() + "/setup";
+    		response.sendRedirect(setupURI);
     		return;
     	}
     	

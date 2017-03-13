@@ -290,4 +290,13 @@ public class Project {
 		}
 		return total;
 	}
+
+	public Workpackage getWorkpackage(int taskWP) {
+		for (Workpackage wp : workpackages){
+			if (wp.getID() == taskWP){
+				return wp;
+			}
+		}
+		return null;
+	}
 }

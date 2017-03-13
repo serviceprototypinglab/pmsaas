@@ -255,4 +255,24 @@ public class DateFormatter {
 		return date;
 	}
 	
+	/**
+	 * Checks if firstDate is before secondDate. 
+	 * @param firstDate
+	 * @param secondDate
+	 * @param formatString
+	 * @return true if firstDate is before secondDate.
+	 */
+	public boolean checkDate(String firstDate, String secondDate, String formatString){
+		SimpleDateFormat format = new SimpleDateFormat(formatString);
+		
+		try {
+			Date date1 = format.parse(firstDate);
+			Date date2 = format.parse(secondDate);
+			
+			return date1.before(date2);
+		} catch (ParseException e) {
+			return false;
+		}
+	}
+	
 }

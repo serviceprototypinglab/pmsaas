@@ -55,6 +55,7 @@ public class DBConnection {
 	private Connection conn;
 	private PreparedStatement st;
 	private ResultSet res;
+	public boolean noConnection;
 
 	/**
 	 * Constructor to the DBConnection class
@@ -81,27 +82,12 @@ public class DBConnection {
 			Class.forName(driver).newInstance();
 			conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
 
+			noConnection = false;
 		} catch (Exception e) {
-			e.printStackTrace();
+			noConnection = true;
 		}
 	}
-	
-	/**
-	 * checks if there are users in the database
-	 * @return true if there are no users
-	 */
-	public boolean noUsers(){
-		try {
-			st = conn.prepareStatement("SELECT * FROM  Employees");
-			res = st.executeQuery();
-			if (!res.next()){
-				return true;
-			}
-		} catch (SQLException | NullPointerException e) {
-			return true;
-		}
-		return false;
-	}
+
 
 	/**
 	 * creates a new Project object and returns it to the user
@@ -116,7 +102,7 @@ public class DBConnection {
 	
 		// variable declaration
 		PreparedStatement stProject = conn.prepareStatement("SELECT * FROM  Projects where ProjectIDFS= ?");
-		PreparedStatement stEmployee = conn.prepareStatement("SELECT Employees.* FROM Employees INNER JOIN Assignments ON Employees.EmployeeID = Assignments.EmployeeIDFS WHERE Assignments.TaskIDFS = ?");
+		PreparedStatement stEmployee = conn.prepareStatement("SELECT Employees.* FROM Employees INNER JOIN Assignments ON Employees.EmployeeID = Assignments.EmployeeIDFS WHERE Assignments.TaskIDFS = ? ORDER BY Employees.Firstname ASC");
 		PreparedStatement stWage = conn.prepareStatement("SELECT WagePerHour FROM  Wage where EmployeeIDFS= ? order by ValidFrom desc");
 		PreparedStatement stExpenses = conn.prepareStatement("Select * from Expenses where ProjectIDFS= ?");
 		PreparedStatement stWeight = conn.prepareStatement("Select * from Weight where TaskIDFS= ?");

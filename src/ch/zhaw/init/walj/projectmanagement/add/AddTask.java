@@ -196,6 +196,10 @@ public class AddTask extends HttpServlet {
             return;
 		}
 
+		Workpackage wp = project.getWorkpackage(taskWP);
+		
+		
+		
 		// check if user is project leader
 		if (project.getLeader() == id){
 			try {	

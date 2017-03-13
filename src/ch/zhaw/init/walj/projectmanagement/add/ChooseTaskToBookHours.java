@@ -114,7 +114,7 @@ public class ChooseTaskToBookHours extends HttpServlet{
 						+ "<div class=\"callout alert\">"
 						+ "<h5>The employee is not assigned to any task</h5>"
 						+ "<p>Assign the employee to a task first.</p>"
-						+ "<a href=\"../assignEmployee?projectID=" + projectID + "\">Click here to assign employees to tasks</a>"
+						+ "<a href=\"../assignEmployee/chooseTask?projectID=" + projectID + "&employee=" + employeeID + "\">Click here to assign the employee to tasks</a>"
 						+ "</div></div>";
 				disabled = "disabled";
 			}		
