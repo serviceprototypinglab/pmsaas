@@ -130,7 +130,7 @@ public class Login extends HttpServlet {
 				  + "</form"
 				  + "<div class=\"row\">" 
 				  + "<div class=\"small-6 small-offset-3 end columns text-center\">"
-				  + "<a href=\"resetPassword\">Forgot your password?</p>" 
+				  + "<a href=\"resetPassword\">Forgot your password?</a>" 
 				  + "</div>"
 				  + "</div>"
 				  + "</div>"

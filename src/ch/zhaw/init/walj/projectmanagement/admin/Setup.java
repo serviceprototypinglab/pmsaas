@@ -17,9 +17,16 @@
 
 package ch.zhaw.init.walj.projectmanagement.admin;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,7 +51,6 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 @WebServlet("/setup")
 public class Setup extends HttpServlet {
 	
-	
 	/*
 	 * method to handle get requests
 	 * Form to set admin mail and password
@@ -52,6 +58,20 @@ public class Setup extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+    	DBConnection con = null;    	
+    	try {
+    		// connection to database
+    		con = new DBConnection(this.getServletContext().getRealPath("/"));            
+    	} catch (NullPointerException e){
+    		
+    	}
+    	
+    	if (!con.noConnection){
+            String setupURI = request.getContextPath() + "/login";
+    		response.sendRedirect(setupURI);
+    		return;
+    	}    	
+    	
     	// prepare response
     	response.setContentType("text/html;charset=UTF8");
 		PrintWriter out = response.getWriter();
@@ -63,7 +83,7 @@ public class Setup extends HttpServlet {
     	}
 		
     	// print HTML
-    	out.println(HTMLHeader.getInstance().printHeader("Setup", "", "Setup", "", "", true)
+    	out.println(HTMLHeader.getInstance().printHeader("Setup", "", "Setup", "", "", true, false)
 				  + "<body>"
 				  + "<div id=\"wrapper\">" 
 				  + "<section>"
@@ -84,20 +104,33 @@ public class Setup extends HttpServlet {
 				  + "<p><i class=\"fa fa-exclamation-triangle\"></i> There are some errors in your form.</p>"
 				  + "</div>"
 				  + "<div class=\"small-12 columns\">"
-				  + "<p>Set database</p>"
+				  + "<h3 class=\"no-margin\">MySQL Database</h3>"
 				  + "</div>"
-				  + "<label class=\"small-12 columns\">Database url "
+				  + "<label class=\"small-12 columns\">URL "
 				  + "<input type=\"text\" name=\"dbURL\" required>"
 				  + "</label>"
-				  + "<label class=\"small-12 columns\">Database username "
+				  + "<label class=\"small-12 columns\">Database name "
+				  + "<input type=\"text\" name=\"dbName\" required>"
+				  + "</label>"
+				  + "<label class=\"small-6 columns\">User "
 				  + "<input type=\"text\" name=\"dbUser\" required>"
 				  + "</label>"
-				  + "<label class=\"small-12 columns\">Database password "
+				  + "<label class=\"small-6 columns\">Password "
 				  + "<input type=\"password\" name=\"dbPassword\" required>"
 				  + "</label>"
 				  + "<hr>"					  
 				  + "<div class=\"small-12 columns\">"
-				  + "<p>Set the Admin's e-mail and password</p>"
+				  + "<h3 class=\"no-margin\">Mail Server</h3>"
+				  + "</div>"
+				  + "<label class=\"small-12 columns\">Sender's e-mail address (e.g. noreply@pmsaas.ch) "
+				  + "<input type=\"email\" name=\"mailFrom\" required>"
+				  + "</label>"
+				  + "<label class=\"small-12 columns\">Host "
+				  + "<input type=\"text\" name=\"host\" required>"
+				  + "</label>"
+				  + "<hr>"					  
+				  + "<div class=\"small-12 columns\">"
+				  + "<h3 class=\"no-margin\">Admin Credentials</h3>"
 				  + "</div>"
 				  // field for e-mail address
 				  + "<label class=\"small-12 columns\">Admin Mail "
@@ -143,15 +176,80 @@ public class Setup extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
-    	DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
     	
     	// prepare response
     	response.setContentType("text/html;charset=UTF8");
         PrintWriter out = response.getWriter();	 
 
     	// get parameters
+        String dbURL = request.getParameter("dbURL");
+        String dbName = request.getParameter("dbName");
+        String dbUser = request.getParameter("dbUser");
+        String dbPassword = request.getParameter("dbPassword");
+        
+        String mailFrom = request.getParameter("mailFrom");
+        String host = request.getParameter("host");
+        
     	String mailAddress = request.getParameter("mail");
         String password = request.getParameter("password");
+        
+        // write database config file
+        FileWriter fw = new FileWriter(this.getServletContext().getRealPath("/") + ".config");
+        BufferedWriter bw = new BufferedWriter(fw);
+        
+        bw.write("URL=" + dbURL);
+        bw.newLine();
+        bw.write("Database=" + dbName);
+        bw.newLine();
+        bw.write("Username=" + dbUser);
+        bw.newLine();
+        bw.write("Password=" + dbPassword);
+
+        bw.close();
+        
+        // write mail config file
+        fw = new FileWriter(this.getServletContext().getRealPath("/") + ".mailconfig");
+        bw = new BufferedWriter(fw);
+        
+        bw.write("mailFrom=" + mailFrom);
+        bw.newLine();
+        bw.write("host=" + host);
+
+        bw.close();
+        
+        // read SQL statements
+        FileReader fr = new FileReader(this.getServletContext().getRealPath("/") + "SQL/projectmanagement.sql");
+	    BufferedReader br = new BufferedReader(fr);
+	    
+	    try {
+	    	// set driver
+	    	String driver = "com.mysql.jdbc.Driver";
+			Class.forName(driver).newInstance();
+	    	
+			// get connection and create statement
+			Connection connection = DriverManager.getConnection(dbURL + "?user="+ dbUser + "&password=" + dbPassword);
+			Statement st = connection.createStatement();
+			
+			// create database
+		    String sql = "CREATE DATABASE IF NOT EXISTS `" + dbName + "` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
+		    st.executeUpdate(sql);
+		    
+		    // select database
+		    sql =  "USE `" + dbName + "`;"; 
+		    st.executeUpdate(sql);
+		    
+		    // read all SQL statements and execute them
+		    while ((sql = br.readLine()) != null){
+		    	st.executeUpdate(sql);
+		    }
+		    br.close();
+	 
+		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+	    
+	    
+    	DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
         
         try {
         	// create new employee "Admin" in database
@@ -190,7 +288,7 @@ public class Setup extends HttpServlet {
   					  + "<div class=\"row\">" 
   					  + "<div class=\"callout success\">" 
   					  + "<h5>Initial setup successful</h5>"
-  					  + "<p><a href=\"/admin/properties\">Go to properties</a></p>"
+  					  + "<p><a href=\"admin/properties\">Go to properties</a></p>"
   					  + "</div>"
   					  + "</div>"
 					  + "</div>"

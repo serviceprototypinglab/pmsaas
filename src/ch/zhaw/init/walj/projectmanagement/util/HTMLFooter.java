@@ -44,7 +44,7 @@ public final class HTMLFooter {
 			  		  + "</span>";
 		  }
 				  		
-		  footer += "<p>Project Management SaaS</p>"
+		  footer += "<p class=\"text-center\">Project Management SaaS | 2016 - 2017 | Zuercher Hochschule fuer Angewandte Wissenschaften | Janine Walther</p>"
 		  		  + "</div>"
 				  + "</div>"
 				  + "</footer>";

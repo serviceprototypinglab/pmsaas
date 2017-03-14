@@ -83,6 +83,12 @@ public final class HTMLHeader {
 	   */
 	  public String printHeader(String tabTitle, String path, String title, String script, String link, boolean admin){
 		    String header = printHeader(tabTitle, path, script);
+		    header += printHeader(tabTitle, path, title, script, link, admin, true);
+		    return header;
+	  }
+	  
+	  public String printHeader(String tabTitle, String path, String title, String script, String link, boolean admin, boolean logout){
+		    String header = printHeader(tabTitle, path, script);
 		    header += "<body>"
 				    + "<div id=\"wrapper\">"
 				    + "<header>"
@@ -104,11 +110,12 @@ public final class HTMLHeader {
 					    + "<a href=\"/Projektverwaltung/Projects/employee\" title=\"My Profile\"><i class=\"fa fa-user fa-fw fa-lg\"></i></a> "
 					 // + "<a href=\"/Projektverwaltung/Projects/properties\" title=\"Properties\"><i class=\"fa fa-cog fa-fw fa-lg\"></i></a> "
 				        + "<a href=\"/Projektverwaltung/Projects/help\" title=\"Help\"><i class=\"fa fa-book fa-fw fa-lg\"></i></a> ";
-		    } else {
-		    	
 		    }
-			header += "<a href=\"/Projektverwaltung/logout\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw fa-lg\"></i></a> "
-				    + "</div>"
+		    
+		    if (logout){
+				header += "<a href=\"/Projektverwaltung/logout\" title=\"Logout\"><i class=\"fa fa-sign-out fa-fw fa-lg\"></i></a> ";	
+		    }
+			header +=  "</div>"
 				    + "</div>"
 				    + "</header>";
 		    return header;
