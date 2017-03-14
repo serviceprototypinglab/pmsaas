@@ -32,6 +32,7 @@ public class Task {
 	// variable initialization
 	private int id;
 	private int workpackageID;
+	private String workpackageName;
 	private String name;
 	private String start;
 	private String projectStart;
@@ -67,6 +68,18 @@ public class Task {
 		this.weights = weights;
 	}
 	
+	public Task(int id, String workpackageName, String name, String start, String projectStart, String end, int pms, double budget, ArrayList<Weight> weights) {
+		this.id = id;
+		this.workpackageName = workpackageName;
+		this.name = name;
+		this.start = start;
+		this.projectStart = projectStart;
+		this.end = end;
+		this.pms = pms;
+		this.budget = budget;
+		this.weights = weights;
+	}
+
 	/**
 	 * adds an employee to the task 
 	 * @param employee the employee who should be added
@@ -95,6 +108,13 @@ public class Task {
 	 */
 	public int getWorkpackageID(){
 		return workpackageID;
+	}
+	
+	/**
+	 * @return Name of the workpackage the task belongs to
+	 */
+	public String getWorkpackageName(){
+		return workpackageName;
 	}
 	
 	/**

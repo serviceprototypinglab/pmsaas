@@ -33,6 +33,7 @@ import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Workpackage;
+import ch.zhaw.init.walj.projectmanagement.util.format.DateFormatter;
 
 /**
  * project management tool, page to add tasks
@@ -176,16 +177,8 @@ public class AddTask extends HttpServlet {
 		
 		// get user ID
 		int id = (int) request.getSession(false).getAttribute("ID");
-		
-		// get the parameters
 		int pID = Integer.parseInt(request.getParameter("projectID"));
-		String taskName = request.getParameter("taskName");
-		String taskStart = request.getParameter("taskStart");
-		String taskEnd = request.getParameter("taskEnd");
-		String taskPM = request.getParameter("taskPM");
-		String taskBudget = request.getParameter("taskBudget");
-		int taskWP = Integer.parseInt(request.getParameter("taskWP"));
-		
+
 		// get project
 		Project project = null;
 		try {
@@ -195,32 +188,52 @@ public class AddTask extends HttpServlet {
             response.sendRedirect(url);
             return;
 		}
-
-		Workpackage wp = project.getWorkpackage(taskWP);
-		
-		
 		
 		// check if user is project leader
 		if (project.getLeader() == id){
-			try {	
-				// create the new workpackages in the DB
-				con.newTask(taskWP, taskName, taskStart, taskEnd, taskPM, taskBudget);
-
-				// set success message as request attribute
-				String message = "<div class=\"callout success small-12 columns\">"
-						  	   + "<h5>Task successfully created</h5>"
-						  	   + "<p>The new task has succsessfully been created.</p>"
-						  	   + "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + pID + "\">Click here to go back to the project overview</a>"
-						  	   + "</div>";
-				request.setAttribute("msg", message);
-				
-			} catch (SQLException e) {
-
-				// set error message as request attribute
+			// get the parameters
+			String taskName = request.getParameter("taskName");
+			String taskStart = request.getParameter("taskStart");
+			String taskEnd = request.getParameter("taskEnd");
+			String taskPM = request.getParameter("taskPM");
+			String taskBudget = request.getParameter("taskBudget");
+			int taskWP = Integer.parseInt(request.getParameter("taskWP"));
+			
+	
+			Workpackage wp = project.getWorkpackage(taskWP);
+			
+			boolean dateOK = DateFormatter.getInstance().checkDate(wp.getStart(), taskStart, "dd.MM.yyyy") &&
+					DateFormatter.getInstance().checkDate(taskEnd, wp.getEnd(), "dd.MM.yyyy") &&
+					DateFormatter.getInstance().checkDate(taskStart, taskEnd, "dd.MM.yyyy");
+		
+			if (dateOK){
+				try {	
+					// create the new workpackages in the DB
+					con.newTask(taskWP, taskName, taskStart, taskEnd, taskPM, taskBudget);
+	
+					// set success message as request attribute
+					String message = "<div class=\"callout success small-12 columns\">"
+							  	   + "<h5>Task successfully created</h5>"
+							  	   + "<p>The new task has succsessfully been created.</p>"
+							  	   + "<a href=\"/Projektverwaltung/Projects/Overview/Project?id=" + pID + "\">Click here to go back to the project overview</a>"
+							  	   + "</div>";
+					request.setAttribute("msg", message);
+					
+				} catch (SQLException e) {
+	
+					// set error message as request attribute
+					String message = "<div class=\"callout alert small-12 columns\">"
+							       + "<h5>Task could not be created</h5>"
+							       + "<p>An error occured and the task could not be created.</p>"
+							       + "</div>";
+					request.setAttribute("msg", message);
+				}
+			} else {
+				// set error message 
 				String message = "<div class=\"callout alert small-12 columns\">"
-						       + "<h5>Task could not be created</h5>"
-						       + "<p>An error occured and the task could not be created.</p>"
-						       + "</div>";
+						  	   + "<h5>Workpackage could not be created</h5>"
+						  	   + "<p>Date not possible, make sure the start date is not before workpackage start and the end date is not after workpackage end</p>"
+						  	   + "</div>";
 				request.setAttribute("msg", message);
 			}
 

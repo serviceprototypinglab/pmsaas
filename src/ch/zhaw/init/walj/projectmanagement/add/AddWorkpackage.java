@@ -31,6 +31,7 @@ import ch.zhaw.init.walj.projectmanagement.util.DBConnection;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLFooter;
 import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
+import ch.zhaw.init.walj.projectmanagement.util.format.DateFormatter;
 
 
 /**
@@ -164,24 +165,38 @@ public class AddWorkpackage extends HttpServlet {
 			String wpStart = request.getParameter("wpStart");
 			String wpEnd = request.getParameter("wpEnd");
 			
-			try {	
-				// create new workpackage in the DB
-				con.newWorkpackage(pID, wpName, wpStart, wpEnd);
-
-				// set success message	
-				String message = "<div class=\"callout success small-12 columns\">"
-						       + "<h5>Workpackage successfully created</h5>"
-						       + "<p>The new workpackage has succsessfully been created.</p>"
-						       + "<a href=\"/Projektverwaltung/Projects/Overview/addTask?projectID=" + pID + "\">Click here to add tasks</a>"
-						       + "</div>";
-				request.setAttribute("msg", message);
-
-			} catch (SQLException e) {
-
+			
+			boolean dateOK = DateFormatter.getInstance().checkDate(project.getStart(), wpStart, "dd.MM.yyyy") &&
+							DateFormatter.getInstance().checkDate(wpEnd, project.getEnd(), "dd.MM.yyyy") &&
+							DateFormatter.getInstance().checkDate(wpStart, wpEnd, "dd.MM.yyyy");
+			
+			if (dateOK){
+				try {	
+					// create new workpackage in the DB
+					con.newWorkpackage(pID, wpName, wpStart, wpEnd);
+	
+					// set success message	
+					String message = "<div class=\"callout success small-12 columns\">"
+							       + "<h5>Workpackage successfully created</h5>"
+							       + "<p>The new workpackage has succsessfully been created.</p>"
+							       + "<a href=\"/Projektverwaltung/Projects/Overview/addTask?projectID=" + pID + "\">Click here to add tasks</a>"
+							       + "</div>";
+					request.setAttribute("msg", message);
+	
+				} catch (SQLException e) {
+	
+					// set error message 
+					String message = "<div class=\"callout alert small-12 columns\">"
+							  	   + "<h5>Workpackage could not be created</h5>"
+							  	   + "<p>An error occured and the workpackage could not be created.</p>"
+							  	   + "</div>";
+					request.setAttribute("msg", message);
+				}
+			} else {
 				// set error message 
 				String message = "<div class=\"callout alert small-12 columns\">"
 						  	   + "<h5>Workpackage could not be created</h5>"
-						  	   + "<p>An error occured and the workpackage could not be created.</p>"
+						  	   + "<p>Date not possible, make sure the start date is not before project start and the end date is not after project end</p>"
 						  	   + "</div>";
 				request.setAttribute("msg", message);
 			}

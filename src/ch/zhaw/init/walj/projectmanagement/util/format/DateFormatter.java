@@ -256,7 +256,7 @@ public class DateFormatter {
 	}
 	
 	/**
-	 * Checks if firstDate is before secondDate. 
+	 * Checks if firstDate is before or the same as secondDate. 
 	 * @param firstDate
 	 * @param secondDate
 	 * @param formatString
@@ -269,7 +269,7 @@ public class DateFormatter {
 			Date date1 = format.parse(firstDate);
 			Date date2 = format.parse(secondDate);
 			
-			return date1.before(date2);
+			return date1.before(date2) || date1.equals(date2);
 		} catch (ParseException e) {
 			return false;
 		}
