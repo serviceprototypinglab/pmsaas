@@ -169,19 +169,19 @@ public class Overview extends HttpServlet {
 						  + "</div>");				
 			}
 		
-			out.println("</div>"
-					  + "<hr>");
+			out.println("</div>");
 			
 			// get all projects that are shared with the user
 			ArrayList<Project> sharedProjects = con.getSharedProjects(id);
 			
 			if (!sharedProjects.isEmpty()){
 				// print title
-				out.println("<div class=\"row\">"
-			     	  + "<h3>Other Projects</h3>"
-				      + "</div>"
-			     	  + "<div class=\"row\">"
-				      + "<ul class=\"accordion\" data-accordion data-multi-expand=\"true\" data-allow-all-closed=\"true\">");
+				out.println("<hr>"
+						  + "<div class=\"row\">"
+						  + "<h3>Other Projects</h3>"
+						  + "</div>"
+						  + "<div class=\"row\">"
+						  + "<ul class=\"accordion\" data-accordion data-multi-expand=\"true\" data-allow-all-closed=\"true\">");
 				for (Project project : sharedProjects){
 					// get all employees
 					ArrayList <Employee> employee = project.getEmployees();
@@ -256,18 +256,16 @@ public class Overview extends HttpServlet {
 							  + "</p>"
 							  + "</div>"
 							  + "</li>");
-				}					
+				}		
+				out.println("</div>");			
 			}				
-		
-
-			out.println("</div>"
-					  + "<hr>");
-			
+					
 			// get archived projects
 			projects = con.getProjects(id, true);
 			if (projects != null){
 				// print title
-				out.println("<div class=\"row\">"
+				out.println("<hr>"
+					      + "<div class=\"row\">"
 				     	  + "<h3>Archived Projects</h3>"
 					      + "</div>"
 				     	  + "<div class=\"row\">"

@@ -101,7 +101,7 @@ public class DBConnection {
 	public Project getProject(int pID) throws SQLException  {
 	
 		// variable declaration
-		PreparedStatement stProject = conn.prepareStatement("SELECT * FROM  Projects where ProjectIDFS= ?");
+		PreparedStatement stProject = conn.prepareStatement("SELECT * FROM  Projects where ProjectID= ?");
 		PreparedStatement stEmployee = conn.prepareStatement("SELECT Employees.* FROM Employees INNER JOIN Assignments ON Employees.EmployeeID = Assignments.EmployeeIDFS WHERE Assignments.TaskIDFS = ? ORDER BY Employees.Firstname ASC");
 		PreparedStatement stWage = conn.prepareStatement("SELECT WagePerHour FROM  Wage where EmployeeIDFS= ? order by ValidFrom desc");
 		PreparedStatement stExpenses = conn.prepareStatement("Select * from Expenses where ProjectIDFS= ?");
@@ -281,7 +281,7 @@ public class DBConnection {
 		ArrayList<Project> projects = new ArrayList<Project>();
 		ArrayList<Integer> projectsIds = new ArrayList<Integer>();
 		
-		st = conn.prepareStatement("SELECT ProjectIDFS FROM  Projects where ProjectLeader=? and Archive=?");
+		st = conn.prepareStatement("SELECT ProjectID FROM  Projects where ProjectLeader=? and Archive=?");
 		st.setInt(1, id);
 		if (archive){
 			st.setInt(2, 1);
@@ -291,7 +291,7 @@ public class DBConnection {
 		res = st.executeQuery();	
 		
 		while (res.next()){
-			projectsIds.add(res.getInt("ProjectIDFS"));
+			projectsIds.add(res.getInt("ProjectID"));
 		}
 		
 		for (int i : projectsIds){
@@ -456,7 +456,7 @@ public class DBConnection {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			
-			return null;
+			return projects;
 		}
 		
 		return projects;
@@ -764,10 +764,10 @@ public class DBConnection {
 		st.executeUpdate();
 
 		// get the ID of the new project and return it afterwards
-		st = conn.prepareStatement("SELECT ProjectIDFS FROM projectmanagement.Projects ORDER BY ProjectIDFS DESC LIMIT 1");
+		st = conn.prepareStatement("SELECT ProjectID FROM Projects ORDER BY ProjectID DESC LIMIT 1");
 		res = st.executeQuery();
 		res.next();
-		int pID = res.getInt("ProjectIDFS");
+		int pID = res.getInt("ProjectID");
 		
 		return pID;
 	}
@@ -827,7 +827,7 @@ public class DBConnection {
 	 */
 	public void newTask(int projectID, String wpName, String taskName, String taskStart, String taskEnd, String taskPM,	String taskBudget) throws SQLException {
 
-		st = conn.prepareStatement("SELECT WorkpackageID FROM projectmanagement.Workpackages WHERE WPName=? AND ProjectIDFS=?");
+		st = conn.prepareStatement("SELECT WorkpackageID FROM Workpackages WHERE WPName=? AND ProjectIDFS=?");
 		st.setString(1, wpName);
 		st.setInt(2, projectID);
 
@@ -1114,7 +1114,7 @@ public class DBConnection {
 	 * @throws SQLException
 	 */
 	public void updateProject(int id, String name, String shortname, double budget, String currency, String start, String end, String partners) throws SQLException {
-		st = conn.prepareStatement("UPDATE Projects SET ProjectShortname=?,ProjectName=?,TotalBudget=?,Currency=?,ProjectStart=?,ProjectEnd=?,Partner=? WHERE Projects.ProjectIDFS=?");
+		st = conn.prepareStatement("UPDATE Projects SET ProjectShortname=?,ProjectName=?,TotalBudget=?,Currency=?,ProjectStart=?,ProjectEnd=?,Partner=? WHERE Projects.ProjectID=?");
 		st.setString(1, shortname);
 		st.setString(2, name);
 		st.setDouble(3, budget);
@@ -1270,7 +1270,7 @@ public class DBConnection {
 	 * @throws SQLException
 	 */
 	public void archiveProject(int projectID) throws SQLException {
-		st = conn.prepareStatement("UPDATE projectmanagement.Projects SET Archive=1 WHERE Projects.ProjectIDFS = ?");
+		st = conn.prepareStatement("UPDATE Projects SET Archive=1 WHERE Projects.ProjectID = ?");
 		st.setInt(1, projectID);
 		st.executeUpdate();
 	}
@@ -1282,7 +1282,7 @@ public class DBConnection {
 	 * @throws SQLException
 	 */
 	public void restoreProject(int projectID) throws SQLException {
-		st = conn.prepareStatement("UPDATE projectmanagement.Projects SET Archive=0 WHERE Projects.ProjectIDFS = ?");
+		st = conn.prepareStatement("UPDATE Projects SET Archive=0 WHERE Projects.ProjectID = ?");
 		st.setInt(1, projectID);
 		st.executeUpdate();
 	}
@@ -1348,7 +1348,7 @@ public class DBConnection {
 	}
 
 	public void deleteProject(int projectID) throws SQLException {
-		st = conn.prepareStatement("DELETE FROM Projects WHERE ProjectIDFS=?");
+		st = conn.prepareStatement("DELETE FROM Projects WHERE ProjectID=?");
 		
 		st.setInt(1, projectID);
 		

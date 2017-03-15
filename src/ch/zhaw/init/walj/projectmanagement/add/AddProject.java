@@ -104,8 +104,8 @@ public class AddProject extends HttpServlet {
 		// print HTML
 		out.println(HTMLHeader.getInstance().printHeader("New Project", "../", "New Project", script, "", false)
 				  + "<section>"
-				  + message
 				  + "<div class=\"row\">"
+				  + message
 				  + "<h2 class=\"small-12\">Project</h2>"
 				  + "</div>"
 				  + "<form method=\"post\" action=\"newProject\" data-abide novalidate>"
@@ -334,6 +334,7 @@ public class AddProject extends HttpServlet {
 				request.setAttribute("msg", message);
 				
 			} catch (SQLException e) {
+				e.printStackTrace();
 				// create error message 
 				String message = "<div class=\"callout alert\">"
 						       + "<h5>Project could not be created</h5>"
