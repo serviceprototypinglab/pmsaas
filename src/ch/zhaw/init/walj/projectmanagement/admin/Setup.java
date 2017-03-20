@@ -197,7 +197,7 @@ public class Setup extends HttpServlet {
         FileWriter fw = new FileWriter(this.getServletContext().getRealPath("/") + ".config");
         BufferedWriter bw = new BufferedWriter(fw);
         
-        bw.write("URL=" + dbURL);
+        bw.write("URL=jdbc:mysql://" + dbURL + "/");
         bw.newLine();
         bw.write("Database=" + dbName);
         bw.newLine();
