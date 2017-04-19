@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.util.password;
@@ -28,20 +28,18 @@ public class PasswordGenerator {
 	
 	private static PasswordGenerator instance;
 
-	// possible characters and length of password
-	private String characters = "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
-	private int pwLength = 8;
-	
-	/**
+    /**
 	 * generates a new, random password
 	 * @return a random password
 	 */
 	public String getNewPassword(){
 		// generate random password
 		SecureRandom random = new SecureRandom();
-		StringBuilder password = new StringBuilder(pwLength);
+        int pwLength = 8;
+        StringBuilder password = new StringBuilder(pwLength);
 		for (int i = 0; i < pwLength; i++) {
-			password.append(characters.charAt(random.nextInt(characters.length())));
+            String characters = "QWERTZUIOPASDFGHJKLYXCVBNMmnbvcxylkjhgfdsapoiuztrewq1234567890";
+            password.append(characters.charAt(random.nextInt(characters.length())));
 		}
 	
 		return password.toString();
@@ -50,7 +48,7 @@ public class PasswordGenerator {
 	/**
 	 * @return an instance of Password Generator
 	 */
-	public static synchronized PasswordGenerator getInstance(){
+	public static PasswordGenerator getInstance(){
 	  
 	    if(instance == null){
 	       instance = new PasswordGenerator(); 

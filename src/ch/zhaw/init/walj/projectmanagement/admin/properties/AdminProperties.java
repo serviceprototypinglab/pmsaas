@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.admin.properties;
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -69,11 +68,11 @@ public class AdminProperties extends HttpServlet {
 		try {
 			employees = con.getAllEmployees();
 		} catch (SQLException e) {
-			
+			e.printStackTrace();
 		}
 		
 		ArrayList<Project> projects = new ArrayList<>();
-		ArrayList<Project> p = new ArrayList<>();
+		ArrayList<Project> p;
 		
 		try {
 			for (Employee e : employees){
@@ -82,7 +81,9 @@ public class AdminProperties extends HttpServlet {
 					projects.addAll(p);
 				}
 			}
-		} catch (SQLException e) {}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		ArrayList<Project> archivedProjects = new ArrayList<>();
 		
@@ -93,7 +94,9 @@ public class AdminProperties extends HttpServlet {
 					archivedProjects.addAll(p);
 				}
 			}
-		} catch (SQLException e) {}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		out.println(HTMLHeader.getInstance().printHeader("Admin Properties", "../", "Properties", "", "", true)
 				  // HTML section with panels
@@ -184,7 +187,6 @@ public class AdminProperties extends HttpServlet {
 				  + "<th>Project Owner</th>"
 				  + "<th style=\"width: 10%\"></th>"
 				  + "<th style=\"width: 10%\"></th>"
-				  + "<th style=\"width: 10%\"></th>"
 				  + "</tr>"
 				  + "</thead>"
 				  + "<tbody>");
@@ -194,11 +196,12 @@ public class AdminProperties extends HttpServlet {
 				out.println("<tr>"
 						  + "<td>" + project.getName() + "</td>"
 						  + "<td>" + con.getEmployee(project.getLeader()).getName() + "</td>"					  	
-						  + "<td style=\"width: 10%\"><a href=\"editProject?id=" + project.getID() + "\" title=\"Edit\"><i class=\"fa fa-pencil-square-o fa-lg\"></i></a></td>"
 						  + "<td style=\"width: 10%\"><a data-open=\"archive" + project.getID() + "\" title=\"Archive\"><i class=\"fa fa-archive fa-lg\"></i></a></td>"
 						  + "<td style=\"width: 10%\"><a data-open=\"delete" + project.getID() + "\" title=\"Delete\"><i class=\"fa fa-trash fa-lg\"></i></a></td>"
 						  + "</tr>");
-			} catch (SQLException e) {}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			
 			// archive project window
 			out.println("<div class=\"reveal\" id=\"archive" + project.getID() + "\" data-reveal>"
@@ -226,11 +229,12 @@ public class AdminProperties extends HttpServlet {
 				out.println("<tr>"
 						  + "<td>" + project.getName() + " (Archived)</td>"
 						  + "<td>" + con.getEmployee(project.getLeader()).getName() + "</td>"	
-						  + "<td style=\"width: 10%\"><a href=\"editProject?id=" + project.getID() + "\" title=\"Edit\"><i class=\"fa fa-pencil-square-o fa-lg\"></i></a></td>"
 						  + "<td style=\"width: 10%\"><a data-open=\"restore" + project.getID() + "\" title=\"Restore\"><i class=\"fa fa-undo fa-lg\"></i></a></td>"
 						  + "<td style=\"width: 10%\"><a data-open=\"delete" + project.getID() + "\" title=\"Delete\"><i class=\"fa fa-trash fa-lg\"></i></a></td>"
 						  + "</tr>");
-			} catch (SQLException e) {}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			
 			// archive project window
 			out.println("<div class=\"reveal\" id=\"restore" + project.getID() + "\" data-reveal>"
@@ -285,24 +289,11 @@ public class AdminProperties extends HttpServlet {
 		
 	    isMultipart = ServletFileUpload.isMultipartContent(request);
 		response.setContentType("text/html");
-		PrintWriter out = response.getWriter( );
-		      
+
 		boolean small = request.getParameter("size").equals("small");
-		  
-		String message = "";
-		  
-		if(!isMultipart){
-			message = "<div class=\"row\">" 
-					+ "<div class=\"small-12 columns\">"
-					+ "<div class=\"row\">" 
-				    + "<div class=\"callout alert\">" 
-				    + "<h5>Upload failed</h5>"
-				    + "</div>"
-				    + "</div>"
-				    + "</div>"
-				    + "</div>";
-		}
-		  
+
+		String message;
+
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		// maximum size that will be stored in memory
 		factory.setSizeThreshold(maxMemSize);
@@ -316,34 +307,31 @@ public class AdminProperties extends HttpServlet {
 			
 		try { 
 			// Parse the request to get file items.
-			List<?> fileItems = upload.parseRequest(request);
+			List<FileItem> fileItems = upload.parseRequest(request);
 			
 			// Process the uploaded file items
-			Iterator<?> i = fileItems.iterator();
-			
-			  
-			while (i.hasNext()){
-				  
-				FileItem fi = (FileItem)i.next();
-			     
-				if (!fi.isFormField()){
+
+
+			for (FileItem fileItem : fileItems) {
+
+				if (!fileItem.isFormField()) {
 					// Get the uploaded file parameters
-			        String contentType = fi.getContentType();
-			        if (contentType.equals("image/png")){
-				        String fileName;
-				        if (small){
-				        	fileName = "logo_small.png";
-				        } else {
-				        	fileName = "logo.png";
-				        }
-				        filePath = this.getServletContext().getRealPath("/") + "img/" + fileName;
-				        // Write the file
-				        file = new File(filePath) ;
-				        fi.write( file ) ;	
-			        } else {
-			        	throw new Exception("type");
-			        }
-		        }
+					String contentType = fileItem.getContentType();
+					if (contentType.equals("image/png")) {
+						String fileName;
+						if (small) {
+							fileName = "logo_small.png";
+						} else {
+							fileName = "logo.png";
+						}
+						filePath = this.getServletContext().getRealPath("/") + "img/" + fileName;
+						// Write the file
+						file = new File(filePath);
+						fileItem.write(file);
+					} else {
+						throw new Exception("type");
+					}
+				}
 			}		  	
 			message = "<div class=\"row\">" 
 					+ "<div class=\"small-12 columns\">"

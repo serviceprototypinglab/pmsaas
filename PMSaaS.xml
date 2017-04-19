@@ -1,84 +1,222 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- WARNING: Eclipse auto-generated file.
-              Any modifications will be overwritten.
-              To include a user specific buildfile here, simply create one in the same
-              directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. --><project basedir="." default="build" name="Projektverwaltung">
-    <property environment="env"/>
-    <property name="ECLIPSE_HOME" value="../../Downloads/eclipse/"/>
-    <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.8"/>
-    <property name="source" value="1.8"/>
-    <path id="JUnit 4.libraryclasspath">
-        <pathelement location="${ECLIPSE_HOME}plugins/org.junit_4.12.0.v201504281640/junit.jar"/>
-        <pathelement location="${ECLIPSE_HOME}plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
-    </path>
-    <path id="Projektverwaltung.classpath">
-        <pathelement location="bin"/>
-        <pathelement location="lib/mysql-connector-java-5.1.39-bin.jar"/>
-        <pathelement location="lib/servlet-api.jar"/>
-        <pathelement location="lib/jcommon-1.0.23.jar"/>
-        <pathelement location="lib/jfreechart-1.0.19.jar"/>
-        <pathelement location="lib/javax.mail.jar"/>
-        <pathelement location="lib/activation.jar"/>
-        <pathelement location="lib/commons-fileupload-1.3.2.jar"/>
-        <pathelement location="lib/commons-io-2.5-javadoc.jar"/>
-        <pathelement location="lib/commons-io-2.5.jar"/>
-        <path refid="JUnit 4.libraryclasspath"/>
-    </path>
-    <target name="init">
-        <mkdir dir="bin"/>
-        <copy includeemptydirs="false" todir="bin">
-            <fileset dir="src">
-                <exclude name="**/*.java"/>
-            </fileset>
-        </copy>
-    </target>
-    <target name="clean">
-        <delete dir="bin"/>
-    </target>
-    <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project" name="build"/>
-    <target name="build-subprojects"/>
-    <target depends="init" name="build-project">
-        <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
-            <src path="src"/>
-            <classpath refid="Projektverwaltung.classpath"/>
-        </javac>
-    </target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
-        <copy todir="${ant.library.dir}">
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </copy>
-        <unzip dest="${ant.library.dir}">
-            <patternset includes="jdtCompilerAdapter.jar"/>
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </unzip>
-    </target>
-    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
-        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-        <antcall target="build"/>
-    </target>
-    <target name="PieChart">
-        <java classname="ch.zhaw.init.walj.projectmanagement.util.chart.PieChart" failonerror="true" fork="yes">
-            <classpath refid="Projektverwaltung.classpath"/>
-        </java>
-    </target>
-    <target name="Mail">
-        <java classname="ch.zhaw.init.walj.projectmanagement.util.Mail" failonerror="true" fork="yes">
-            <classpath refid="Projektverwaltung.classpath"/>
-        </java>
-    </target>
-    <target name="DataBaseAccess">
-        <java classname="ch.zhaw.init.walj.projectmanagement.util.DataBaseAccess" failonerror="true" fork="yes">
-            <classpath refid="Projektverwaltung.classpath"/>
-        </java>
-    </target>
-    <target name="TestDBConnection">
-        <java classname="ch.zhaw.init.walj.projectmanagement.TestDBConnection" failonerror="true" fork="yes">
-            <classpath refid="Projektverwaltung.classpath"/>
-        </java>
-    </target>
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="projektverwaltung" default="all">
+  
+  
+  <property file="PMSaaS.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+    <include name="*.swc"/>
+    <include name="*.war"/>
+    <include name="*.ane"/>
+    <include name="*.zip"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  
+  <!-- Application Server Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module Projektverwaltung -->
+  
+  <dirname property="module.projektverwaltung.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.projektverwaltung" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="projektverwaltung.output.dir" value="${module.projektverwaltung.basedir}/bin"/>
+  <property name="projektverwaltung.testoutput.dir" value="${module.projektverwaltung.basedir}/bin"/>
+  
+  <path id="projektverwaltung.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="projektverwaltung.module.production.classpath">
+    <pathelement location="${basedir}/lib/mysql-connector-java-5.1.39-bin.jar"/>
+    <pathelement location="${basedir}/lib/servlet-api.jar"/>
+    <pathelement location="${basedir}/lib/jcommon-1.0.23.jar"/>
+    <pathelement location="${basedir}/lib/jfreechart-1.0.19.jar"/>
+    <pathelement location="${basedir}/lib/javax.mail.jar"/>
+    <pathelement location="${basedir}/lib/activation.jar"/>
+    <pathelement location="${basedir}/lib/commons-fileupload-1.3.2.jar"/>
+    <pathelement location="${basedir}/lib/commons-io-2.5-javadoc.jar"/>
+    <pathelement location="${basedir}/lib/commons-io-2.5.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+  </path>
+  
+  <path id="projektverwaltung.runtime.production.module.classpath">
+    <pathelement location="${projektverwaltung.output.dir}"/>
+    <pathelement location="${basedir}/lib/mysql-connector-java-5.1.39-bin.jar"/>
+    <pathelement location="${basedir}/lib/servlet-api.jar"/>
+    <pathelement location="${basedir}/lib/jcommon-1.0.23.jar"/>
+    <pathelement location="${basedir}/lib/jfreechart-1.0.19.jar"/>
+    <pathelement location="${basedir}/lib/javax.mail.jar"/>
+    <pathelement location="${basedir}/lib/activation.jar"/>
+    <pathelement location="${basedir}/lib/commons-fileupload-1.3.2.jar"/>
+    <pathelement location="${basedir}/lib/commons-io-2.5-javadoc.jar"/>
+    <pathelement location="${basedir}/lib/commons-io-2.5.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+  </path>
+  
+  <path id="projektverwaltung.module.classpath">
+    <pathelement location="${projektverwaltung.output.dir}"/>
+    <pathelement location="${basedir}/lib/mysql-connector-java-5.1.39-bin.jar"/>
+    <pathelement location="${basedir}/lib/servlet-api.jar"/>
+    <pathelement location="${basedir}/lib/jcommon-1.0.23.jar"/>
+    <pathelement location="${basedir}/lib/jfreechart-1.0.19.jar"/>
+    <pathelement location="${basedir}/lib/javax.mail.jar"/>
+    <pathelement location="${basedir}/lib/activation.jar"/>
+    <pathelement location="${basedir}/lib/commons-fileupload-1.3.2.jar"/>
+    <pathelement location="${basedir}/lib/commons-io-2.5-javadoc.jar"/>
+    <pathelement location="${basedir}/lib/commons-io-2.5.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+  </path>
+  
+  <path id="projektverwaltung.runtime.module.classpath">
+    <pathelement location="${projektverwaltung.output.dir}"/>
+    <pathelement location="${basedir}/lib/mysql-connector-java-5.1.39-bin.jar"/>
+    <pathelement location="${basedir}/lib/servlet-api.jar"/>
+    <pathelement location="${basedir}/lib/jcommon-1.0.23.jar"/>
+    <pathelement location="${basedir}/lib/jfreechart-1.0.19.jar"/>
+    <pathelement location="${basedir}/lib/javax.mail.jar"/>
+    <pathelement location="${basedir}/lib/activation.jar"/>
+    <pathelement location="${basedir}/lib/commons-fileupload-1.3.2.jar"/>
+    <pathelement location="${basedir}/lib/commons-io-2.5-javadoc.jar"/>
+    <pathelement location="${basedir}/lib/commons-io-2.5.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.projektverwaltung">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.projektverwaltung">
+    <patternset refid="excluded.from.module.projektverwaltung"/>
+  </patternset>
+  
+  <path id="projektverwaltung.module.sourcepath">
+    <dirset dir="${module.projektverwaltung.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.projektverwaltung" depends="compile.module.projektverwaltung.production,compile.module.projektverwaltung.tests" description="Compile module Projektverwaltung"/>
+  
+  <target name="compile.module.projektverwaltung.production" description="Compile module Projektverwaltung; production classes">
+    <mkdir dir="${projektverwaltung.output.dir}"/>
+    <javac destdir="${projektverwaltung.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.projektverwaltung}"/>
+      <bootclasspath refid="projektverwaltung.module.bootclasspath"/>
+      <classpath refid="projektverwaltung.module.production.classpath"/>
+      <src refid="projektverwaltung.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.projektverwaltung"/>
+    </javac>
+    
+    <copy todir="${projektverwaltung.output.dir}">
+      <fileset dir="${module.projektverwaltung.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.projektverwaltung.tests" depends="compile.module.projektverwaltung.production" description="compile module Projektverwaltung; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.projektverwaltung" description="cleanup module">
+    <delete dir="${projektverwaltung.output.dir}"/>
+    <delete dir="${projektverwaltung.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.projektverwaltung" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.projektverwaltung" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.pmsaas" value="${basedir}"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.PMSaaS.war" value="${artifacts.temp.dir}/PMSaaS.war"/>
+  </target>
+  
+  <target name="artifact.pmsaas" depends="init.artifacts, compile.module.projektverwaltung" description="Build &#39;PMSaaS&#39; artifact">
+    <property name="artifact.temp.output.pmsaas" value="${artifacts.temp.dir}/PMSaaS"/>
+    <mkdir dir="${artifact.temp.output.pmsaas}"/>
+    <zip destfile="${temp.jar.path.PMSaaS.war}">
+      <zipfileset file="${basedir}/META-INF/MANIFEST.MF" prefix="META-INF"/>
+      <zipfileset file="${basedir}/lib/activation.jar" prefix="WEB-INF/lib"/>
+      <zipfileset file="${basedir}/lib/commons-io-2.5-javadoc.jar" prefix="WEB-INF/lib"/>
+      <zipfileset file="${basedir}/lib/commons-fileupload-1.3.2.jar" prefix="WEB-INF/lib"/>
+      <zipfileset file="${basedir}/lib/commons-io-2.5.jar" prefix="WEB-INF/lib"/>
+      <zipfileset file="${basedir}/lib/javax.mail.jar" prefix="WEB-INF/lib"/>
+      <zipfileset file="${basedir}/lib/jcommon-1.0.23.jar" prefix="WEB-INF/lib"/>
+      <zipfileset file="${basedir}/lib/jfreechart-1.0.19.jar" prefix="WEB-INF/lib"/>
+      <zipfileset file="${idea.home}/lib/junit-4.12.jar" prefix="WEB-INF/lib"/>
+      <zipfileset file="${basedir}/lib/servlet-api.jar" prefix="WEB-INF/lib"/>
+      <zipfileset dir="${projektverwaltung.output.dir}" prefix="WEB-INF/classes"/>
+      <zipfileset dir="${basedir}/WebContent"/>
+      <zipfileset file="${basedir}/WebContent/.mailconfig"/>
+      <zipfileset file="${basedir}/WebContent/.config"/>
+    </zip>
+    <copy file="${temp.jar.path.PMSaaS.war}" tofile="${artifact.temp.output.pmsaas}/PMSaaS.war"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.pmsaas" description="Build all artifacts">
+    <mkdir dir="${artifact.output.pmsaas}"/>
+    <copy todir="${artifact.output.pmsaas}">
+      <fileset dir="${artifact.temp.output.pmsaas}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
 </project>

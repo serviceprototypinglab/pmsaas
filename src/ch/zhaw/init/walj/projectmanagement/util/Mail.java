@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.util;
@@ -41,16 +41,13 @@ public class Mail {
 	
 	private static String mailFrom;
 	private static String host;
-	private Properties properties = System.getProperties();
-	private Session session;
-	private MimeMessage message;
+    private MimeMessage message;
 	private Employee user;
-	private String helper[];
 
-	/**
+    /**
 	 * constructor of the Mail class
 	 * sets user, host, sender e-mail address and properties
-	 * @param user
+	 * @param user the user to whom the mail should be sent
 	 */
 	public Mail (Employee user, String path){
 		
@@ -60,7 +57,7 @@ public class Mail {
 		    BufferedReader br = new BufferedReader(fr);
 			
 		    mailFrom = br.readLine();
-		    helper = mailFrom.split("=");
+            String[] helper = mailFrom.split("=");
 		    mailFrom = helper[1];
 		    
 		    host = br.readLine();
@@ -72,8 +69,9 @@ public class Mail {
 		}
 	    
 		this.user = user;
-		properties.setProperty("mail.smtp.host", host);
-		session = Session.getDefaultInstance(properties);
+        Properties properties = System.getProperties();
+        properties.setProperty("mail.smtp.host", host);
+        Session session = Session.getDefaultInstance(properties);
 		message = new MimeMessage(session);
 		try {
 			message.setFrom(new InternetAddress(mailFrom));
@@ -94,7 +92,6 @@ public class Mail {
 	public void sendWelcomeMail(StringBuffer url){
 		
 		String path = url.toString();
-		path = path.split("/Projektverwaltung")[0];
 		
 		try {
 			// set subject of the mail
@@ -110,7 +107,7 @@ public class Mail {
 						   + "<p>Password: " + user.getPassword() + "</p>"
 						   + "<p style=\"font-style:italic\">Please change your password at your first login.</p>"
 						   + "<br>"
-						   + "<p>Click <a href=\"" + path + "/Projektverwaltung/login\">here</a> to sign in </p>"
+						   + "<p>Click <a href=\"" + path + "/login\">here</a> to sign in </p>"
 						   + "<p></p>"
 						   + "<p style=\"font-style:italic\">This e-mail was generated automatically, please do not respond to it.</p>";			
 			message.setContent(content, "text/html");
@@ -124,10 +121,9 @@ public class Mail {
 	}
 	
 	/**
-	 * 
-	 * @throws MessagingException
+	 * sends an e-mail to the employee with a new password
 	 */
-	public void sendNewPasswordMail(){
+	public void sendNewPassword(){
 		try {
 			// set subject of the mail
 			message.setSubject("Password reset");
@@ -144,13 +140,12 @@ public class Mail {
 			Transport.send(message);
 
 		} catch (MessagingException e) {
-
+			e.printStackTrace();
 		}
 	}
 	
 	/**
 	 * send initial mail to admin
-	 * @throws MessagingException
 	 */
 	public void sendInitialSetupMail(){
 		try {
@@ -168,7 +163,7 @@ public class Mail {
 			Transport.send(message);
 			
 		} catch (MessagingException e) {
-			
+			e.printStackTrace();
 		}
 	}
 

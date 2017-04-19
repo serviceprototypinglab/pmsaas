@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
@@ -30,21 +30,22 @@ public class Project {
 	
 	// set EUR-CHF currency rate
 	// TODO dynamic
-	protected double EUR = 0.9246;
+	@SuppressWarnings("FieldCanBeLocal")
+	private final double EUR = 0.9246;
 	
-	private int id;
-	private String shortname;
-	private String name;
-	private int leader;
-	private String start;
-	private String end;
-	private String currency;
-	private double budget;
-	private ArrayList<Task> tasks = new ArrayList<Task>();
-	private ArrayList<Workpackage> workpackages = new ArrayList<Workpackage>();
-	private ArrayList<Employee> employees = new ArrayList<Employee>();
-	private ArrayList<Expense> expenses = new ArrayList<Expense>();
-	private String partner;
+	private final int id;
+	private final String shortname;
+	private final String name;
+	private final int leader;
+	private final String start;
+	private final String end;
+	private final String currency;
+	private final double budget;
+	private ArrayList<Task> tasks = new ArrayList<>();
+	private ArrayList<Workpackage> workpackages = new ArrayList<>();
+	private ArrayList<Employee> employees = new ArrayList<>();
+	private ArrayList<Expense> expenses = new ArrayList<>();
+	private final String partner;
 	
 	/**
 	 * constructor of Project
@@ -115,6 +116,7 @@ public class Project {
 	public String getStart(){
 		return start;
 	}
+
 	/**
 	 * @return the end date of the project
 	 */
@@ -126,8 +128,7 @@ public class Project {
 	 * @return the start and end date of the project
 	 */
 	public String getDuration(){
-		String duration = start + " - " + end;
-		return duration;
+		return start + " - " + end;
 	}
 	
 	/**
@@ -136,16 +137,6 @@ public class Project {
 	public int getNumberOfMonths(){
 		
 		return DateFormatter.getInstance().getMonthsBetween(start, end);
-	}
-
-	/**
-	 * calculates the amount of months between the start of the project
-	 * and a given date
-	 * @param date the end date of the period
-	 * @return amount of months between start of project and end of period
-	 */
-	public int getMonthsBetween(String date){
-		return DateFormatter.getInstance().getMonthsBetween(start, date);
 	}
 
 	/**
@@ -197,7 +188,7 @@ public class Project {
 	 * @param id ID of the requested employee
 	 * @return the employee or null
 	 */
-	public Employee getSpecificEmployee(int id){
+	public Employee getEmployee(int id){
 		for(Employee employee : employees){
 			if (employee.getID() == id){
 				return employee;

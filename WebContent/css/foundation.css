@@ -1620,6 +1620,7 @@ input:-ms-input-placeholder,
 textarea:-ms-input-placeholder {
   color: #cacaca; }
 
+/*noinspection ALL,CssInvalidPseudoSelector*/
 input::placeholder,
 textarea::placeholder {
   color: #cacaca; }

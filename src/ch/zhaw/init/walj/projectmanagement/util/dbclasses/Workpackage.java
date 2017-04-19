@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
@@ -30,17 +30,16 @@ import ch.zhaw.init.walj.projectmanagement.util.format.DateFormatter;
 public class Workpackage {
 	
 	// variable initialization
-	private int id;
-	private String name;
-	private String start;
-	private String end;
-	private ArrayList<Task> tasks = new ArrayList<Task>();
-	private ArrayList<Employee> employees = new ArrayList<Employee>();
+	private final int id;
+	private final String name;
+	private final String start;
+	private final String end;
+	private final ArrayList<Task> tasks = new ArrayList<>();
+	private final ArrayList<Employee> employees = new ArrayList<>();
 	
 	/**
 	 * constructor of Workpackage
 	 * @param id ID of the workpackage 
-	 * @param projectID ID of the project the workpackage belongs to
 	 * @param name name of the workpackage
 	 * @param start start date of the workpackage
 	 * @param end end date of the workpackage
@@ -77,8 +76,7 @@ public class Workpackage {
 	 * @return the start date of the workpackage as a date
 	 */
 	public Date getStartAsDate(){
-		Date date = DateFormatter.getInstance().stringToDate(start, "dd.MM.yyyy");
-		return date;
+        return DateFormatter.getInstance().stringToDate(start, "dd.MM.yyyy");
 	}
 
 	/**
@@ -92,16 +90,7 @@ public class Workpackage {
 	 * @return the end date of the workpackage as a date
 	 */
 	public Date getEndAsDate(){
-		Date date = DateFormatter.getInstance().stringToDate(end, "dd.MM.yyyy");
-		return date;
-	}
-
-	/**
-	 * @return start and end date as string like "01.01.2017 - 31.01.2017"
-	 */
-	public String getDuration(){
-		String duration = start + " - " + end;
-		return duration;
+		return DateFormatter.getInstance().stringToDate(end, "dd.MM.yyyy");
 	}
 
 	/**
@@ -128,9 +117,8 @@ public class Workpackage {
 
 	/**
 	 * adds the employee to the workpackage
-	 * @return a list of all employees
 	 */
-	public ArrayList<Employee> addEmployees(){
+	public void addEmployees(){
 		for(Task task : tasks){
 			int nbrOfEmployees = task.nbrOfEmployees();
 			for (int i = 0; i < nbrOfEmployees; i++){
@@ -146,7 +134,6 @@ public class Workpackage {
 				}
 			}
 		}
-		return employees;
 	}
 
 	/**

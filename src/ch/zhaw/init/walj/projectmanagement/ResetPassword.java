@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement;
@@ -116,7 +116,7 @@ public class ResetPassword extends HttpServlet {
     	String user = request.getParameter("mail");
         
     	// find user 
-        Employee e = con.findUser(user);
+        Employee employee = con.findUser(user);
              
         // try to reset password
         try {
@@ -124,18 +124,18 @@ public class ResetPassword extends HttpServlet {
 	        String newPassword = PasswordGenerator.getInstance().getNewPassword();
 	        
 	        // set new password for employee
-	        e.setNewPassword(newPassword);
+	        employee.setNewPassword(newPassword);
 	        
 	        // update password in database
-	        con.updatePassword(e.getID(), PasswordService.getInstance().encrypt(e.getPassword()));
+	        con.updatePassword(employee.getID(), PasswordService.getInstance().encrypt(employee.getPassword()));
 	        
 	        // send mail with new password
-	        Mail mail = new Mail(e, this.getServletContext().getRealPath("/"));	               
-			mail.sendNewPasswordMail();
+	        Mail mail = new Mail(employee, this.getServletContext().getRealPath("/"));
+			mail.sendNewPassword();
 			
 
-		} catch (NullPointerException | SQLException e1) {
-
+		} catch (NullPointerException | SQLException e) {
+			e.printStackTrace();
 		}
         
         // redirect to login page

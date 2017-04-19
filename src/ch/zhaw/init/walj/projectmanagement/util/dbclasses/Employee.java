@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
@@ -25,15 +25,14 @@ package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
  */
 public class Employee {
 	
-	private int id;
-	private String firstname;
-	private String lastname;
-	private String kuerzel;
-	private String mail;
+	private final int id;
+	private final String firstname;
+	private final String lastname;
+	private final String kuerzel;
+	private final String mail;
 	private String password;
 	private double wage;
-	private int supervisor;
-	
+
 	/**
 	 * constructor for the employee class
 	 * 
@@ -47,8 +46,6 @@ public class Employee {
 	 * 			kuerzel of the employee
 	 * @param mail
 	 * 			mail of the employee
-	 * @param ePassword 
-	 * 			password of the employee
 	 * @param wage
 	 * 			the employee's wage per hour
 	 * @param supervisor
@@ -63,7 +60,6 @@ public class Employee {
 		this.mail = mail;
 		this.password = password;
 		this.wage = wage;
-		this.supervisor = supervisor;
 		
 	}
 	
@@ -80,8 +76,7 @@ public class Employee {
 	public String getFirstName(){
 		return firstname;
 	}
-	
-	
+
 	/**
 	 * @return the lastname of the employee as a string
 	 */
@@ -93,16 +88,14 @@ public class Employee {
 	 * @return the firstname and lastname of the employee in form of "firstname lastname"
 	 */
 	public String getName(){
-		String name = firstname + " " + lastname;
-		return name;
+        return firstname + " " + lastname;
 	}
 	
 	/**
 	 * @return the firstname and lastname of the employee in form of "lastname, firstname"
 	 */
 	public String getFullName(){
-		String name = lastname + ", " + firstname;
-		return name;
+        return lastname + ", " + firstname;
 	}
 	
 	/**
@@ -119,7 +112,6 @@ public class Employee {
 		return mail;
 	}
 	
-	
 	/**
 	 * @return the password of the employee
 	 */
@@ -127,15 +119,13 @@ public class Employee {
 		return password;
 	}
 	
-	
 	/**
 	 * set a new password for the employee
-	 * @param password
+	 * @param password new password for the employee
 	 */
 	public void setNewPassword(String password){
 		this.password = password;
 	}
-	
 	
 	/**
 	 * @return the employees wage per hour
@@ -147,12 +137,5 @@ public class Employee {
 	public void setWage(double wage){
 		this.wage = wage;
 	}
-	
-	
-	/**
-	 * @return the ID of the supervisor
-	 */
-	public int getSupervisor(){
-		return supervisor;
-	}
+
 }

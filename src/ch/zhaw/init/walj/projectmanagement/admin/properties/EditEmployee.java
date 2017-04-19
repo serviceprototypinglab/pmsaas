@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.admin.properties;
@@ -35,7 +35,7 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 import ch.zhaw.init.walj.projectmanagement.util.format.DateFormatter;
 
 /**
- * project management tool, profile page
+ * project management tool, edit employees (as admin)
  * 
  * @author Janine Walther, ZHAW
  */
@@ -48,7 +48,7 @@ public class EditEmployee extends HttpServlet {
 	
 	/*
 	 * method to handle get requests
-	 * form for editing user information and change password
+	 * form for editing user information
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -72,6 +72,7 @@ public class EditEmployee extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		// print html
+		assert employee != null;
 		out.println(HTMLHeader.getInstance().printHeader("Edit " + employee.getName(), "../", "Edit " + employee.getName(), "", "<a href=\"properties\" class=\"back\"><i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i> back to properties</a>", true)
 				  + "<section>"					  
 				  // form to edit user information
@@ -115,7 +116,7 @@ public class EditEmployee extends HttpServlet {
 
 	/*
 	 * method to handle post requests
-	 * updates user information or password
+	 * updates user information
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -136,8 +137,8 @@ public class EditEmployee extends HttpServlet {
 			e.printStackTrace();
 		}
 				
-		String message = "";
-		String title = "";
+		String message;
+		String title;
 		
 		// get parameters
 		String firstname = request.getParameter("firstname");
@@ -147,10 +148,11 @@ public class EditEmployee extends HttpServlet {
 		double wage = Double.parseDouble(request.getParameter("wage"));
 			
 		// set title
-		title = "Update User";
+		title = "Update " + firstname + " " + lastname;
 		try {
 			// update user
 			con.updateUser(userID, firstname, lastname, kuerzel, mail);
+			assert employee != null;
 			if (employee.getWage() != wage){
 				con.newWage(userID, wage, DateFormatter.getInstance().formatDateForDB(new Date()));
 			}
@@ -164,7 +166,7 @@ public class EditEmployee extends HttpServlet {
 					+ "<p>Kuerzel: " + kuerzel + "</p>"
 					+ "<p>E-Mail: " + mail + "</p>"
 					+ "<p>Wage per hour: " + wage + "</p>"
-					+ "<a href=\"/Projektverwaltung/Projects/employee\">Click here to go back to the user page</a>"
+					+ "<a href=\"/Projects/employee\">Click here to go back to the user page</a>"
 					+ "</div>";
 			
 		} catch (SQLException e) {
@@ -173,7 +175,7 @@ public class EditEmployee extends HttpServlet {
 			message = "<div class=\"callout alert\">"
 				    + "<h5>User could not be updated</h5>"
 				    + "<p>An error occured and the user could not be updated.</p>"
-					+ "<a href=\"/Projektverwaltung/Projects/employee\">Click here to go back to the user page</a>"
+					+ "<a href=\"/Projects/employee\">Click here to go back to the user page</a>"
 					+ "</div>";
 		}	
 	
@@ -191,6 +193,5 @@ public class EditEmployee extends HttpServlet {
 				  + "<script>$(document).foundation();</script>"
 				  + "</body>"
 				  + "</html>");
-		
 	}
 }

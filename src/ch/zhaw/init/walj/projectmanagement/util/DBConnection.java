@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.util;
@@ -46,13 +46,7 @@ import ch.zhaw.init.walj.projectmanagement.util.password.PasswordService;
  */
 public class DBConnection {
 
-	private String driver = "com.mysql.jdbc.Driver";
-	private DataBaseAccess dbAccess;
-	private String url;
-	private String dbName;
-	private String userName;
-	private String password;
-	private Connection conn;
+    private Connection conn;
 	private PreparedStatement st;
 	private ResultSet res;
 	public boolean noConnection;
@@ -60,34 +54,25 @@ public class DBConnection {
 	/**
 	 * Constructor to the DBConnection class
 	 * creates a connection to a database
-	 * 
-	 * @param url
-	 *            URL to the database
-	 * @param dbName
-	 *            name of the database
-	 * @param userName
-	 * 			  username for login
-	 * @param password
-	 * 			  password for login
 	 */
 	public DBConnection(String path) {
 		
 		// get connection to database
-		dbAccess = new DataBaseAccess(path);
-		url = dbAccess.getUrl();
-		dbName = dbAccess.getDbname();
-		userName = dbAccess.getUsername();
-		password = dbAccess.getPassword();
+        DataBaseAccess dbAccess = new DataBaseAccess(path);
+        String url = dbAccess.getUrl();
+        String dbName = dbAccess.getDbname();
+        String userName = dbAccess.getUsername();
+        String password = dbAccess.getPassword();
 		try {
-			Class.forName(driver).newInstance();
-			conn = DriverManager.getConnection(this.url + this.dbName, this.userName, this.password);
+            String driver = "com.mysql.jdbc.Driver";
+            Class.forName(driver).newInstance();
+			conn = DriverManager.getConnection(url + dbName, userName, password);
 
 			noConnection = false;
 		} catch (Exception e) {
 			noConnection = true;
 		}
 	}
-
 
 	/**
 	 * creates a new Project object and returns it to the user
@@ -220,7 +205,7 @@ public class DBConnection {
 				stWeight.setInt(1, tID);
 				resWeight = stWeight.executeQuery();
 				
-				ArrayList<Weight> weights = new ArrayList<Weight>();
+				ArrayList<Weight> weights = new ArrayList<>();
 				while (resWeight.next()){
 					weights.add(new Weight(resWeight.getInt("WeightID"), resWeight.getInt("TaskIDFS"), resWeight.getInt("Month"), resWeight.getDouble("Weight")));
 				}
@@ -278,8 +263,8 @@ public class DBConnection {
 	 * @throws SQLException 
 	 */
 	public ArrayList<Project> getProjects(int id, boolean archive) throws SQLException {
-		ArrayList<Project> projects = new ArrayList<Project>();
-		ArrayList<Integer> projectsIds = new ArrayList<Integer>();
+		ArrayList<Project> projects = new ArrayList<>();
+		ArrayList<Integer> projectsIds = new ArrayList<>();
 		
 		st = conn.prepareStatement("SELECT ProjectID FROM  Projects where ProjectLeader=? and Archive=?");
 		st.setInt(1, id);
@@ -314,7 +299,7 @@ public class DBConnection {
 	 * @return all workpackages from the current project
 	 * @throws SQLException 
 	 */
-	public ResultSet getWorkpackages(int id) throws SQLException {
+	private ResultSet getWorkpackages(int id) throws SQLException {
 		st = conn.prepareStatement("SELECT * FROM  Workpackages where ProjectIDFS=?");
 		st.setInt(1, id);
 		res = st.executeQuery();
@@ -330,7 +315,7 @@ public class DBConnection {
 	 * @return all tasks from the current workpackage
 	 * @throws SQLException 
 	 */
-	public ResultSet getTasks(int id) throws SQLException {
+	private ResultSet getTasks(int id) throws SQLException {
 		st = conn.prepareStatement("SELECT * FROM Tasks where WorkpackageIDFS=?");
 		st.setInt(1, id);
 		res = st.executeQuery();
@@ -345,7 +330,7 @@ public class DBConnection {
 	 * @throws SQLException 
 	 */
 	public Employee getEmployee(int id) throws SQLException {
-		Employee employee = null;
+		Employee employee;
 		
 		// get the employees
 		st = conn.prepareStatement("SELECT * from Employees WHERE EmployeeID=?");
@@ -379,30 +364,12 @@ public class DBConnection {
 	}
 
 	/**
-	 * get all employees, working at the current project
-	 * 
-	 * @param id
-	 *            id of the current task
-	 * 
-	 * @return all employees, working at the current project
-	 * @throws SQLException 
-	 */
-	public ResultSet getEmployees(int id) throws SQLException {
-		st = conn.prepareStatement("SELECT Employees.Firstname , Employees.Lastname "
-				+ "FROM Employees INNER JOIN Assignments ON Employees.EmployeeID = Assignments.EmployeeIDFS "
-				+ "WHERE Assignments.TaskIDFS =?");
-		st.setInt(1, id);
-		res = st.executeQuery();
-		return res;
-	}
-	
-	/**
 	 * get all employees with whom the project is shared
 	 * @param projectID id of the project
 	 * @return List of all employees the project is shared with
 	 */
 	public ArrayList<Employee> getSharedEmployees(int projectID){
-		ArrayList<Employee> employees = new ArrayList<Employee>();
+		ArrayList<Employee> employees = new ArrayList<>();
 		
 		PreparedStatement stEmployees;
 		ResultSet resEmployee;
@@ -431,6 +398,7 @@ public class DBConnection {
 			}
 		
 		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 		return employees;
@@ -442,7 +410,7 @@ public class DBConnection {
 	 * @return list of all projects who are shared with the user
 	 */
 	public ArrayList<Project> getSharedProjects(int id) {
-		ArrayList<Project> projects = new ArrayList<Project>();
+		ArrayList<Project> projects = new ArrayList<>();
 		
 		try {
 			st = conn.prepareStatement("SELECT * FROM Share WHERE EmployeeIDFS=?");
@@ -450,7 +418,7 @@ public class DBConnection {
 			res = st.executeQuery();
 			
 			while (res.next()){
-				int pID = res.getInt("ProjectID");
+				int pID = res.getInt("ProjectIDFS");
 				projects.add(getProject(pID));
 			}
 		} catch (SQLException e) {
@@ -470,7 +438,7 @@ public class DBConnection {
 	 * @throws SQLException
 	 */
 	public ArrayList<Employee> getAllEmployees() throws SQLException {
-		ArrayList<Employee> employees = new ArrayList<Employee>();
+		ArrayList<Employee> employees = new ArrayList<>();
 		Employee employee;
 	
 		st = conn.prepareStatement("SELECT * from Employees ORDER BY Lastname asc");
@@ -513,10 +481,9 @@ public class DBConnection {
 	 * @param employee
 	 *            ID of the employee
 	 * @return ArrayList with all task IDs
-	 * @throws SQLException
 	 */
 	public ArrayList<Integer> getAssignedTasks(int employee){
-		ArrayList<Integer> tasks = new ArrayList<Integer>();
+		ArrayList<Integer> tasks = new ArrayList<>();
 	
 		// get the task IDs
 		try {
@@ -528,7 +495,7 @@ public class DBConnection {
 				tasks.add(res.getInt("TaskIDFS"));
 			}
 		} catch (SQLException e) {
-			
+			e.printStackTrace();
 		}
 		
 		return tasks;
@@ -542,7 +509,7 @@ public class DBConnection {
 	 * @throws SQLException
 	 */
 	public ArrayList<Assignment> getAssignments(int taskID) throws SQLException{
-		ArrayList<Assignment> assignments = new ArrayList<Assignment>();
+		ArrayList<Assignment> assignments = new ArrayList<>();
 		
 		st = conn.prepareStatement("select * from Assignments where TaskIDFS = ?");
 		st.setInt(1, taskID);
@@ -556,32 +523,36 @@ public class DBConnection {
 	/**
 	 * get the ID of the assignment between the given employee and task
 	 * 
-	 * @param employee
+	 * @param employeeID
 	 *            ID of the employee
-	 * @param task
+	 * @param taskID
 	 *            ID of the task
 	 * @return Assignment ID
-	 * @throws SQLException
 	 */
-	public Assignment getAssignment(int employee, int task){
+	public Assignment getAssignment(int employeeID, int taskID){
 	
 		// get the ID of the assignment
 		try {
 			st = conn.prepareStatement("SELECT AssignmentID from Assignments WHERE EmployeeIDFS = ? and TaskIDFS = ?");
 
-			st.setInt(1, employee);
-			st.setInt(2, task);
+			st.setInt(1, employeeID);
+			st.setInt(2, taskID);
 			res = st.executeQuery();
 			res.next();
 			
-			return new Assignment(res.getInt("AssignmentID"), task, employee);
+			return new Assignment(res.getInt("AssignmentID"), taskID, employeeID);
 		} catch (SQLException e) {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * get a list with the IDs of all expenses of the given employee
+	 * @param id of the employee
+	 * @return list of all IDs
+	 */
 	public ArrayList<Integer> getExpenses(int id) {
-		ArrayList<Integer> expenses = new ArrayList<Integer>();
+		ArrayList<Integer> expenses = new ArrayList<>();
 		try {
 			st = conn.prepareStatement("SELECT ExpenseID from Expenses WHERE EmployeeIDFS = ?");
 
@@ -594,19 +565,19 @@ public class DBConnection {
 				expenses.add(res.getInt("ExpenseID"));
 			}
 		} catch (SQLException e) {
-			
+			e.printStackTrace();
 		}
 		return expenses;
 	}
 
-	/**
+		/**
 	 * get all bookings to a specific assignment
 	 * @param assignment the assignment the bookings should be searched for
 	 * @return List of bookings
 	 * @throws SQLException
 	 */
 	public ArrayList<Booking> getBookings (Assignment assignment) throws SQLException {
-		ArrayList<Booking> bookings = new ArrayList<Booking>();
+		ArrayList<Booking> bookings = new ArrayList<>();
 		
 		st = conn.prepareStatement("select * from Bookings where AssignmentIDFS = ? order by Month");
 		st.setInt(1, assignment.getID());
@@ -625,9 +596,8 @@ public class DBConnection {
 
 	/**
 	 * get the used budget 
-	 * @param project
-	 * @return used budget
-	 * @throws SQLException
+	 * @param project project from where you want to calculate the used budget
+	 * @return used budget total of used budget in the given project as a double
 	 */
 	public double getUsedBudget(Project project){
 		double usedBudget = 0;
@@ -659,15 +629,13 @@ public class DBConnection {
 	}
 
 	public double getRemainingBudget(Project project){
-		double remaining = project.getBudget() - getUsedBudget(project);
-		return remaining;
+		return project.getBudget() - getUsedBudget(project);
 	}
-	
-	
+
 	/**
 	 * find a user with his name (shortname or mail) and password
-	 * @param user
-	 * @param password
+	 * @param user shortname or e-mail of the user
+	 * @param password password of the user
 	 * @return employee or null
 	 */
 	public Employee findUser(String user, String password){
@@ -678,15 +646,14 @@ public class DBConnection {
 			st.setString(3, password);
 			res = st.executeQuery();
 			res.next();
-			Employee e = new Employee(res.getInt("EmployeeID"), 
-									  res.getString("Firstname"), 
-									  res.getString("Lastname"), 
-									  res.getString("Kuerzel"), 
-									  res.getString("Mail"), 
-									  res.getString("Password"), 
-									  0, 
+			return new Employee(res.getInt("EmployeeID"),
+									  res.getString("Firstname"),
+									  res.getString("Lastname"),
+									  res.getString("Kuerzel"),
+									  res.getString("Mail"),
+									  res.getString("Password"),
+									  0,
 									  res.getInt("Supervisor"));
-			return e;
 		} catch (SQLException e) {
 			return null;
 		}
@@ -703,15 +670,14 @@ public class DBConnection {
 			st.setString(1, user);
 			res = st.executeQuery();
 			res.next();
-			Employee e = new Employee(res.getInt("EmployeeID"), 
-									  res.getString("Firstname"), 
-									  res.getString("Lastname"), 
-									  res.getString("Kuerzel"), 
-									  res.getString("Mail"), 
-									  res.getString("Password"), 
-									  0, 
+			return new Employee(res.getInt("EmployeeID"),
+									  res.getString("Firstname"),
+									  res.getString("Lastname"),
+									  res.getString("Kuerzel"),
+									  res.getString("Mail"),
+									  res.getString("Password"),
+									  0,
 									  res.getInt("Supervisor"));
-			return e;
 		} catch (SQLException e) {
 			return null;
 		}
@@ -719,7 +685,6 @@ public class DBConnection {
 
 	/**
 	 * creates a new project in the database
-	 * 
 	 * 
 	 * @param pName
 	 *            name of the project
@@ -741,9 +706,6 @@ public class DBConnection {
 	 * @return the new ID of the project in the database
 	 * 
 	 * @throws SQLException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
 	 */
 	public int newProject(String pName, String pShortname, int pLeader, String pBudget, String pCurrency, String pStart, String pEnd, String pPartners) throws SQLException {
 		
@@ -767,9 +729,8 @@ public class DBConnection {
 		st = conn.prepareStatement("SELECT ProjectID FROM Projects ORDER BY ProjectID DESC LIMIT 1");
 		res = st.executeQuery();
 		res.next();
-		int pID = res.getInt("ProjectID");
-		
-		return pID;
+
+		return res.getInt("ProjectID");
 	}
 
 	/**
@@ -785,9 +746,6 @@ public class DBConnection {
 	 *            end date of the workpackage
 	 * 
 	 * @throws SQLException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
 	 */
 	public void newWorkpackage(int projectIDFS, String wpName, String wpStart, String wpEnd) throws SQLException {
 
@@ -821,9 +779,6 @@ public class DBConnection {
 	 *            total budget planned for the task
 	 * 
 	 * @throws SQLException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
 	 */
 	public void newTask(int projectID, String wpName, String taskName, String taskStart, String taskEnd, String taskPM,	String taskBudget) throws SQLException {
 
@@ -892,17 +847,12 @@ public class DBConnection {
 	 *            wage per hour of the new user
 	 * 
 	 * @throws SQLException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
 	 */
 	public Employee newEmployee(int employeeID, String firstname, String lastname, String kuerzel, String mail, int wage) throws SQLException {
 
 		String password = PasswordGenerator.getInstance().getNewPassword();
-		
-		Employee user = newEmployee(employeeID, firstname, lastname, kuerzel, mail, password, wage);
-		
-		return user;
+
+		return newEmployee(employeeID, firstname, lastname, kuerzel, mail, password, wage);
 	}
 		
 	/**
@@ -924,9 +874,6 @@ public class DBConnection {
 	 *            wage per hour of the new user
 	 * 
 	 * @throws SQLException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
 	 */
 	public Employee newEmployee(int employeeID, String firstname, String lastname, String kuerzel, String mail, String password, int wage) throws SQLException {
 		
@@ -1275,7 +1222,6 @@ public class DBConnection {
 		st.executeUpdate();
 	}
 	
-
 	/**
 	 * set the archive flag to 0 (= not archived)
 	 * @param projectID ID of the project

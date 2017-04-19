@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.util.dbclasses;
@@ -30,19 +30,17 @@ import ch.zhaw.init.walj.projectmanagement.util.format.DateFormatter;
 public class Task {
 
 	// variable initialization
-	private int id;
+	private final int id;
 	private int workpackageID;
 	private String workpackageName;
-	private String name;
-	private String start;
-	private String projectStart;
-	private String end;
-	private int pms;
-	private double budget;
-	private ArrayList<Employee> employees = new ArrayList<Employee>();
-	private int startMonth;
-	private int endMonth;
-	private ArrayList<Weight> weights = new ArrayList<Weight>();
+	private final String name;
+	private final String start;
+	private final String projectStart;
+	private final String end;
+	private final int pms;
+	private final double budget;
+	private final ArrayList<Employee> employees = new ArrayList<>();
+    private ArrayList<Weight> weights = new ArrayList<>();
 	
 	/**
 	 * constructor of the task class
@@ -109,14 +107,7 @@ public class Task {
 	public int getWorkpackageID(){
 		return workpackageID;
 	}
-	
-	/**
-	 * @return Name of the workpackage the task belongs to
-	 */
-	public String getWorkpackageName(){
-		return workpackageName;
-	}
-	
+
 	/**
 	 * @return the name of the task
 	 */
@@ -151,15 +142,7 @@ public class Task {
 	public Date getEndAsDate(){
 		return DateFormatter.getInstance().stringToDate(end, "dd.MM.yyyy");
 	}
-	
-	/**
-	 * @return start and end date as string like "01.01.2017 - 31.01.2017"
-	 */
-	public String getDuration(){
-		String duration = start + " - " + end;
-		return duration;
-	}
-	
+
 	/**
 	 * @return amount of planned PMs
 	 */
@@ -193,8 +176,7 @@ public class Task {
 	 * @return number of the month
 	 */
 	public int getStartMonth(){
-		startMonth = DateFormatter.getInstance().getMonthsBetween(projectStart, start);
-		return startMonth;
+		return DateFormatter.getInstance().getMonthsBetween(projectStart, start);
 	}	
 	
 	/**
@@ -202,8 +184,7 @@ public class Task {
 	 * @return number of the month
 	 */
 	public int getEndMonth(){
-		endMonth = DateFormatter.getInstance().getMonthsBetween(projectStart, end);
-		return endMonth;
+		return DateFormatter.getInstance().getMonthsBetween(projectStart, end);
 	}	
 	
 	/**
@@ -211,19 +192,19 @@ public class Task {
 	 * @return the number of tasks
 	 */
 	public int getNumberOfMonths(){
-		int numberOfMonths = 0;
+		int numberOfMonths;
 		numberOfMonths = DateFormatter.getInstance().getMonthsBetween(start, end);
 		return numberOfMonths;
 	}
 		
-	/**
+		/**
 	 * calculates the PMs per month with including the weight of each month
 	 * @return average PMs per month
 	 */
 	public double getPMsPerMonth(){
 		
 		double weight = 0;
-		double pmsPerMonth = 0;
+		double pmsPerMonth;
 		
 		for (Weight w : weights){
 			weight += w.getWeight();

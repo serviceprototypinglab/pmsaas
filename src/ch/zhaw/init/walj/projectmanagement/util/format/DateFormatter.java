@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.util.format;
@@ -35,7 +35,7 @@ public class DateFormatter {
 	/**
 	 * @return instance of a DateFormatter
 	 */
-	public static synchronized DateFormatter getInstance(){
+	public static DateFormatter getInstance(){
 	  
 	    if(instance == null){
 	       instance = new DateFormatter(); 
@@ -56,28 +56,13 @@ public class DateFormatter {
 		SimpleDateFormat format2 = new SimpleDateFormat("dd.MM.yyyy");
 		
 		try {
-			Date date = format.parse(unformattedDate);			
-			String formattedDate = format2.format(date);
-			return formattedDate;
+			Date date = format.parse(unformattedDate);
+            return format2.format(date);
 		} catch (ParseException e) {
 			return unformattedDate;
 		}
 	}
-	
-	/**
-	 * 
-	 * @param unformattedDate
-	 * 				date object
-	 * @return
-	 * 				date 'DD.MM.YYYY' as a string
-	 */
-	public String formatDate(Date unformattedDate){
-		
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-		String formattedDate = format.format(unformattedDate);
-		return formattedDate;
-	}
-	
+
 	/**
 	 * 
 	 * @param unformattedDate
@@ -91,10 +76,9 @@ public class DateFormatter {
 		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
 		
 		try {
-			Date date = format.parse(unformattedDate);			
-			String formattedDate = format2.format(date);
-						
-			return formattedDate;
+			Date date = format.parse(unformattedDate);
+
+			return format2.format(date);
 		} catch (ParseException e) {
 			
 			return unformattedDate;
@@ -111,11 +95,9 @@ public class DateFormatter {
 	public String formatDateForDB(Date unformattedDate){
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		String formattedDate = format.format(unformattedDate);
-		return formattedDate;
+		return format.format(unformattedDate);
 	}
-	
-	
+
 	/**
 	 * 
 	 * returns the number of months between two dates
@@ -155,8 +137,7 @@ public class DateFormatter {
 		}
 		return monthsBetween + 1;
 	}
-	
-	
+
 	/**
 	 * calculates the number of days between two dates
 	 * 
@@ -230,19 +211,17 @@ public class DateFormatter {
 	public String[] getMonthStrings(Date start, int nbrOfMonths) {
 		String months[][] = getMonths(start, nbrOfMonths);
 		String month[] = new String[nbrOfMonths];
-		
-		for (int i = 0; i < nbrOfMonths; i++){
-			month[i] = months[1][i];
-		}
+
+		System.arraycopy(months[1], 0, month, 0, nbrOfMonths);
 		
 		return month;
 	}
 
 	/**
 	 * formats a string 
-	 * @param dateString
-	 * @param formatString
-	 * @return
+	 * @param dateString a date as a string
+	 * @param formatString format of the date
+	 * @return date as a date object
 	 */
 	public Date stringToDate(String dateString, String formatString){
 		SimpleDateFormat format = new SimpleDateFormat(formatString);
@@ -257,9 +236,9 @@ public class DateFormatter {
 	
 	/**
 	 * Checks if firstDate is before or the same as secondDate. 
-	 * @param firstDate
-	 * @param secondDate
-	 * @param formatString
+	 * @param firstDate date that should be before secondDate as a string
+	 * @param secondDate date that should be after firstDate as a string
+	 * @param formatString format of the two dates
 	 * @return true if firstDate is before secondDate.
 	 */
 	public boolean checkDate(String firstDate, String secondDate, String formatString){

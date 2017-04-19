@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.admin.properties;
@@ -33,7 +33,7 @@ import ch.zhaw.init.walj.projectmanagement.util.HTMLHeader;
 import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 
 /**
- * Projectmanagement tool, Page to archive projects
+ * Projectmanagement tool, Page to delete projects
  * 
  * @author Janine Walther, ZHAW
  * 
@@ -42,17 +42,14 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Project;
 @WebServlet("/admin/deleteProject")
 public class DeleteProject extends HttpServlet {
 
-	// connection to database
-	private DBConnection con;
-
-	/*
-	 *	method to handle get requests
-	 *	archives the project and shows success/error message to the user   
-	 */
+    /*
+     *	method to handle get requests
+     *	deletes the project and shows success/error message to the user
+     */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		con = new DBConnection(this.getServletContext().getRealPath("/"));
+
+        DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// prepare response
 		response.setContentType("text/html;charset=UTF8");
@@ -62,7 +59,7 @@ public class DeleteProject extends HttpServlet {
 		int projectID = Integer.parseInt(request.getParameter("projectID"));
 
 		// get project
-		Project project = null;
+		Project project;
 		try {
 			project = con.getProject(projectID);
 		} catch (SQLException e) {
@@ -71,7 +68,7 @@ public class DeleteProject extends HttpServlet {
             return;
 		}
 
-		String message = "";
+		String message;
 		try {
 			// set archive flag for project in database
 			con.deleteProject(projectID);
@@ -79,7 +76,7 @@ public class DeleteProject extends HttpServlet {
 			message = "<div class=\"row\">"
 					+ "<div class=\"small-12 columns align-center\">" 
 				    + "<h2>The Project " + project.getName() + " has sucessfully been deleted.</h2>"
-					+ "<a href=\"/Projektverwaltung/admin/properties\">"
+					+ "<a href=\"/admin/properties\">"
 					+ "<i class=\"fa fa-chevron-left fa-4x\" aria-hidden=\"true\"></i></br>"
 					+ "Click here to go back to the properties page</a>"
 					+ "</div>"
@@ -89,7 +86,7 @@ public class DeleteProject extends HttpServlet {
 			message =  "<div class=\"row\">"
 					+ "<div class=\"small-12 columns align-center\">" 
 				    + "<h2>The Project " + project.getName() + " could not be deleted.</h2>"
-					+ "<a href=\"/Projektverwaltung/admin/properties\">"
+					+ "<a href=\"/admin/properties\">"
 					+ "<i class=\"fa fa-chevron-left fa-4x\" aria-hidden=\"true\"></i></br>"
 					+ "Click here to go back to the properties page</a>"
 					+ "</div>"

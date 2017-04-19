@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.admin;
@@ -63,10 +63,11 @@ public class Setup extends HttpServlet {
     		// connection to database
     		con = new DBConnection(this.getServletContext().getRealPath("/"));            
     	} catch (NullPointerException e){
-    		
+			e.printStackTrace();
     	}
-    	
-    	if (!con.noConnection){
+
+    	assert con != null;
+		if (!con.noConnection){
             String setupURI = request.getContextPath() + "/login";
     		response.sendRedirect(setupURI);
     		return;
@@ -183,6 +184,7 @@ public class Setup extends HttpServlet {
 
     	// get parameters
         String dbURL = request.getParameter("dbURL");
+        dbURL = "jdbc:mysql://" + dbURL + "/";
         String dbName = request.getParameter("dbName");
         String dbUser = request.getParameter("dbUser");
         String dbPassword = request.getParameter("dbPassword");
@@ -196,8 +198,8 @@ public class Setup extends HttpServlet {
         // write database config file
         FileWriter fw = new FileWriter(this.getServletContext().getRealPath("/") + ".config");
         BufferedWriter bw = new BufferedWriter(fw);
-        
-        bw.write("URL=jdbc:mysql://" + dbURL + "/");
+
+        bw.write("URL=" + dbURL);
         bw.newLine();
         bw.write("Database=" + dbName);
         bw.newLine();

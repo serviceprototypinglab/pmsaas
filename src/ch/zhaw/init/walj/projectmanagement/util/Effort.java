@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.util;
@@ -33,9 +33,9 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Weight;
  */
 public class Effort {
 	
-	private ArrayList<Task> tasks = new ArrayList<Task>();
+	private ArrayList<Task> tasks = new ArrayList<>();
 	
-	DBConnection con;
+	private final DBConnection con;
 	
 	/**
 	 * constructor of the Effort class
@@ -45,20 +45,20 @@ public class Effort {
 		this.tasks = tasks;
 		con = new DBConnection(path);
 	}
-	
-	
+
+	/**
+	 * gets all bookings to the tasks in a list
+	 * @return ArrayList with all bookings
+	 * @throws SQLException
+	 */
 	public ArrayList<Booking> getBookings () throws SQLException {
-			
-		ArrayList<Booking> bookings = new ArrayList<Booking>();
-		
-		
+		ArrayList<Booking> bookings = new ArrayList<>();
 		for (Task task : tasks){
 			ArrayList<Assignment> assignments = con.getAssignments(task.getID());
 			for (Assignment a : assignments){
 				bookings.addAll(con.getBookings(a));
 			}
     	}	
-		
 		return bookings;
 	}
 	
@@ -70,7 +70,7 @@ public class Effort {
 	 */
 	public ArrayList<Booking> getBookings (int employeeID) throws SQLException {
 				
-		ArrayList<Booking> bookings = new ArrayList<Booking>();
+		ArrayList<Booking> bookings = new ArrayList<>();
 		
 		for (Task task : tasks){
 			Assignment assignment = con.getAssignment(employeeID, task.getID());
@@ -89,7 +89,7 @@ public class Effort {
 	 */
 	public double getPlannedEffort (double month){
 		double effort = 0;
-		int y = 0;
+		int y;
 		for (Task task : tasks){
 			Weight w = task.getWeight(month);
 			double weight;
@@ -118,14 +118,14 @@ public class Effort {
 	
 	/**
 	 * get the booked effort for a specific month from all tasks
-	 * @param month
+	 * @param month the number of the month from which you want the booked effort
 	 * @return booked effort as PMs
 	 * @throws SQLException
 	 */
 	public double getBookedEffort (double month) throws SQLException{
 		double effort = 0.0;
 		
-		ArrayList<Booking> bookings = new ArrayList<Booking>();
+		ArrayList<Booking> bookings;
 		
 		for (Task task : tasks){
 			ArrayList<Assignment> assignments = con.getAssignments(task.getID());
@@ -146,21 +146,13 @@ public class Effort {
 	}
 	
 	/**
-	 * get the effort on the project for a specific employee (in hours)
+	 * get the effort of the project for a specific employee (in hours)
 	 * 
-	 * @param employeeID
-	 * 				ID of the employee
-	 * @return
-	 * 		effort in hours
-	 * @throws SQLException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @return effort in hours
 	 */
-	
 	public float getEffortPerEmployee(int employee){
 		float effort = 0;
-		ArrayList<Booking> bookings = new ArrayList<Booking>();
+		ArrayList<Booking> bookings;
 				
 		for (Task task : tasks){
 			// get assignments to the task
@@ -168,19 +160,20 @@ public class Effort {
 			try {
 				a = con.getAssignment(employee, task.getID());
 				// get bookings to the assignment
-				bookings = con.getBookings(a);
-				for (Booking b : bookings){
-						effort += b.getHours(); 		
-	    		}
+				if (a != null) {
+					bookings = con.getBookings(a);
+					for (Booking b : bookings) {
+						effort += b.getHours();
+					}
+				}
 			} catch (SQLException | NullPointerException e) {
-			
+
+				e.printStackTrace();
 			}
 			
     	}	
-		
 		return effort;
 	}
-
 
 	/**
 	 * get the booked effort for a specific month and employee
@@ -191,20 +184,23 @@ public class Effort {
 	public double getBookedEffortPerMonth(double month, int employee){
 		double effort = 0.0;
 		
-		ArrayList<Booking> bookings = new ArrayList<Booking>();
+		ArrayList<Booking> bookings;
 		
 		for (Task task : tasks){
 			try {
 				// get assignments to the task
 				Assignment a = con.getAssignment(employee, task.getID());
 				// get bookings to the assignment
-				bookings = con.getBookings(a);
-				for (Booking b : bookings){
-					if (b.getMonth() == month){
-						effort += b.getHours();
-					} 		
-	    		}
+				if (a != null) {
+					bookings = con.getBookings(a);
+					for (Booking b : bookings) {
+						if (b.getMonth() == month) {
+							effort += b.getHours();
+						}
+					}
+				}
 			} catch (SQLException | NullPointerException e) {
+				e.printStackTrace();
 			}
     	}		
 		

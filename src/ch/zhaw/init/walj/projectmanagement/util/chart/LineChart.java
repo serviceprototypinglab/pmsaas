@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.util.chart;
@@ -45,13 +45,14 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Task;
  */
 public class LineChart {
 
-	private Project project;
-	private String path;
-	private ArrayList<Task> tasks = new ArrayList<Task>();
+	private final Project project;
+	private final String path;
+	private ArrayList<Task> tasks = new ArrayList<>();
 	
 	/**
 	 * Constructor of the LineChart class
 	 * @param project the project for which the chart should be created
+	 * @param path path where PMSaaS is located
 	 */
 	public LineChart(Project project, String path) {
 		this.project = project;
@@ -104,7 +105,7 @@ public class LineChart {
 
     	// initialize variables
 		Effort effort = new Effort(tasks, path);
-    	double bookedEffort = 0;
+    	double bookedEffort;
     	XYSeries booked = new XYSeries("Booked");
     	int projectMonths = project.getNumberOfMonths();
 
@@ -127,9 +128,8 @@ public class LineChart {
         
 	/**
      * creates a line chart with all booked and planned PMs
-     * @param path place where the picture should be saved
 	 */
-    public void createChart(String path) {
+    public void createChart() {
     	
     	// get dataset
     	XYSeriesCollection dataset = null;
@@ -168,24 +168,22 @@ public class LineChart {
 	    // set size of the chart and save it as large JPEG for effort detail page
 	    width = 1200;
 	    height = 600; 
-	    lineChart = new File(path + "EffortProject" + project.getID() + "_large.jpg" ); 
+	    lineChart = new File(path + "/Charts/EffortProject" + project.getID() + "_large.jpg" );
 	    try {
 			ChartUtilities.saveChartAsJPEG( lineChart , xylineChart , width , height );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
-    
-    
+
     /**
      * creates a line chart with all booked hours of a specific employee
-     * @param path place where the picture should be saved
-     * @param employeeID 
+     * @param employeeID ID of the employee for which a chart should be created
      */
-    public void createChart(String path, int employeeID) {
+    public void createChart(int employeeID) {
 
     	// get dataset
-    	XYSeriesCollection dataset = null;
+    	XYSeriesCollection dataset;
     	dataset = createDataset(employeeID);
     	
     	// create chart
@@ -208,7 +206,7 @@ public class LineChart {
 	    // set size of the chart and save it as JPEG
 	    int width = 1200;
 	    int height = 600; 
-	    File lineChart = new File(path + "EffortProject" + project.getID() + "_Employee" + employeeID + ".jpg" ); 
+	    File lineChart = new File(path + "/Charts/EffortProject" + project.getID() + "_Employee" + employeeID + ".jpg" );
 	    try {
 			ChartUtilities.saveChartAsJPEG( lineChart , xylineChart , width , height );
 		} catch (IOException e) {

@@ -1,18 +1,18 @@
-/**
- *	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
- *	All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License. You may obtain
- *  a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- *  License for the specific language governing permissions and limitations
- *  under the License.
+/*
+ 	Copyright 2016-2017 Zuercher Hochschule fuer Angewandte Wissenschaften
+ 	All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+   License for the specific language governing permissions and limitations
+   under the License.
  */
 
 package ch.zhaw.init.walj.projectmanagement.admin.properties;
@@ -42,14 +42,11 @@ import ch.zhaw.init.walj.projectmanagement.util.dbclasses.Employee;
 @SuppressWarnings("serial")
 @WebServlet("/admin/newEmployee")
 public class AddEmployee extends HttpServlet {
-	
-	// connection to database
-	private DBConnection con;
-	
-	/*
-	 * method to handle get requests
-	 * Form to create a new employee
-	 */
+
+    /*
+     * method to handle get requests
+     * Form to create a new employee
+     */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -141,8 +138,8 @@ public class AddEmployee extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		con = new DBConnection(this.getServletContext().getRealPath("/"));
+
+        DBConnection con = new DBConnection(this.getServletContext().getRealPath("/"));
 		
 		// get user id from session
 		int id = (int) request.getSession(false).getAttribute("ID");

@@ -292,7 +292,7 @@ img {
 }
 
 .button-group {
-	margin: 0px;
+	margin: 0;
 }
 
 #deleteProject {
@@ -325,10 +325,6 @@ img {
   	overflow-x: auto;
   	clear: both;
   	width: 100%;
-}
-
-.table {
-	min-width: rem-calc(1000);
 }
 
 .th-150 {
